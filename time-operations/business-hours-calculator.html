@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Business Hours Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Calculate total hours worked, labor time, and estimated earnings with this free business hours calculator." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --blue:           #185FA5;
+    --blue-light:     #E8F0FA;
+    --profit-pos:     #1A5C3A;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:  'DM Serif Display', Georgia, serif;
+    --font-body:     'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1rem; }
+  .header-inner { max-width: 780px; margin: 0 auto; height: 58px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); text-decoration: none; letter-spacing: -0.01em; }
+  .logo span { color: var(--accent); }
+  .header-tag { font-size: 12px; font-weight: 500; color: var(--accent-text); background: var(--accent-light); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  /* Main */
+  main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
+
+  /* Page title */
+  .page-title { margin-bottom: 2rem; animation: fadeUp 0.4s ease both; }
+  .page-title h1 { font-family: var(--font-display); font-size: clamp(26px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+  .page-title p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* Calc card */
+  .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); animation: fadeUp 0.4s 0.08s ease both; margin-bottom: 2rem; }
+  @media (max-width: 640px) { .calc-card { padding: 1.25rem; } }
+
+  .section-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Input grid */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .field .field-hint { font-size: 11px; color: var(--text-muted); margin-top: -3px; }
+
+  /* Tooltip */
+  .tip { position: relative; display: inline-flex; align-items: center; cursor: default; }
+  .tip-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--border-dark); color: var(--text-secondary); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tip-box { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--text-primary); color: #fff; font-size: 11px; line-height: 1.5; padding: 7px 10px; border-radius: var(--radius-sm); width: 210px; z-index: 10; pointer-events: none; }
+  .tip:hover .tip-box { display: block; }
+
+  /* Time input */
+  .input-wrap input[type="time"] {
+    width: 100%; padding: 11px 14px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; cursor: pointer; min-height: 44px;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  }
+  .input-wrap input[type="time"]:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* Number input */
+  .input-wrap { position: relative; }
+  .input-wrap .prefix { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 500; color: var(--text-muted); pointer-events: none; }
+  .input-wrap input[type="number"] {
+    width: 100%; padding: 11px 14px 11px 30px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; -moz-appearance: textfield; min-height: 44px;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  }
+  .input-wrap input[type="number"].no-prefix { padding-left: 14px; }
+  .input-wrap input[type="number"]::-webkit-inner-spin-button,
+  .input-wrap input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input[type="number"]:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* Error */
+  .error-msg { display: none; align-items: center; gap: 8px; font-size: 13px; color: var(--danger); background: var(--danger-light); border: 1px solid #F0C8C8; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 1.25rem; }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* Insight banners */
+  .insight-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .insight-banner { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid; animation: fadeUp 0.3s ease both; line-height: 1.5; }
+  .insight-banner svg { flex-shrink: 0; margin-top: 1px; }
+  .insight-banner.info   { color: var(--accent-text); background: var(--accent-light); border-color: #B8D9C5; }
+  .insight-banner.warn   { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .insight-banner.danger { color: var(--danger);  background: var(--danger-light);  border-color: #F0C8C8; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .btn { font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 11px 24px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid transparent; transition: all var(--transition); letter-spacing: 0.01em; min-height: 44px; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); flex: 1; }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset { background: transparent; color: var(--text-secondary); border-color: var(--border-dark); }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy { font-family: var(--font-body); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid #B8D9C5; background: var(--accent-light); color: var(--accent-text); transition: all var(--transition); display: none; min-height: 44px; }
+  .btn-copy:hover { background: #d4ecde; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* Results */
+  .results-section h2 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Hours hero */
+  .result-hero { background: var(--accent-light); border: 1px solid #B8D9C5; border-radius: var(--radius-lg); padding: 2rem 1.5rem; text-align: center; margin-bottom: 12px; transition: all 0.25s ease; }
+  .result-hero.warn { background: var(--warning-light); border-color: #F0D8A8; }
+  .result-hero .rh-eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-text); margin-bottom: 8px; }
+  .result-hero.warn .rh-eyebrow { color: var(--warning); }
+  .result-hero .rh-value { font-family: var(--font-display); font-size: 58px; color: var(--profit-pos); line-height: 1; margin-bottom: 6px; }
+  .result-hero.warn .rh-value { color: var(--warning); }
+  .result-hero .rh-sub { font-size: 13px; color: var(--accent-text); opacity: 0.85; }
+  .result-hero.warn .rh-sub { color: var(--warning); }
+  .rh-value.placeholder { font-size: 32px; color: var(--border-dark); font-family: var(--font-body); }
+
+  /* Earnings card */
+  .result-earnings { background: var(--blue-light); border: 1px solid #BDD4EE; border-radius: var(--radius-md); padding: 1.25rem 1rem; text-align: center; margin-bottom: 12px; }
+  .result-earnings.hidden { display: none; }
+  .result-earnings .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--blue); margin-bottom: 6px; }
+  .result-earnings .r-value { font-family: var(--font-display); font-size: 34px; color: var(--blue); line-height: 1; }
+  .result-earnings .r-sub  { font-size: 11px; color: var(--blue); margin-top: 5px; opacity: 0.8; }
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 20px; }
+
+  /* KPI grid */
+  .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 560px) { .results-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 380px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-card.highlight      { background: var(--accent-light); border-color: #B8D9C5; }
+  .result-card.highlight-blue { background: var(--blue-light);   border-color: #BDD4EE; }
+  .result-card.highlight-warn { background: var(--warning-light); border-color: #F0D8A8; }
+  .result-card .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .result-card .r-value { font-family: var(--font-display); font-size: 22px; color: var(--text-primary); line-height: 1; }
+  .result-card .r-value.pos  { color: var(--profit-pos); }
+  .result-card .r-value.blue { color: var(--blue); }
+  .result-card .r-value.warn { color: var(--warning); }
+  .result-card .r-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  /* Timeline visual */
+  .timeline-band { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 12px; display: none; }
+  .timeline-band.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .timeline-band h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 12px; }
+  .tl-bar-wrap { display: flex; height: 24px; border-radius: 8px; overflow: hidden; width: 100%; }
+  .tl-work { background: var(--accent); height: 100%; transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; }
+  .tl-break { background: var(--warning); height: 100%; transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; }
+  .tl-label { font-size: 10px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; padding: 0 6px; }
+  .tl-legend { display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; }
+  .tl-leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
+  .tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .tl-times { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  /* Guide */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section > h2, .faq-section > h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--text-primary); margin-bottom: 1.25rem; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .guide-card .g-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.amber { background: #FDF3E7; }
+  .g-icon.slate { background: #EEF0F5; }
+  .guide-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .guide-card p  { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .guide-card .formula { margin-top: 10px; padding: 8px 12px; background: var(--surface-alt); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--text-secondary); font-family: 'Courier New', monospace; border-left: 3px solid var(--border-dark); }
+
+  .guide-card-wide { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .guide-card-wide h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .why-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* FAQ */
+  .faq-section { margin-top: 2.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .faq-q { width: 100%; text-align: left; padding: 1rem 1.25rem; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background var(--transition); min-height: 44px; }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s ease; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0.75rem 1.25rem 1rem; font-size: 13px; color: var(--text-secondary); line-height: 1.65; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-a { display: block; }
+
+  /* Footer */
+  .site-footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--surface); }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+  @keyframes popIn { 0% { transform: scale(0.94); opacity: 0.6; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>Business Hours Calculator</h1>
+    <p>Enter your start time, end time, and break duration to instantly calculate total hours worked, net working time, and estimated earnings — useful for payroll, invoicing, and time tracking.</p>
+  </div>
+
+  <div class="calc-card">
+
+    <div class="input-section">
+      <h2 class="section-label">Time Details</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="startTime">Start Time</label>
+          <div class="input-wrap">
+            <input type="time" id="startTime" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="endTime">End Time</label>
+          <div class="input-wrap">
+            <input type="time" id="endTime" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="breakMins">
+            Break Time
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Total unpaid break time in minutes. This is subtracted from total hours to calculate net working time.</span>
+            </span>
+          </label>
+          <span class="field-hint">Unpaid lunch, rest breaks</span>
+          <div class="input-wrap">
+            <input type="number" id="breakMins" class="no-prefix" placeholder="30" min="0" step="5" inputmode="numeric" />
+          </div>
+          <span style="font-size:11px; color:var(--text-muted);">minutes</span>
+        </div>
+        <div class="field">
+          <label for="hourlyRate">
+            Hourly Rate
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Optional. Enter your hourly rate to calculate estimated earnings for the hours worked.</span>
+            </span>
+          </label>
+          <span class="field-hint">Optional — for earnings estimate</span>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="hourlyRate" placeholder="0.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-area" id="insightArea"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate Hours</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Time Breakdown</h2>
+
+      <!-- Hero -->
+      <div class="result-hero" id="heroCard">
+        <div class="rh-eyebrow">Total Hours Worked (Net)</div>
+        <div class="rh-value placeholder" id="val-nethours">—</div>
+        <div class="rh-sub" id="sub-nethours">after break deduction</div>
+      </div>
+
+      <!-- Earnings (shown only if rate entered) -->
+      <div class="result-earnings hidden" id="earningsCard">
+        <div class="r-label">Estimated Earnings</div>
+        <div class="r-value placeholder" id="val-earnings">—</div>
+        <div class="r-sub" id="sub-earnings">net hours × hourly rate</div>
+      </div>
+
+      <!-- KPI grid -->
+      <div class="results-grid">
+        <div class="result-card" id="card-totalhours">
+          <div class="r-label">Total Time</div>
+          <div class="r-value placeholder" id="val-totalhours">—</div>
+          <div class="r-sub">start to end</div>
+        </div>
+        <div class="result-card" id="card-break">
+          <div class="r-label">Break Time</div>
+          <div class="r-value placeholder" id="val-break">—</div>
+          <div class="r-sub">unpaid deduction</div>
+        </div>
+        <div class="result-card" id="card-rate">
+          <div class="r-label">Hourly Rate</div>
+          <div class="r-value placeholder" id="val-rate">—</div>
+          <div class="r-sub">per hour</div>
+        </div>
+      </div>
+
+      <!-- Timeline visual -->
+      <div class="timeline-band" id="timelineBand">
+        <h3>Day Visualisation</h3>
+        <div class="tl-times">
+          <span id="tl-start">—</span>
+          <span id="tl-end">—</span>
+        </div>
+        <div class="tl-bar-wrap" id="tlBar"></div>
+        <div class="tl-legend">
+          <div class="tl-leg-item"><div class="tl-dot" style="background:var(--accent)"></div> Working Time</div>
+          <div class="tl-leg-item" id="leg-break" style="display:none;"><div class="tl-dot" style="background:var(--warning)"></div> Break</div>
+        </div>
+      </div>
+
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn" onclick="copySummary()">Copy Time Summary</button>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Guide -->
+  <div class="guide-section">
+    <h2>Why Accurate Time Tracking Matters</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="#1A5C3A" stroke-width="1.5"/>
+            <path d="M10 6v4l3 2" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Payroll Accuracy</h3>
+        <p>Payroll errors caused by inaccurate time tracking cost US businesses billions annually. Calculating hours worked precisely — including breaks — ensures employees are paid correctly and employers stay compliant with FLSA requirements.</p>
+        <div class="formula">Net Hours = (End − Start) − Break Minutes</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 10l4 4 6-7" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="10" cy="10" r="8" stroke="#185FA5" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>Freelance &amp; Contractor Billing</h3>
+        <p>Freelancers and contractors need accurate hour counts for client invoices. Rounding to the nearest 15 minutes is common practice — this calculator helps you quickly determine billable time before sending an invoice.</p>
+        <div class="formula">Earnings = Net Hours × Hourly Rate</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon amber">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 4v6l3 3" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="10" cy="10" r="8" stroke="#7A4A10" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>Overtime Monitoring</h3>
+        <p>Under US federal law, non-exempt employees must receive overtime pay for hours over 40 per week. Tracking daily hours is the first step to identifying when overtime thresholds are approaching — before they hit your payroll unexpectedly.</p>
+        <div class="formula">OT Alert: daily hours &gt; 8 hrs</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon slate">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="5" width="14" height="10" rx="2" stroke="#4A5568" stroke-width="1.5"/>
+            <path d="M3 8h14" stroke="#4A5568" stroke-width="1.5"/>
+            <path d="M7 12h2M11 12h2" stroke="#4A5568" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Break Time Deductions</h3>
+        <p>Unpaid breaks must be properly deducted from total time to calculate actual working hours. Paid breaks (typically under 20 minutes under FLSA) count as working time. Always know which applies to your business before running payroll.</p>
+        <div class="formula">Paid Break: ≤20 min | Unpaid: &gt;30 min</div>
+      </div>
+
+    </div>
+
+    <!-- Best practices -->
+    <div class="guide-card-wide">
+      <h3>Time tracking best practices for small businesses</h3>
+      <ul class="why-list">
+        <li><strong>Track time daily, not from memory.</strong> Employees who reconstruct hours at the end of the week routinely underestimate or misremember. Daily logging is more accurate, easier to audit, and reduces payroll disputes.</li>
+        <li><strong>Distinguish paid from unpaid breaks.</strong> Under FLSA, rest breaks of 20 minutes or less must be paid. Meal breaks of 30+ minutes where the employee is fully relieved of duties are unpaid. Getting this wrong creates wage liability.</li>
+        <li><strong>Set clear rounding policies.</strong> Many payroll systems round to the nearest 5, 6, or 15 minutes. Your rounding policy must be neutral — it cannot consistently favour the employer. Document the policy and apply it consistently.</li>
+        <li><strong>Use this calculator for client invoices.</strong> When billing hourly, enter start and end times precisely and deduct any time spent not working on the client's project. Accurate billing protects client relationships and your revenue.</li>
+        <li><strong>Keep records for at least 3 years.</strong> FLSA requires employers to retain time and payroll records for 3 years. For wage claims, records going back 2 years (3 for willful violations) can be audited. Digital time records are your best protection.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Does this calculator handle overnight shifts?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Yes — if the end time is earlier than the start time, the calculator automatically adds 24 hours to handle overnight shifts (e.g. 10:00 PM to 6:00 AM = 8 hours). This is correct for any shift that crosses midnight within a single working period.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Are lunch breaks counted as working time?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Under FLSA, meal breaks of 30 minutes or more during which the employee is completely relieved of duties are not considered working time and should not be paid. Rest breaks of 20 minutes or less must be paid and count as working time. Enter only unpaid breaks in the Break Time field.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How do I calculate weekly hours from daily entries?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Run this calculator for each day of the week and sum the daily net hours. For overtime purposes, total all hours in the 7-day workweek — not a calendar week unless your workweek starts on Sunday. Your workweek start day is a fixed, recurring 7-day period defined by your business.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How do I bill a client for partial hours?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Common approaches are billing in 15-minute increments (round to nearest quarter hour), 6-minute increments (1/10 of an hour, common in legal and consulting), or exact decimal hours. Be consistent, document your billing policy in your contract, and state it clearly on every invoice to avoid disputes.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What's the difference between hours worked and hours paid?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Hours worked are all compensable hours an employee is required to be on duty or at the employer's premises. Hours paid may include paid time off (vacation, sick leave, holidays) that employees receive but don't physically work. For overtime calculations, only actual hours worked count — not PTO or holiday pay, unless your company policy states otherwise.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  /* ── Helpers ── */
+  function parseTime(str) {
+    if (!str) return null;
+    const [h, m] = str.split(':').map(Number);
+    return h * 60 + m;
+  }
+  function fmtHours(decHours) {
+    const h = Math.floor(decHours);
+    const m = Math.round((decHours - h) * 60);
+    if (m === 0) return h + ' hr' + (h !== 1 ? 's' : '');
+    return h + ' hr ' + m + ' min';
+  }
+  function fmtHoursDec(decHours) {
+    return decHours.toFixed(2) + ' hrs';
+  }
+  function fmtMoney(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function to12hr(mins) {
+    let h = Math.floor(mins / 60) % 24;
+    const m = mins % 60;
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    return h + ':' + String(m).padStart(2, '0') + ' ' + ampm;
+  }
+
+  function calculate() {
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+
+    const startVal = document.getElementById('startTime').value;
+    const endVal   = document.getElementById('endTime').value;
+
+    if (!startVal || !endVal) {
+      document.getElementById('errorText').textContent = 'Please select both a start time and an end time.';
+      errMsg.classList.add('visible');
+      return;
+    }
+
+    const startMins = parseTime(startVal);
+    let   endMins   = parseTime(endVal);
+    const breakMins = parseFloat(document.getElementById('breakMins').value) || 0;
+    const rate      = parseFloat(document.getElementById('hourlyRate').value) || 0;
+
+    /* Handle overnight */
+    if (endMins <= startMins) endMins += 24 * 60;
+
+    const totalMins = endMins - startMins;
+    const netMins   = Math.max(0, totalMins - breakMins);
+    const netHours  = netMins / 60;
+    const totalHours = totalMins / 60;
+    const earnings  = rate > 0 ? netHours * rate : 0;
+    const isLong    = netHours > 10;
+    const isOver8   = netHours > 8 && netHours <= 10;
+
+    /* Hero */
+    const hero = document.getElementById('heroCard');
+    hero.className = 'result-hero ' + (isLong ? 'warn' : '');
+    const heroVal = document.getElementById('val-nethours');
+    heroVal.textContent = fmtHours(netHours);
+    heroVal.className = 'rh-value pop';
+    document.getElementById('sub-nethours').textContent = fmtHoursDec(netHours) + ' · ' + to12hr(startMins) + ' – ' + to12hr(endMins % (24*60));
+    heroVal.addEventListener('animationend', () => heroVal.classList.remove('pop'), { once: true });
+
+    /* Earnings */
+    const ec = document.getElementById('earningsCard');
+    if (rate > 0) {
+      ec.classList.remove('hidden');
+      const ev = document.getElementById('val-earnings');
+      ev.textContent = fmtMoney(earnings);
+      ev.className = 'r-value pop';
+      document.getElementById('sub-earnings').textContent = fmtHoursDec(netHours) + ' × $' + rate + '/hr';
+      ev.addEventListener('animationend', () => ev.classList.remove('pop'), { once: true });
+    } else {
+      ec.classList.add('hidden');
+    }
+
+    /* KPI */
+    renderCard('val-totalhours', 'card-totalhours', fmtHours(totalHours), 'pos', 'highlight', 'gross time');
+    renderCard('val-break',      'card-break',      breakMins + ' min',  breakMins > 0 ? 'warn' : '', breakMins > 0 ? 'highlight-warn' : '', 'deducted');
+    renderCard('val-rate',       'card-rate',       rate > 0 ? '$' + rate + '/hr' : 'Not set', rate > 0 ? 'blue' : '', rate > 0 ? 'highlight-blue' : '', rate > 0 ? 'per hour' : 'optional');
+
+    /* Timeline */
+    buildTimeline(startMins, endMins, totalMins, breakMins);
+
+    /* Insights */
+    buildInsights(netHours, isLong, isOver8);
+
+    document.getElementById('copyBtn').style.display = 'inline-block';
+    window._last = { startMins, endMins, breakMins, totalMins, netMins, netHours, totalHours, earnings, rate };
+  }
+
+  function renderCard(valId, cardId, text, cls, cardCls, subText) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    card.className = 'result-card ' + cardCls;
+    if (subText) { const sub = card.querySelector('.r-sub'); if (sub) sub.textContent = subText; }
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function buildTimeline(startMins, endMins, totalMins, breakMins) {
+    const band = document.getElementById('timelineBand');
+    band.classList.add('visible');
+    document.getElementById('tl-start').textContent = to12hr(startMins % (24*60));
+    document.getElementById('tl-end').textContent   = to12hr(endMins   % (24*60));
+
+    const workPct  = breakMins > 0 ? ((totalMins - breakMins) / totalMins * 100) : 100;
+    const breakPct = breakMins > 0 ? (breakMins / totalMins * 100) : 0;
+
+    const barEl = document.getElementById('tlBar');
+    barEl.innerHTML = `
+      <div class="tl-work"  style="width:0%" id="tlWork"><span class="tl-label">Working</span></div>
+      <div class="tl-break" style="width:0%" id="tlBreak">${breakPct > 5 ? '<span class="tl-label">Break</span>' : ''}</div>`;
+
+    document.getElementById('leg-break').style.display = breakMins > 0 ? 'flex' : 'none';
+
+    setTimeout(() => {
+      document.getElementById('tlWork').style.width  = workPct + '%';
+      document.getElementById('tlBreak').style.width = breakPct + '%';
+    }, 60);
+  }
+
+  function buildInsights(netHours, isLong, isOver8) {
+    const area = document.getElementById('insightArea');
+    area.innerHTML = '';
+    const add = (type, msg) => {
+      const d = document.createElement('div');
+      d.className = 'insight-banner ' + type;
+      d.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg> ${msg}`;
+      area.appendChild(d);
+    };
+    if (isLong)      add('danger', `${fmtHours(netHours)} is a long workday. Hours over 12 may require double-time pay in some states (e.g. California). Monitor for overtime compliance.`);
+    else if (isOver8) add('warn',  `${fmtHours(netHours)} exceeds the standard 8-hour day. If weekly total exceeds 40 hours, overtime pay applies under federal FLSA.`);
+    else             add('info',   `${fmtHours(netHours)} net working time logged. Standard 8-hour day — no overtime concern for this shift alone.`);
+  }
+
+  function copySummary() {
+    const r = window._last;
+    if (!r) return;
+    const text =
+      `Time Summary\n` +
+      `────────────\n` +
+      `Start Time:      ${to12hr(r.startMins % (24*60))}\n` +
+      `End Time:        ${to12hr(r.endMins   % (24*60))}\n` +
+      `Total Time:      ${fmtHours(r.totalHours)}\n` +
+      `Break Deduction: ${r.breakMins} minutes\n` +
+      `Net Hours:       ${fmtHours(r.netHours)} (${r.netHours.toFixed(2)} hrs)\n` +
+      (r.rate > 0 ? `Hourly Rate:     $${r.rate}/hr\nEstimated Earnings: ${fmtMoney(r.earnings)}\n` : '') +
+      `Generated by Small Business Profit Toolkit`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Time Summary'; }, 2000);
+    });
+  }
+
+  function resetCalc() {
+    document.getElementById('startTime').value   = '';
+    document.getElementById('endTime').value     = '';
+    document.getElementById('breakMins').value   = '';
+    document.getElementById('hourlyRate').value  = '';
+    document.getElementById('errorMsg').classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+    document.getElementById('copyBtn').style.display = 'none';
+    document.getElementById('timelineBand').classList.remove('visible');
+    document.getElementById('earningsCard').classList.add('hidden');
+
+    document.getElementById('heroCard').className  = 'result-hero';
+    const heroVal = document.getElementById('val-nethours');
+    heroVal.textContent = '—'; heroVal.className = 'rh-value placeholder';
+    document.getElementById('sub-nethours').textContent = 'after break deduction';
+    ['val-totalhours','val-break','val-rate'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—'; el.className = 'r-value placeholder';
+    });
+    ['card-totalhours','card-break','card-rate'].forEach(id => { document.getElementById(id).className = 'result-card'; });
+  }
+
+  function toggleFaq(btn) { btn.closest('.faq-item').classList.toggle('open'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>

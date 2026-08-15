@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Terms & Conditions | Small Business Profit Toolkit</title>
+<meta name="description" content="Terms and Conditions for Small Business Profit Toolkit, the free suite of profit, pricing, and margin calculators for small business owners." />
+<meta name="robots" content="index, follow" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Small Business Profit Toolkit" />
+<meta property="og:title" content="Terms & Conditions | Small Business Profit Toolkit" />
+<meta property="og:description" content="Terms governing the use of Small Business Profit Toolkit's free business calculators." />
+<meta property="og:url" content="https://smallbusinessprofittoolkit.com/terms.html" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #F7F5F0;
+    --surface:     #FFFFFF;
+    --surface-alt: #F0EDE6;
+    --border:      #DDD9D0;
+    --border-dark: #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:      #1A5C3A;
+    --accent-light:#E8F3ED;
+    --accent-text: #0F3D26;
+    --danger:      #9B2828;
+    --danger-light:#FBEAEA;
+    --warning:     #7A4A10;
+    --warning-light:#FDF3E7;
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   16px;
+    --shadow-sm:   0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md:   0 4px 16px rgba(0,0,0,0.09);
+    --font-display:'DM Serif Display', Georgia, serif;
+    --font-body:   'DM Sans', system-ui, sans-serif;
+    --transition:  0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+  }
+  .header-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    min-height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 0;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  /* ── Main Layout ── */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  /* ── Page Title (hero) ── */
+  .page-title {
+    margin-bottom: 1.75rem;
+    animation: fadeUp 0.4s ease both;
+  }
+  .updated-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    letter-spacing: 0.02em;
+  }
+  .page-title h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 5vw, 36px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .page-title p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+
+  /* ── TOC Card ── */
+  .toc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.4s 0.05s ease both;
+  }
+  .toc-card h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 16px;
+  }
+  @media (max-width: 560px) { .toc-grid { grid-template-columns: 1fr; } }
+  .toc-grid a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent-text);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    padding: 0 8px;
+    transition: background var(--transition);
+  }
+  .toc-grid a:hover { background: var(--accent-light); }
+  .toc-grid a::before {
+    content: '→';
+    margin-right: 8px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  /* ── Legal Content Sections ── */
+  .legal-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    margin-bottom: 1rem;
+    scroll-margin-top: 16px;
+    animation: fadeUp 0.4s 0.08s ease both;
+  }
+  .legal-section h2 {
+    font-family: var(--font-display);
+    font-size: 21px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .legal-section .sec-num {
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--surface-alt);
+    border-radius: 6px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+  }
+  .legal-section p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 10px;
+  }
+  .legal-section p:last-child { margin-bottom: 0; }
+  .legal-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 4px;
+  }
+  .legal-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .legal-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+  .legal-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Disclaimer callout (reuses warning tokens from design system) */
+  .callout {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: 13px;
+    color: var(--warning);
+    background: var(--warning-light);
+    border: 1px solid #F0DCB8;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  .callout svg { flex-shrink: 0; margin-top: 1px; }
+
+  /* Contact card variant */
+  .contact-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    text-decoration: none;
+    padding: 0 18px;
+    border-radius: var(--radius-md);
+    margin-top: 6px;
+    transition: background var(--transition);
+  }
+  .contact-link:hover { background: var(--accent-text); }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 4px;
+    margin-bottom: 12px;
+  }
+  .footer-nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition), color var(--transition);
+  }
+  .footer-nav a:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .footer-divider {
+    color: var(--border-dark);
+    display: inline-flex;
+    align-items: center;
+  }
+  .site-footer p {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* ── Mobile tightening ── */
+  @media (max-width: 640px) {
+    .legal-section { padding: 1.25rem; }
+    .toc-card { padding: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Page Title -->
+  <div class="page-title">
+    <span class="updated-badge">Last updated: June 2026</span>
+    <h1>Terms &amp; Conditions</h1>
+    <p>Terms governing the use of Small Business Profit Toolkit. Please read these terms carefully before using our calculators and resources.</p>
+  </div>
+
+  <!-- Table of Contents -->
+  <nav class="toc-card" aria-label="Table of contents">
+    <h2>On This Page</h2>
+    <div class="toc-grid">
+      <a href="#acceptance">Acceptance of Terms</a>
+      <a href="#purpose">Website Purpose</a>
+      <a href="#disclaimer">Calculator Disclaimer</a>
+      <a href="#no-advice">No Professional Advice</a>
+      <a href="#ip">Intellectual Property</a>
+      <a href="#third-party">Third-Party Links</a>
+      <a href="#liability">Limitation of Liability</a>
+      <a href="#changes">Changes to Terms</a>
+      <a href="#contact">Contact Information</a>
+    </div>
+  </nav>
+
+  <!-- 1. Acceptance of Terms -->
+  <section class="legal-section" id="acceptance">
+    <h2><span class="sec-num">01</span> Acceptance of Terms</h2>
+    <p>By accessing or using the Small Business Profit Toolkit website ("the Site," "we," "us," or "our"), you agree to be bound by these Terms &amp; Conditions ("Terms"). If you do not agree with any part of these Terms, please discontinue use of the Site.</p>
+    <ul class="legal-list">
+      <li><strong>Use constitutes acceptance.</strong> Simply browsing or using any calculator on the Site means you accept these Terms in full.</li>
+      <li><strong>Compliance with law.</strong> You agree to use the Site only in ways that comply with all applicable local, state, national, and international laws and regulations.</li>
+    </ul>
+  </section>
+
+  <!-- 2. Website Purpose -->
+  <section class="legal-section" id="purpose">
+    <h2><span class="sec-num">02</span> Website Purpose</h2>
+    <p>Small Business Profit Toolkit provides free, educational, and informational calculators and resources designed to help small business owners think through pricing, profit, and related business math.</p>
+    <ul class="legal-list">
+      <li><strong>Educational intent.</strong> Every tool on this Site exists to help you understand business concepts like margin, markup, and pricing — not to replace your own judgment.</li>
+      <li><strong>General guidance only.</strong> Content is written for a broad audience and may not reflect the specific circumstances of your business, industry, or location.</li>
+      <li><strong>Not professional advice.</strong> Nothing on this Site should be treated as a substitute for individualized advice from a qualified professional.</li>
+    </ul>
+  </section>
+
+  <!-- 3. Calculator Disclaimer -->
+  <section class="legal-section" id="disclaimer">
+    <h2><span class="sec-num">03</span> Calculator Disclaimer</h2>
+    <p>Our calculators perform mathematical computations based solely on the figures you enter. They are provided for convenience and general planning purposes only.</p>
+    <ul class="legal-list">
+      <li><strong>Estimates only.</strong> All results — including profit, margin, markup, and any other figures — are estimates and may not reflect your actual financial outcome.</li>
+      <li><strong>No guarantee of accuracy.</strong> While we aim for mathematically correct calculations, we make no warranty, express or implied, regarding the accuracy, completeness, or reliability of any result.</li>
+      <li><strong>You are responsible for your decisions.</strong> Any business, pricing, or financial decision you make based on a calculator result is made at your own discretion and risk.</li>
+    </ul>
+    <div class="callout">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="7" stroke="#7A4A10" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="#7A4A10"/>
+      </svg>
+      <span>Always double-check important figures independently, or with a qualified professional, before relying on them for real business decisions.</span>
+    </div>
+  </section>
+
+  <!-- 4. No Professional Advice -->
+  <section class="legal-section" id="no-advice">
+    <h2><span class="sec-num">04</span> No Professional Advice</h2>
+    <p>The content and tools on this Site are not, and should not be construed as:</p>
+    <ul class="legal-list">
+      <li><strong>Accounting advice.</strong> We are not accountants, and our tools do not replace a bookkeeper or CPA.</li>
+      <li><strong>Legal advice.</strong> Nothing on this Site should be relied upon for legal matters affecting your business.</li>
+      <li><strong>Tax advice.</strong> Tax rules vary by jurisdiction and change frequently; consult a licensed tax professional.</li>
+      <li><strong>Financial advice.</strong> We do not provide investment, lending, or financial planning recommendations.</li>
+    </ul>
+    <p>We strongly encourage you to consult a qualified accountant, attorney, tax advisor, or financial professional regarding your specific situation before making any business decision.</p>
+  </section>
+
+  <!-- 5. Intellectual Property -->
+  <section class="legal-section" id="ip">
+    <h2><span class="sec-num">05</span> Intellectual Property</h2>
+    <p>Unless otherwise noted, all content on this Site — including text, design elements, graphics, layouts, calculator logic, source code, and branding — is the property of Small Business Profit Toolkit or its licensors, and is protected by applicable copyright and trademark laws.</p>
+    <ul class="legal-list">
+      <li><strong>Personal use only.</strong> You may view and use the Site for your own personal or internal business purposes.</li>
+      <li><strong>No reproduction without permission.</strong> You may not copy, reproduce, republish, distribute, or create derivative works from any part of the Site for commercial purposes without our prior written consent.</li>
+      <li><strong>Brand protection.</strong> The Small Business Profit Toolkit name, logo, and associated branding may not be used without authorization.</li>
+    </ul>
+  </section>
+
+  <!-- 6. Third-Party Links -->
+  <section class="legal-section" id="third-party">
+    <h2><span class="sec-num">06</span> Third-Party Links</h2>
+    <p>The Site may contain links to third-party websites or resources provided for your convenience.</p>
+    <ul class="legal-list">
+      <li><strong>No endorsement.</strong> Links do not imply our endorsement of the linked site, its operator, or its content.</li>
+      <li><strong>No responsibility.</strong> We have no control over, and accept no responsibility for, the content, accuracy, security, or practices of any third-party website.</li>
+      <li><strong>Your own risk.</strong> Visiting any external link is done at your own discretion and risk; we recommend reviewing the terms and privacy policy of any third-party site you visit.</li>
+    </ul>
+  </section>
+
+  <!-- 7. Limitation of Liability -->
+  <section class="legal-section" id="liability">
+    <h2><span class="sec-num">07</span> Limitation of Liability</h2>
+    <p>To the fullest extent permitted by applicable law, Small Business Profit Toolkit, its owners, and operators shall not be liable for any direct, indirect, incidental, consequential, or special damages or losses arising from your use of, or inability to use, the Site.</p>
+    <ul class="legal-list">
+      <li><strong>No liability for losses.</strong> This includes, without limitation, lost profits, lost revenue, or lost business opportunities.</li>
+      <li><strong>No liability for business decisions.</strong> We are not responsible for any decision you make based on information or calculator results obtained from this Site.</li>
+      <li><strong>"As is" basis.</strong> The Site and all tools are provided "as is" and "as available," without warranties of any kind, either express or implied. Use of the Site is entirely at your own risk.</li>
+    </ul>
+  </section>
+
+  <!-- 8. Changes to Terms -->
+  <section class="legal-section" id="changes">
+    <h2><span class="sec-num">08</span> Changes to Terms</h2>
+    <p>We may update or revise these Terms from time to time at our sole discretion, for example to reflect changes in the law or to our tools.</p>
+    <ul class="legal-list">
+      <li><strong>Effective upon posting.</strong> Any updated Terms take effect as soon as they are posted to this page.</li>
+      <li><strong>Your responsibility to check.</strong> We encourage you to review this page periodically to stay informed of any changes.</li>
+      <li><strong>Continued use means acceptance.</strong> Continuing to use the Site after changes are posted constitutes your acceptance of the revised Terms.</li>
+    </ul>
+  </section>
+
+  <!-- 9. Contact Information -->
+  <section class="legal-section" id="contact">
+    <h2><span class="sec-num">09</span> Contact Information</h2>
+    <p>If you have any questions about these Terms &amp; Conditions, please get in touch through our Contact page and we'll be happy to help.</p>
+    <a href="contact.html" class="contact-link">Visit Contact Page →</a>
+  </section>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <nav class="footer-nav" aria-label="Footer navigation">
+    <a href="index.html">Home</a>
+    <span class="footer-divider">·</span>
+    <a href="about.html">About</a>
+    <span class="footer-divider">·</span>
+    <a href="contact.html">Contact</a>
+    <span class="footer-divider">·</span>
+    <a href="privacy.html">Privacy Policy</a>
+  </nav>
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Overtime Cost Estimator | Small Business Profit Toolkit</title>
+<meta name="description" content="Estimate overtime wages, payroll costs, and labor expenses with this free overtime cost calculator." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --blue:           #185FA5;
+    --blue-light:     #E8F0FA;
+    --profit-pos:     #1A5C3A;
+    --profit-neg:     #9B2828;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:  'DM Serif Display', Georgia, serif;
+    --font-body:     'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1rem; }
+  .header-inner { max-width: 780px; margin: 0 auto; height: 58px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); text-decoration: none; letter-spacing: -0.01em; }
+  .logo span { color: var(--accent); }
+  .header-tag { font-size: 12px; font-weight: 500; color: var(--accent-text); background: var(--accent-light); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  /* Main */
+  main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
+
+  /* Page title */
+  .page-title { margin-bottom: 2rem; animation: fadeUp 0.4s ease both; }
+  .page-title h1 { font-family: var(--font-display); font-size: clamp(26px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+  .page-title p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* Calc card */
+  .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); animation: fadeUp 0.4s 0.08s ease both; margin-bottom: 2rem; }
+  @media (max-width: 640px) { .calc-card { padding: 1.25rem; } }
+
+  .section-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Input grid */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .field .field-hint { font-size: 11px; color: var(--text-muted); margin-top: -3px; }
+
+  /* Tooltip */
+  .tip { position: relative; display: inline-flex; align-items: center; cursor: default; }
+  .tip-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--border-dark); color: var(--text-secondary); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tip-box { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--text-primary); color: #fff; font-size: 11px; line-height: 1.5; padding: 7px 10px; border-radius: var(--radius-sm); width: 220px; z-index: 10; pointer-events: none; }
+  .tip:hover .tip-box { display: block; }
+
+  /* Inputs */
+  .input-wrap { position: relative; }
+  .input-wrap .prefix { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 500; color: var(--text-muted); pointer-events: none; }
+  .input-wrap input {
+    width: 100%; padding: 11px 14px 11px 30px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; -moz-appearance: textfield;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    min-height: 44px;
+  }
+  .input-wrap input.no-prefix { padding-left: 14px; }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* Select */
+  .field select {
+    width: 100%; padding: 11px 36px 11px 14px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239E9990' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+    transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
+    min-height: 44px;
+  }
+  .field select:focus { border-color: var(--accent); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* Error */
+  .error-msg { display: none; align-items: center; gap: 8px; font-size: 13px; color: var(--danger); background: var(--danger-light); border: 1px solid #F0C8C8; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 1.25rem; }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* Insights */
+  .insight-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .insight-banner { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid; animation: fadeUp 0.3s ease both; line-height: 1.5; }
+  .insight-banner svg { flex-shrink: 0; margin-top: 1px; }
+  .insight-banner.info   { color: var(--accent-text); background: var(--accent-light); border-color: #B8D9C5; }
+  .insight-banner.warn   { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .insight-banner.danger { color: var(--danger);  background: var(--danger-light);  border-color: #F0C8C8; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .btn { font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 11px 24px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid transparent; transition: all var(--transition); letter-spacing: 0.01em; min-height: 44px; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); flex: 1; }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset { background: transparent; color: var(--text-secondary); border-color: var(--border-dark); }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy { font-family: var(--font-body); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid #B8D9C5; background: var(--accent-light); color: var(--accent-text); transition: all var(--transition); display: none; min-height: 44px; }
+  .btn-copy:hover { background: #d4ecde; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* Results */
+  .results-section h2 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Dual primary */
+  .result-primary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 480px) { .result-primary-row { grid-template-columns: 1fr; } }
+
+  .result-primary { border-radius: var(--radius-md); padding: 1.5rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-primary.total-card { background: var(--danger-light); border: 1px solid #F0C8C8; }
+  .result-primary.ot-card    { background: var(--warning-light); border: 1px solid #F0D8A8; }
+  .result-primary .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .total-card .r-label { color: var(--danger); }
+  .ot-card    .r-label { color: var(--warning); }
+  .result-primary .r-value { font-family: var(--font-display); font-size: 38px; line-height: 1; }
+  .total-card .r-value { color: var(--profit-neg); }
+  .ot-card    .r-value { color: var(--warning); }
+  .result-primary .r-sub { font-size: 11px; margin-top: 5px; opacity: 0.85; }
+  .total-card .r-sub { color: var(--danger); }
+  .ot-card    .r-sub { color: var(--warning); }
+
+  /* KPI grid */
+  .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 560px) { .results-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 380px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-card.highlight      { background: var(--accent-light); border-color: #B8D9C5; }
+  .result-card.highlight-blue { background: var(--blue-light);   border-color: #BDD4EE; }
+  .result-card.highlight-warn { background: var(--warning-light); border-color: #F0D8A8; }
+  .result-card.highlight-neg  { background: var(--danger-light);  border-color: #F0C8C8; }
+  .result-card .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .result-card .r-value { font-family: var(--font-display); font-size: 22px; color: var(--text-primary); line-height: 1; }
+  .result-card .r-value.pos  { color: var(--profit-pos); }
+  .result-card .r-value.neg  { color: var(--profit-neg); }
+  .result-card .r-value.warn { color: var(--warning); }
+  .result-card .r-value.blue { color: var(--blue); }
+  .result-card .r-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 20px; }
+  .result-primary .r-value.placeholder { font-size: 26px; }
+
+  /* Payroll breakdown band */
+  .breakdown-band { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 12px; display: none; }
+  .breakdown-band.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .breakdown-band h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 10px; }
+  .bd-rows { display: flex; flex-direction: column; gap: 0; }
+  .bd-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-secondary); gap: 10px; }
+  .bd-row:last-child { border-bottom: none; }
+  .bd-label { flex: 1; }
+  .bd-bar-wrap { flex: 2; height: 6px; background: var(--border); border-radius: 6px; overflow: hidden; }
+  .bd-bar { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+  .bd-val  { font-weight: 600; color: var(--text-primary); min-width: 70px; text-align: right; }
+  .bd-row.reg-row  .bd-bar { background: var(--accent); }
+  .bd-row.ot-row   .bd-bar { background: var(--warning); }
+  .bd-row.prem-row .bd-bar { background: var(--danger); }
+  .bd-row.total-row { border-top: 2px solid var(--border-dark); padding-top: 10px; margin-top: 4px; font-weight: 700; font-size: 14px; }
+  .bd-row.total-row .bd-val { color: var(--profit-neg); font-size: 15px; }
+
+  /* Cost legend */
+  .cost-legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  /* Guide */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section > h2, .faq-section > h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--text-primary); margin-bottom: 1.25rem; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .guide-card .g-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.amber { background: #FDF3E7; }
+  .g-icon.red   { background: var(--danger-light); }
+  .guide-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .guide-card p  { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .guide-card .formula { margin-top: 10px; padding: 8px 12px; background: var(--surface-alt); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--text-secondary); font-family: 'Courier New', monospace; border-left: 3px solid var(--border-dark); }
+
+  .guide-card-wide { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .guide-card-wide h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .why-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Examples */
+  .examples-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .examples-grid { grid-template-columns: 1fr; } }
+  .example-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .example-card .e-role { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-text); background: var(--accent-light); display: inline-block; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+  .example-card h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .example-card .e-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.65; }
+  .example-card .e-price { margin-top: 10px; font-family: var(--font-display); font-size: 20px; color: var(--profit-neg); }
+
+  /* FAQ */
+  .faq-section { margin-top: 2.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .faq-q { width: 100%; text-align: left; padding: 1rem 1.25rem; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background var(--transition); min-height: 44px; }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s ease; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0.75rem 1.25rem 1rem; font-size: 13px; color: var(--text-secondary); line-height: 1.65; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-a { display: block; }
+
+  /* Footer */
+  .site-footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--surface); }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+  @keyframes popIn { 0% { transform: scale(0.94); opacity: 0.6; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>Overtime Cost Estimator</h1>
+    <p>Enter the hourly wage, regular hours, and overtime hours to instantly see total payroll cost, overtime premium, and the true extra expense overtime adds to your business.</p>
+  </div>
+
+  <div class="calc-card">
+
+    <!-- Inputs -->
+    <div class="input-section">
+      <h2 class="section-label">Employee &amp; Hours Details</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="hourlyWage">
+            Employee Hourly Wage
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">The employee's regular base pay per hour before any overtime multiplier is applied.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="hourlyWage" placeholder="20.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="regularHours">
+            Regular Hours Worked
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Standard hours worked in the pay period before overtime kicks in. Typically 40 hours per week under US federal law (FLSA).</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="regularHours" class="no-prefix" placeholder="40" min="0" step="0.5" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="overtimeHours">
+            Overtime Hours Worked
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Hours worked beyond the regular threshold that qualify for overtime pay under FLSA or your state's laws.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="overtimeHours" class="no-prefix" placeholder="10" min="0" step="0.5" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="otMultiplier">
+            Overtime Rate Multiplier
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">1.5× (time-and-a-half) is the US federal standard for most employees. 2× (double-time) is required in some states like California for hours over 12/day.</span>
+            </span>
+          </label>
+          <select id="otMultiplier">
+            <option value="1.5" selected>1.5× — Time and a Half (standard)</option>
+            <option value="2.0">2.0× — Double Time</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-area" id="insightArea"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate Overtime Cost</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Payroll Cost Breakdown</h2>
+
+      <!-- Dual primary -->
+      <div class="result-primary-row">
+        <div class="result-primary total-card" id="card-total">
+          <div class="r-label">Total Payroll Cost</div>
+          <div class="r-value placeholder" id="val-total">—</div>
+          <div class="r-sub" id="sub-total">regular + overtime</div>
+        </div>
+        <div class="result-primary ot-card" id="card-otpay">
+          <div class="r-label">Overtime Pay</div>
+          <div class="r-value placeholder" id="val-otpay">—</div>
+          <div class="r-sub" id="sub-otpay">overtime hours × OT rate</div>
+        </div>
+      </div>
+
+      <!-- KPI grid -->
+      <div class="results-grid">
+        <div class="result-card" id="card-addlcost">
+          <div class="r-label">Additional OT Cost</div>
+          <div class="r-value placeholder" id="val-addlcost">—</div>
+          <div class="r-sub">overtime premium only</div>
+        </div>
+        <div class="result-card" id="card-regpay">
+          <div class="r-label">Regular Pay</div>
+          <div class="r-value placeholder" id="val-regpay">—</div>
+          <div class="r-sub" id="sub-regpay">standard hours</div>
+        </div>
+        <div class="result-card" id="card-otrate">
+          <div class="r-label">OT Hourly Rate</div>
+          <div class="r-value placeholder" id="val-otrate">—</div>
+          <div class="r-sub" id="sub-otrate">per overtime hour</div>
+        </div>
+      </div>
+
+      <!-- Breakdown band -->
+      <div class="breakdown-band" id="breakdownBand">
+        <h3>Pay Breakdown</h3>
+        <div class="bd-rows" id="bdRows"></div>
+        <div class="cost-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div> Regular Pay</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--warning)"></div> Base OT Cost</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--danger)"></div> OT Premium</div>
+        </div>
+      </div>
+
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn" onclick="copySummary()">Copy OT Summary</button>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Guide -->
+  <div class="guide-section">
+    <h2>Understanding Overtime Costs</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>How Overtime Is Calculated</h3>
+        <p>Under the US Fair Labor Standards Act (FLSA), eligible employees must receive at least 1.5× their regular rate for all hours over 40 in a workweek. Some states require overtime for daily hours over 8 as well.</p>
+        <div class="formula">OT Pay = OT Hours × (Wage × 1.5)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon red">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 6v5M10 14v.5" stroke="#9B2828" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M3.5 16.5l6.5-11 6.5 11H3.5z" stroke="#9B2828" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>The True Cost of Overtime</h3>
+        <p>Overtime doesn't just cost 50% more per hour — it also inflates payroll taxes (FICA) proportionally. An employee earning $20/hr costs $30/hr in overtime wages alone, before employer taxes on top of that.</p>
+        <div class="formula">Total OT Cost = OT Pay + FICA on OT Pay</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon amber">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="#7A4A10" stroke-width="1.5"/>
+            <path d="M10 6v4l3 2" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>When Is Double-Time Required?</h3>
+        <p>California requires double-time (2×) for hours over 12 in a single workday and for all hours on the 7th consecutive workday. Some union contracts and industries also mandate double-time. Always check your state's specific rules.</p>
+        <div class="formula">Double-Time = Wage × 2.0</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 14l4-4 3 3 5-6" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>The Overtime Premium Explained</h3>
+        <p>The "additional overtime cost" is the premium you pay above what you'd pay if those same hours were at regular rates. It's the true extra expense — the cost of working those hours in overtime rather than regular time.</p>
+        <div class="formula">Premium = OT Hours × Wage × (Multiplier − 1)</div>
+      </div>
+
+    </div>
+
+    <!-- Examples -->
+    <h2 style="margin-top:2.5rem; margin-bottom:1.25rem;">Business Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="e-role">Retail</span>
+        <h4>Store Associate — Holiday Season</h4>
+        <div class="e-detail">$15/hr · 40 regular hrs · 15 overtime hrs · 1.5× multiplier</div>
+        <div class="e-price">Total cost: $937.50</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Restaurant</span>
+        <h4>Line Cook — Busy Weekend</h4>
+        <div class="e-detail">$18/hr · 40 regular hrs · 8 overtime hrs · 1.5× multiplier</div>
+        <div class="e-price">Total cost: $936.00</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Construction</span>
+        <h4>Skilled Tradesperson</h4>
+        <div class="e-detail">$35/hr · 40 regular hrs · 12 overtime hrs · 1.5× multiplier</div>
+        <div class="e-price">Total cost: $2,030.00</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">California</span>
+        <h4>Warehouse Worker — Long Shift</h4>
+        <div class="e-detail">$22/hr · 40 regular hrs · 5 overtime hrs · 2.0× (double-time)</div>
+        <div class="e-price">Total cost: $1,100.00</div>
+      </div>
+    </div>
+
+    <!-- Cost tips -->
+    <div class="guide-card-wide">
+      <h3>How to manage overtime costs without burning out your team</h3>
+      <ul class="why-list">
+        <li><strong>Track overtime weekly, not monthly.</strong> FLSA overtime is calculated per workweek. By the time you see high monthly overtime, the cost is already locked in. Weekly tracking lets you intervene before it escalates.</li>
+        <li><strong>Compare hiring vs overtime cost.</strong> When overtime becomes chronic, a part-time hire or contractor may be cheaper than ongoing premium wages. Run the numbers — the breakeven point is often lower than managers expect.</li>
+        <li><strong>Stagger shifts to avoid the 40-hour threshold.</strong> Scheduling 4 × 10-hour shifts instead of 5 × 8-hour shifts gives employees more flexibility while keeping all hours within the regular rate. Consult your state's daily overtime rules first.</li>
+        <li><strong>Exempt vs non-exempt matters a lot.</strong> Salaried employees classified as exempt from FLSA overtime are not entitled to overtime pay regardless of hours worked — but misclassification carries significant legal and financial risk. Always verify classification with an employment attorney.</li>
+        <li><strong>Factor FICA into overtime planning.</strong> Employer payroll taxes (7.65%) apply to all wages including overtime. A $300 overtime bill actually costs closer to $323 when you include employer FICA. This calculator shows the wage cost — add 7.65% for the complete picture.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Who is entitled to overtime pay under US law?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Under the FLSA, most hourly (non-exempt) employees are entitled to overtime at 1.5× their regular rate for hours over 40 per workweek. Salaried employees earning below the FLSA threshold ($684/week as of 2024) are also typically entitled to overtime. Exempt employees — certain executive, administrative, professional, and outside sales roles above the salary threshold — are not. State laws may add additional protections.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is overtime calculated daily or weekly?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Under federal FLSA, overtime is calculated on a weekly basis — hours over 40 in a single 7-day workweek. However, several states (including California, Nevada, and Alaska) also require daily overtime for hours over 8 in a single workday. Always apply whichever calculation results in greater pay for the employee.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Can I offer comp time instead of overtime pay?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Private sector employers generally cannot substitute comp time for overtime pay under FLSA — you must pay the cash premium. Government and public sector employers have more flexibility to offer comp time. Some states have their own rules. Offering comp time in lieu of overtime wages to private sector non-exempt employees is a common and costly compliance mistake.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          At what point is it cheaper to hire than pay overtime?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">A rough rule: if overtime consistently exceeds 8–10 hours per employee per week for 3+ months, compare the annualised overtime cost against the loaded cost of a part-time hire (including payroll taxes and benefits). Part-time employees often become cheaper once overtime hours are above 10–15 hours per week — especially for roles where the overtime hours are predictable and recurring.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Does this calculator include payroll taxes on overtime?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">No — this calculator shows the gross wage cost only. Employers also pay FICA (7.65%) on all wages including overtime. To estimate total employer cost, multiply the total payroll figure by 1.0765. For full accuracy, also factor in state unemployment taxes (SUTA) and workers' compensation premiums.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtRate(n) {
+    return '$' + n.toFixed(2) + '/hr';
+  }
+
+  function calculate() {
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+
+    const wageVal   = document.getElementById('hourlyWage').value.trim();
+    const regVal    = document.getElementById('regularHours').value.trim();
+    const otVal     = document.getElementById('overtimeHours').value.trim();
+    const multiplier = parseFloat(document.getElementById('otMultiplier').value);
+
+    if (!wageVal || !regVal || !otVal) {
+      document.getElementById('errorText').textContent = 'Please fill in the hourly wage, regular hours, and overtime hours.';
+      errMsg.classList.add('visible');
+      return;
+    }
+
+    const wage    = parseFloat(wageVal);
+    const regHrs  = parseFloat(regVal);
+    const otHrs   = parseFloat(otVal);
+
+    if (wage <= 0)   { document.getElementById('errorText').textContent = 'Hourly wage must be greater than zero.'; errMsg.classList.add('visible'); return; }
+    if (regHrs < 0)  { document.getElementById('errorText').textContent = 'Regular hours cannot be negative.'; errMsg.classList.add('visible'); return; }
+    if (otHrs < 0)   { document.getElementById('errorText').textContent = 'Overtime hours cannot be negative.'; errMsg.classList.add('visible'); return; }
+
+    /* Calculations */
+    const regPay    = wage * regHrs;
+    const otRate    = wage * multiplier;
+    const otPay     = otHrs * otRate;
+    const totalPay  = regPay + otPay;
+    const otPremium = otHrs * wage * (multiplier - 1); // the extra above regular rate
+
+    /* Primary cards */
+    renderPrimary('val-total',  fmt(totalPay), 'total-card');
+    renderPrimary('val-otpay',  fmt(otPay),    'ot-card');
+    document.getElementById('sub-total').textContent = regHrs + ' reg hrs + ' + otHrs + ' OT hrs';
+    document.getElementById('sub-otpay').textContent = otHrs + ' hrs × ' + fmtRate(otRate);
+
+    /* KPI */
+    renderCard('val-addlcost', 'card-addlcost', fmt(otPremium), 'neg',  'highlight-neg',  'OT premium above regular rate');
+    renderCard('val-regpay',   'card-regpay',   fmt(regPay),   'pos',  'highlight',       regHrs + ' hrs × $' + wage + '/hr');
+    renderCard('val-otrate',   'card-otrate',   fmtRate(otRate),'warn','highlight-warn',  multiplier + '× multiplier');
+
+    /* Breakdown */
+    buildBreakdown(regPay, otPay, otPremium, totalPay);
+
+    /* Insights */
+    buildInsights(otHrs, otPremium);
+
+    document.getElementById('copyBtn').style.display = 'inline-block';
+    window._last = { wage, regHrs, otHrs, multiplier, otRate, regPay, otPay, otPremium, totalPay };
+  }
+
+  function renderPrimary(valId, text, cardClass) {
+    const el = document.getElementById(valId);
+    el.textContent = text;
+    el.className = 'r-value pop';
+    el.addEventListener('animationend', () => el.classList.remove('pop'), { once: true });
+  }
+
+  function renderCard(valId, cardId, text, cls, cardCls, subText) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    card.className = 'result-card ' + cardCls;
+    if (subText) { const sub = card.querySelector('.r-sub'); if (sub) sub.textContent = subText; }
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function buildBreakdown(regPay, otPay, otPremium, total) {
+    const band = document.getElementById('breakdownBand');
+    band.classList.add('visible');
+    const otBase = otPay - otPremium;
+
+    const items = [
+      { label: 'Regular Pay',       val: regPay,    cls: 'reg-row',  pct: regPay / total * 100 },
+      { label: 'OT Base Cost',      val: otBase,    cls: 'ot-row',   pct: otBase / total * 100 },
+      { label: 'OT Premium',        val: otPremium, cls: 'prem-row', pct: otPremium / total * 100 },
+    ].filter(i => i.val > 0);
+
+    let html = items.map(item => `
+      <div class="bd-row ${item.cls}">
+        <span class="bd-label">${item.label}</span>
+        <div class="bd-bar-wrap"><div class="bd-bar" style="width:0%" data-w="${item.pct.toFixed(1)}"></div></div>
+        <span class="bd-val">${fmt(item.val)}</span>
+      </div>`).join('');
+    html += `<div class="bd-row total-row"><span class="bd-label">Total Payroll Cost</span><div class="bd-bar-wrap"></div><span class="bd-val">${fmt(total)}</span></div>`;
+    document.getElementById('bdRows').innerHTML = html;
+
+    setTimeout(() => {
+      document.querySelectorAll('.bd-bar[data-w]').forEach(b => { b.style.width = b.dataset.w + '%'; });
+    }, 60);
+  }
+
+  function buildInsights(otHrs, premium) {
+    const area = document.getElementById('insightArea');
+    area.innerHTML = '';
+    const add = (type, msg) => {
+      const d = document.createElement('div');
+      d.className = 'insight-banner ' + type;
+      d.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg> ${msg}`;
+      area.appendChild(d);
+    };
+    if (otHrs > 15)      add('danger', `${otHrs} overtime hours is high. If this is recurring, compare the cost of hiring a part-time employee vs continuing at this overtime rate.`);
+    else if (otHrs > 8)  add('warn',   `${otHrs} overtime hours adds significant premium cost. Monitor weekly to prevent chronic overtime from becoming a budget issue.`);
+    if (premium > 200)   add('warn',   `The overtime premium alone is ${fmt(premium)} — the amount you're paying above what regular-rate hours would cost. Consider scheduling adjustments.`);
+    if (otHrs === 0)     add('info',   'No overtime hours entered. Add overtime hours to see the cost impact.');
+  }
+
+  function copySummary() {
+    const r = window._last;
+    if (!r) return;
+    const text =
+      `Overtime Cost Summary\n` +
+      `─────────────────────\n` +
+      `Hourly Wage:          $${r.wage}/hr\n` +
+      `Regular Hours:        ${r.regHrs} hrs  →  ${fmt(r.regPay)}\n` +
+      `Overtime Hours:       ${r.otHrs} hrs @ $${r.otRate.toFixed(2)}/hr (${r.multiplier}×)\n` +
+      `Regular Pay:          ${fmt(r.regPay)}\n` +
+      `Overtime Pay:         ${fmt(r.otPay)}\n` +
+      `OT Premium (extra):   ${fmt(r.otPremium)}\n` +
+      `Total Payroll Cost:   ${fmt(r.totalPay)}\n` +
+      `Note: Does not include employer FICA (add 7.65% for full cost).\n` +
+      `Generated by Small Business Profit Toolkit`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy OT Summary'; }, 2000);
+    });
+  }
+
+  function resetCalc() {
+    ['hourlyWage','regularHours','overtimeHours'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('otMultiplier').value = '1.5';
+    document.getElementById('errorMsg').classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+    document.getElementById('copyBtn').style.display = 'none';
+    document.getElementById('breakdownBand').classList.remove('visible');
+
+    ['val-total','val-otpay','val-addlcost','val-regpay','val-otrate'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    document.getElementById('card-total').className   = 'result-primary total-card';
+    document.getElementById('card-otpay').className   = 'result-primary ot-card';
+    ['card-addlcost','card-regpay','card-otrate'].forEach(id => { document.getElementById(id).className = 'result-card'; });
+    document.getElementById('sub-total').textContent  = 'regular + overtime';
+    document.getElementById('sub-otpay').textContent  = 'overtime hours × OT rate';
+  }
+
+  function toggleFaq(btn) { btn.closest('.faq-item').classList.toggle('open'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>

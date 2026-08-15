@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profit Goal Revenue Calculator – Calculate Required Revenue | Small Business Profit Toolkit</title>
+<meta name="description" content="Find out how much revenue your business needs to generate to achieve your target profit goal." />
+<meta name="keywords" content="profit goal calculator, revenue goal calculator, profit target calculator, required revenue calculator, business profit calculator" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --profit-pos:     #1A5C3A;
+    --profit-neg:     #9B2828;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-sm:      0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:   'DM Serif Display', Georgia, serif;
+    --font-body:      'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+  }
+  .header-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  /* ── Main Layout ── */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  /* ── Page Title ── */
+  .page-title {
+    margin-bottom: 2rem;
+    animation: fadeUp 0.4s ease both;
+  }
+  .page-title h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 5vw, 36px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .page-title p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ── Calculator Card ── */
+  .calc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    animation: fadeUp 0.4s 0.08s ease both;
+    margin-bottom: 2rem;
+  }
+
+  /* ── Input Section ── */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .input-wrap { position: relative; }
+  .input-wrap .prefix {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-muted);
+    pointer-events: none;
+    user-select: none;
+  }
+  .input-wrap input[type="number"] {
+    width: 100%;
+    padding: 11px 14px 11px 30px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-primary);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    outline: none;
+    min-height: 44px;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    -moz-appearance: textfield;
+  }
+  .input-wrap input[type="number"]::-webkit-inner-spin-button,
+  .input-wrap input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input[type="number"]:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(26,92,58,0.12);
+  }
+  .input-wrap input.error-input { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(155,40,40,0.1); }
+
+  /* ── Slider Field ── */
+  .slider-field { display: flex; flex-direction: column; gap: 7px; }
+  .slider-field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .slider-value-display {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: var(--radius-sm);
+    min-width: 52px;
+    text-align: center;
+    transition: all var(--transition);
+  }
+  .slider-wrap {
+    position: relative;
+    padding: 6px 0;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+    min-height: 44px;
+    background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--slider-pct, 24%), var(--border) var(--slider-pct, 24%), var(--border) 100%);
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+     width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: box-shadow var(--transition);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--accent);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    cursor: pointer;
+  }
+  input[type="range"]:focus::-webkit-slider-thumb {
+    box-shadow: 0 0 0 3px rgba(26,92,58,0.2);
+  }
+  .slider-range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* ── Error Message ── */
+  .error-msg {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--danger);
+    background: var(--danger-light);
+    border: 1px solid #F0C8C8;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 1.25rem;
+  }
+  .error-msg.warning {
+    color: var(--warning);
+    background: var(--warning-light);
+    border-color: #EDCFA0;
+  }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 24px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    letter-spacing: 0.01em;
+    min-height: 44px;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    flex: 1;
+  }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: var(--border-dark);
+  }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy {
+    background: transparent;
+    color: var(--accent-text);
+    border-color: #B8D9C5;
+  }
+@media (max-width: 380px) {
+    .btn-primary { flex: 1 1 100%; }
+    .btn-reset, .btn-copy { flex: 1; }
+}
+  .btn-copy:hover { background: var(--accent-light); }
+
+  /* ── Divider ── */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* ── Results Section ── */
+  .results-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+
+  /* Hero Result */
+  .hero-result {
+    background: var(--accent-light);
+    border: 1.5px solid #B8D9C5;
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-align: center;
+    margin-bottom: 1rem;
+    transition: all 0.25s ease;
+  }
+  .hero-result.placeholder-state {
+    background: var(--surface-alt);
+    border-color: var(--border);
+  }
+  .hero-result .hero-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-text);
+    margin-bottom: 10px;
+  }
+  .hero-result.placeholder-state .hero-label { color: var(--text-muted); }
+  .hero-result .hero-value {
+    font-family: var(--font-display);
+    font-size: clamp(28px, 6vw, 52px);
+    color: var(--accent);
+    line-height: 1;
+    transition: color 0.25s ease;
+  }
+  .hero-result.placeholder-state .hero-value { color: var(--border-dark); font-family: var(--font-body); font-size: 28px; }
+  .hero-result .hero-sub {
+    font-size: 13px;
+    color: var(--accent-text);
+    margin-top: 8px;
+    opacity: 0.8;
+  }
+  .hero-result.placeholder-state .hero-sub { color: var(--text-muted); }
+
+  /* Secondary Results Grid */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .result-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1rem;
+    text-align: center;
+    transition: all 0.25s ease;
+  }
+  .result-card.highlight {
+    background: var(--accent-light);
+    border-color: #B8D9C5;
+  }
+  .result-card .r-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .result-card .r-value {
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--text-primary);
+    line-height: 1;
+    transition: color 0.25s ease;
+  }
+  .result-card .r-value.pos { color: var(--profit-pos); }
+  .result-card .r-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 5px;
+  }
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 18px; }
+
+  /* ── Insight Banner ── */
+  .insight-banner {
+    display: none;
+    align-items: flex-start;
+    gap: 10px;
+    background: var(--warning-light);
+    border: 1px solid #EDCFA0;
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+    margin-top: 1rem;
+    font-size: 13px;
+    color: var(--warning);
+    line-height: 1.5;
+  }
+  .insight-banner.insight-good {
+    background: var(--accent-light);
+    border-color: #B8D9C5;
+    color: var(--accent-text);
+  }
+  .insight-banner.visible { display: flex; }
+  .insight-banner svg { flex-shrink: 0; margin-top: 1px; }
+
+  /* ── Guide / Explanation Section ── */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section h2 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+  }
+  .guide-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .guide-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+  .guide-card .g-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .guide-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .guide-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .guide-card .formula {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--surface-alt);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    border-left: 3px solid var(--border-dark);
+  }
+
+  .guide-card-wide {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .guide-card-wide h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .why-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* ── Examples Section ── */
+  .examples-section { margin-bottom: 1rem; }
+  .examples-section h2 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+  }
+  .examples-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+ .example-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+}
+  .example-card .ex-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .ex-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  .example-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .ex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .ex-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .ex-row span:first-child { color: var(--text-secondary); }
+  .ex-row span:last-child { font-weight: 600; color: var(--text-primary); }
+  .ex-row span.highlight { color: var(--accent); }
+
+  /* ── FAQ Section ── */
+  .faq-section { margin-bottom: 1rem; }
+  .faq-section h2 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .faq-q {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 14px 16px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 44px;
+    transition: background var(--transition);
+  }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-q svg { flex-shrink: 0; transition: transform var(--transition); color: var(--text-muted); }
+  .faq-item.open .faq-q svg { transform: rotate(180deg); }
+  .faq-a {
+    display: none;
+    padding: 0 16px 14px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .faq-item.open .faq-a { display: block; }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-5px); }
+    40%     { transform: translateX(5px); }
+    60%     { transform: translateX(-3px); }
+    80%     { transform: translateX(3px); }
+  }
+  @keyframes popIn {
+    0%   { transform: scale(0.94); opacity: 0.6; }
+    60%  { transform: scale(1.03); }
+    100% { transform: scale(1);    opacity: 1; }
+  }
+  .pop { animation: popIn 0.3s ease both; }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .calc-card { padding: 1.25rem; }
+    .input-grid { grid-template-columns: 1fr; }
+  }
+ @media (max-width: 560px) {
+    .results-grid { grid-template-columns: 1fr; }
+    .guide-grid, .examples-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 380px) {
+    .results-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Page Title -->
+  <div class="page-title">
+    <h1>Profit Goal Revenue Calculator</h1>
+    <p>Enter your desired profit and expected margin to instantly see how much revenue your business needs to generate — annually, monthly, and weekly.</p>
+  </div>
+
+  <!-- Calculator Card -->
+  <div class="calc-card">
+
+    <!-- Inputs -->
+    <div class="input-section">
+      <h2>Enter Your Numbers</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="desiredProfit">Desired Annual Profit</label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="desiredProfit" placeholder="100,000" min="0" step="100" value="100000" inputmode="decimal" aria-label="Desired annual profit in dollars" />
+          </div>
+        </div>
+        <div class="slider-field">
+          <div class="slider-header">
+            <label for="profitMargin">Expected Profit Margin</label>
+            <span class="slider-value-display" id="marginDisplay">20%</span>
+          </div>
+          <div class="slider-wrap">
+            <input type="range" id="profitMargin" min="1" max="80" step="1" value="20" aria-label="Expected profit margin percentage" />
+          </div>
+          <div class="slider-range-labels">
+            <span>1%</span>
+            <span>80%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" id="calcBtn" onclick="calculate()">Calculate</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+      <button class="btn btn-copy" id="copyBtn" onclick="copyResults()" title="Copy results">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" style="display:inline;vertical-align:middle;margin-right:4px;">
+          <rect x="4" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M2 10V2h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Copy
+      </button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Your Revenue Targets</h2>
+
+      <!-- Hero: Required Annual Revenue -->
+      <div class="hero-result placeholder-state" id="heroCard">
+        <div class="hero-label">Required Annual Revenue</div>
+        <div class="hero-value" id="heroValue">—</div>
+        <div class="hero-sub" id="heroSub">to achieve your profit goal</div>
+      </div>
+
+      <!-- Secondary KPIs -->
+      <div class="results-grid">
+        <div class="result-card" id="card-monthly">
+          <div class="r-label">Monthly Target</div>
+          <div class="r-value placeholder" id="val-monthly">—</div>
+          <div class="r-sub">per month</div>
+        </div>
+        <div class="result-card" id="card-weekly">
+          <div class="r-label">Weekly Target</div>
+          <div class="r-value placeholder" id="val-weekly">—</div>
+          <div class="r-sub">per week</div>
+        </div>
+        <div class="result-card" id="card-margin">
+          <div class="r-label">Margin Used</div>
+          <div class="r-value placeholder" id="val-margin">—</div>
+          <div class="r-sub">profit margin</div>
+        </div>
+      </div>
+
+      <!-- Smart Insight Banner -->
+      <div class="insight-banner" id="insightBanner">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+        </svg>
+        <span id="insightText"></span>
+      </div>
+
+    </div>
+  </div><!-- /.calc-card -->
+
+  <!-- Guide Section -->
+  <div class="guide-section">
+    <h2>Understanding Revenue vs. Profit</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>What is Required Revenue?</h3>
+        <p>Required revenue is the total sales you need to cover all costs <em>and</em> land your desired profit. With a 20% margin, only $1 in every $5 earned is profit — so you need to earn $5 for every $1 of profit you want.</p>
+        <div class="formula">Revenue = Desired Profit ÷ (Margin ÷ 100)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2L3 7v11h5v-5h4v5h5V7L10 2z" fill="#185FA5"/>
+          </svg>
+        </div>
+        <h3>Why Margin Matters So Much</h3>
+        <p>Doubling your profit margin is the same as doubling your revenue — without any extra sales. A business at 10% margin needs twice the revenue of one at 20% to earn the same profit. Margin is your most powerful lever.</p>
+        <div class="formula">Monthly Target = Annual Revenue ÷ 12</div>
+      </div>
+
+    </div>
+
+    <div class="guide-card-wide">
+      <h3>Why every business owner should know their revenue target</h3>
+      <ul class="why-list">
+        <li><strong>Set goals that actually mean something.</strong> "I want to make $100,000" is vague. "I need $500,000 in revenue at 20% margin" is a plan you can work backward from.</li>
+        <li><strong>Price smarter, not cheaper.</strong> When you know each sale's contribution, you stop discounting blindly and start protecting your margin.</li>
+        <li><strong>Spot the margin trap early.</strong> A low margin forces you into a high-volume treadmill. Raising margin by even 5% can dramatically cut the revenue you need.</li>
+        <li><strong>Plan hiring and expenses confidently.</strong> Knowing your revenue target tells you exactly how much overhead you can absorb before it threatens your profit goal.</li>
+        <li><strong>Make the case to investors and lenders.</strong> Showing a target revenue backed by a margin assumption signals financial literacy — and builds instant credibility.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Business Examples Section -->
+  <div class="examples-section">
+    <h2>Business Examples</h2>
+    <div class="examples-grid">
+
+      <div class="example-card">
+        <div class="ex-header">
+          <div class="ex-icon">☕</div>
+          <h3>Coffee Shop</h3>
+        </div>
+        <div class="ex-row"><span>Profit Goal</span><span>$60,000/yr</span></div>
+        <div class="ex-row"><span>Profit Margin</span><span>15%</span></div>
+        <div class="ex-row"><span>Required Revenue</span><span class="highlight">$400,000</span></div>
+        <div class="ex-row"><span>Monthly Target</span><span>$33,333</span></div>
+      </div>
+
+      <div class="example-card">
+        <div class="ex-header">
+          <div class="ex-icon">💻</div>
+          <h3>Freelance Developer</h3>
+        </div>
+        <div class="ex-row"><span>Profit Goal</span><span>$120,000/yr</span></div>
+        <div class="ex-row"><span>Profit Margin</span><span>70%</span></div>
+        <div class="ex-row"><span>Required Revenue</span><span class="highlight">$171,429</span></div>
+        <div class="ex-row"><span>Monthly Target</span><span>$14,286</span></div>
+      </div>
+
+      <div class="example-card">
+        <div class="ex-header">
+          <div class="ex-icon">🛍️</div>
+          <h3>E-commerce Store</h3>
+        </div>
+        <div class="ex-row"><span>Profit Goal</span><span>$80,000/yr</span></div>
+        <div class="ex-row"><span>Profit Margin</span><span>12%</span></div>
+        <div class="ex-row"><span>Required Revenue</span><span class="highlight">$666,667</span></div>
+        <div class="ex-row"><span>Monthly Target</span><span>$55,556</span></div>
+      </div>
+
+      <div class="example-card">
+        <div class="ex-header">
+          <div class="ex-icon">🎨</div>
+          <h3>Marketing Agency</h3>
+        </div>
+        <div class="ex-row"><span>Profit Goal</span><span>$200,000/yr</span></div>
+        <div class="ex-row"><span>Profit Margin</span><span>35%</span></div>
+        <div class="ex-row"><span>Required Revenue</span><span class="highlight">$571,429</span></div>
+        <div class="ex-row"><span>Monthly Target</span><span>$47,619</span></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)" aria-expanded="false">
+          What's the difference between revenue and profit?
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Revenue is the total amount your business earns from sales before any expenses are deducted. Profit is what's left after all costs — materials, salaries, rent, software, taxes — are paid. A business can have high revenue and still lose money if costs are too high.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)" aria-expanded="false">
+          What profit margin should I use?
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Use your actual or expected net profit margin — the percentage of revenue you keep after all expenses. Industry averages vary widely: retail typically runs 2–5%, software companies 20–40%, and service businesses 10–30%. If you're unsure, use 15–20% as a conservative starting point and adjust as you learn your real numbers.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)" aria-expanded="false">
+          Why does a small margin change make such a big revenue difference?
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Because the formula divides your profit goal by the margin. At 10% margin, you divide by 0.10, needing $1,000,000 revenue for a $100,000 profit goal. At 20%, you divide by 0.20, requiring only $500,000. Small margin improvements compound into enormous reductions in required revenue — which is why margin is the single most powerful lever in your business.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)" aria-expanded="false">
+          Should I use gross or net profit margin?
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">For the most accurate result, use your net profit margin — that's after all operating expenses, not just cost of goods. Gross margin (which excludes overhead like rent and salaries) will give you a lower revenue target than reality. Net margin gives you the honest picture of what you actually keep.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFAQ(this)" aria-expanded="false">
+          How do I increase my profit margin to lower my revenue target?
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Three main levers: raise your prices (the fastest, most powerful option with no extra cost), reduce your variable costs (negotiate with suppliers, optimize materials), or cut fixed overhead (renegotiate rent, reduce subscriptions, improve operational efficiency). Even a 5% margin improvement can reduce required revenue by tens of thousands of dollars.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  /* ── Slider: live update ── */
+  const slider = document.getElementById('profitMargin');
+  const marginDisplay = document.getElementById('marginDisplay');
+
+  function updateSlider() {
+    const val = parseInt(slider.value);
+    const pct = ((val - 1) / (80 - 1)) * 100;
+    slider.style.setProperty('--slider-pct', pct + '%');
+    marginDisplay.textContent = val + '%';
+    // Live calc if already computed once
+    if (!document.getElementById('heroCard').classList.contains('placeholder-state')) {
+      calculate(true);
+    }
+  }
+  slider.addEventListener('input', updateSlider);
+  // Init slider track fill
+  updateSlider();
+
+  /* ── Helpers ── */
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+  function fmtPct(n) { return n.toFixed(0) + '%'; }
+
+  /* ── Main Calculate ── */
+  function calculate(silent) {
+    const profitEl = document.getElementById('desiredProfit');
+    const errMsg   = document.getElementById('errorMsg');
+    const errTxt   = document.getElementById('errorText');
+
+    errMsg.classList.remove('visible', 'warning');
+    profitEl.classList.remove('error-input');
+
+    const profitVal = profitEl.value.trim();
+
+    if (profitVal === '') {
+      if (!silent) showError('Please enter your desired annual profit.');
+      return;
+    }
+
+    const profit = parseFloat(profitVal);
+
+    if (profit < 0) {
+      if (!silent) showError('Profit goal cannot be negative. Please enter a positive value.');
+      return;
+    }
+
+    const margin  = parseInt(slider.value);
+    const revenue = profit / (margin / 100);
+    const monthly = revenue / 12;
+    const weekly  = revenue / 52;
+
+    // Hero
+    const heroCard  = document.getElementById('heroCard');
+    const heroValue = document.getElementById('heroValue');
+    heroCard.classList.remove('placeholder-state');
+    heroValue.textContent = fmt(revenue);
+    heroValue.classList.add('pop');
+    heroValue.addEventListener('animationend', () => heroValue.classList.remove('pop'), { once: true });
+
+    // Secondary cards
+    renderCard('val-monthly', 'card-monthly', fmt(monthly), true);
+    renderCard('val-weekly',  'card-weekly',  fmt(weekly),  false);
+    renderCard('val-margin',  'card-margin',  fmtPct(margin), false);
+
+    // Smart insight
+    const banner    = document.getElementById('insightBanner');
+    const insightTxt = document.getElementById('insightText');
+    banner.classList.remove('visible', 'insight-good');
+
+    if (margin < 10) {
+      insightTxt.textContent = 'Your margin is below 10% — this requires significantly higher revenue to hit your profit goal. Even a small margin improvement would sharply reduce the revenue you need.';
+      banner.classList.add('visible');
+    } else if (margin > 30) {
+      insightTxt.textContent = 'With a margin above 30%, you\'re in strong territory — your revenue target is substantially lower than lower-margin competitors chasing the same profit goal.';
+      banner.classList.add('visible', 'insight-good');
+    }
+  }
+
+  function renderCard(valId, cardId, text, highlight) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop pos';
+    card.className = 'result-card' + (highlight ? ' highlight' : '');
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function showError(msg) {
+    const errMsg = document.getElementById('errorMsg');
+    const errTxt = document.getElementById('errorText');
+    errTxt.textContent = msg;
+    errMsg.classList.add('visible');
+    document.getElementById('desiredProfit').classList.add('error-input');
+  }
+
+  /* ── Reset ── */
+  function resetCalc() {
+    document.getElementById('desiredProfit').value = '100000';
+    document.getElementById('desiredProfit').classList.remove('error-input');
+    slider.value = 20;
+    updateSlider();
+
+    document.getElementById('errorMsg').classList.remove('visible', 'warning');
+    document.getElementById('insightBanner').classList.remove('visible', 'insight-good');
+
+    // Hero
+    const heroCard  = document.getElementById('heroCard');
+    const heroValue = document.getElementById('heroValue');
+    heroCard.classList.add('placeholder-state');
+    heroValue.textContent = '—';
+    heroValue.className = 'hero-value';
+
+    // Cards
+    ['val-monthly','val-weekly','val-margin'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    ['card-monthly','card-weekly','card-margin'].forEach(id => {
+      document.getElementById(id).className = 'result-card';
+    });
+  }
+
+  /* ── Copy Results ── */
+  function copyResults() {
+    const heroValue = document.getElementById('heroValue').textContent;
+    if (heroValue === '—') { return; }
+
+    const monthly = document.getElementById('val-monthly').textContent;
+    const weekly  = document.getElementById('val-weekly').textContent;
+    const margin  = document.getElementById('val-margin').textContent;
+    const profit  = document.getElementById('desiredProfit').value;
+
+    const text = [
+      'Profit Goal Revenue Calculator Results',
+      '----------------------------------------',
+      'Desired Annual Profit: $' + parseFloat(profit).toLocaleString('en-US'),
+      'Profit Margin: ' + margin,
+      '',
+      'Required Annual Revenue: ' + heroValue,
+      'Monthly Revenue Target: ' + monthly,
+      'Weekly Revenue Target: ' + weekly,
+      '',
+      'Generated by Small Business Profit Toolkit'
+    ].join('\n');
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = '✓ Copied';
+      setTimeout(() => { btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display:inline;vertical-align:middle;margin-right:4px;"><rect x="4" y="4" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 10V2h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Copy'; }, 2000);
+    }).catch(() => {
+      // Fallback for older browsers
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    });
+  }
+
+  /* ── FAQ Toggle ── */
+  function toggleFAQ(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    item.classList.toggle('open', !isOpen);
+    btn.setAttribute('aria-expanded', !isOpen);
+  }
+
+  /* ── Enter key ── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') calculate();
+  });
+</script>
+</body>
+</html>

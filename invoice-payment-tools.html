@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Invoice &amp; Payment Tools for Small Businesses | Small Business Profit Toolkit</title>
+<meta name="description" content="Free invoice and payment calculators for small businesses. Calculate invoice due dates, late payment fees, sales tax, and discount impact on profit — all in one place." />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Invoice &amp; Payment Tools | Small Business Profit Toolkit" />
+<meta property="og:description" content="Free tools to help small businesses manage invoices, payment deadlines, discounts, sales tax estimates, and cash flow decisions." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://smallbusinessprofittoolkit.com/invoice-payment-tools" />
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<!-- FAQ Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is an invoice due date?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An invoice due date is the deadline by which a customer must pay the amount owed. Common terms are Net 30 (due in 30 days), Net 15, or Due on Receipt. The due date is calculated from the invoice issue date, not the date work was completed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do late payment fees work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Late payment fees are penalties charged when a customer pays after the invoice due date. They are typically calculated as a percentage of the unpaid balance per month (e.g., 1.5% per month) or as a flat fee. The fee structure must be stated on the original invoice to be legally enforceable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do discounts affect profit margins?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Discounts directly reduce your revenue and compress profit margins. For example, a 10% discount on a product with a 30% margin leaves you with roughly a 22% margin — you've given away nearly a third of your profit. Discounts require higher sales volume to compensate, which is why analyzing discount impact before offering one is essential."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is sales tax calculated for small businesses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sales tax is calculated by multiplying the taxable sale amount by the applicable tax rate for the customer's jurisdiction. Rates vary significantly by state, county, city, and even special districts. Businesses must collect the correct rate based on where the buyer is located (destination-based sourcing) in most US states."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should small businesses charge late payment fees?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, in most cases. Late payment fees incentivize on-time payment, compensate you for the cost of delayed cash flow, and discourage chronic late payers. The key is disclosing the fee policy on every invoice and in your contracts before work begins."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens when invoices go unpaid?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Unpaid invoices create cash flow gaps that can prevent you from covering operating expenses, payroll, and supplier payments. After sending reminders, your options include charging late fees, using a collections agency, small claims court, or writing off the debt as a bad debt expense for tax purposes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can small businesses improve cash flow from invoices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Key strategies include issuing invoices immediately after work is completed, shortening payment terms (Net 15 instead of Net 30), offering early payment discounts, following up on overdue invoices within 24 hours of the due date, and requiring deposits upfront for large projects."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often should small businesses track outstanding invoices?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Ideally, review your outstanding invoices (accounts receivable) weekly. A weekly review lets you catch overdue accounts before they age further, send timely reminders, and maintain an accurate picture of your expected incoming cash."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is accounts receivable?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Accounts receivable (AR) is the total amount owed to your business by customers for goods or services already delivered but not yet paid for. It appears as a current asset on your balance sheet. High AR relative to your revenue may signal a collection problem even if your sales look strong."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are these invoice and payment tools free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. All tools on Small Business Profit Toolkit are completely free. No account required, no sign-up, and no data is saved or shared. Every calculation runs locally in your browser."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:             #F7F5F0;
+  --surface:        #FFFFFF;
+  --surface-alt:    #F0EDE6;
+  --border:         #DDD9D0;
+  --border-dark:    #C4BFB5;
+  --text-primary:   #1A1815;
+  --text-secondary: #6B6660;
+  --text-muted:     #9E9990;
+  --accent:         #1A5C3A;
+  --accent-light:   #E8F3ED;
+  --accent-text:    #0F3D26;
+  --danger:         #9B2828;
+  --danger-light:   #FBEAEA;
+  --warning:        #7A4A10;
+  --warning-light:  #FDF3E7;
+  --radius-sm:      6px;
+  --radius-md:      10px;
+  --radius-lg:      16px;
+  --shadow-sm:      0 1px 3px rgba(0,0,0,0.07);
+  --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+  --font-display:   'DM Serif Display', Georgia, serif;
+  --font-body:      'DM Sans', system-ui, sans-serif;
+  --transition:     0.18s ease;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Header ── */
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+.logo span { color: var(--accent); }
+.header-tag {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent-text);
+  background: var(--accent-light);
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.02em;
+}
+
+/* ── Nav Breadcrumb ── */
+.breadcrumb {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 1rem;
+}
+.breadcrumb-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.breadcrumb a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb-sep { color: var(--border-dark); }
+
+/* ── Main ── */
+main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 1rem 4rem;
+}
+
+/* ── Hero ── */
+.hero {
+  margin-bottom: 2.5rem;
+  animation: fadeUp 0.4s ease both;
+}
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent-text);
+  background: var(--accent-light);
+  padding: 5px 12px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+}
+.hero-eyebrow svg { flex-shrink: 0; }
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 5vw, 42px);
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+.hero-subtitle {
+  font-size: 17px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+  max-width: 640px;
+}
+.hero-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.hero-stat .stat-num {
+  font-family: var(--font-display);
+  font-size: 28px;
+  color: var(--accent);
+  display: block;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat .stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+/* ── Section Titles ── */
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 4vw, 30px);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+.section-intro {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.75rem;
+}
+
+/* ── Content Section ── */
+.content-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+  animation: fadeUp 0.4s 0.05s ease both;
+}
+.content-section h2 {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3.5vw, 26px);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  letter-spacing: -0.01em;
+}
+.content-section h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 1.5rem 0 0.5rem;
+}
+.content-section p {
+  font-size: 15px;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+.content-section p:last-child { margin-bottom: 0; }
+
+/* ── Tool Cards Grid ── */
+.tools-section {
+  margin-bottom: 2rem;
+  animation: fadeUp 0.4s 0.1s ease both;
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 640px) {
+  .tools-grid { grid-template-columns: 1fr; }
+}
+
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+.tool-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.tool-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--accent-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  flex-shrink: 0;
+}
+.tool-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  line-height: 1.3;
+}
+.tool-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  flex: 1;
+  margin-bottom: 1.25rem;
+}
+.btn-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-text);
+  background: var(--accent-light);
+  border: 1px solid #B8D9C5;
+  border-radius: var(--radius-md);
+  padding: 9px 16px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  align-self: flex-start;
+  min-height: 44px;
+}
+.btn-tool:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+/* ── Disclaimer Banner ── */
+.disclaimer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--warning-light);
+  border: 1px solid #E8C98A;
+  border-left: 4px solid #C0872A;
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-top: 1rem;
+  font-size: 13px;
+  color: var(--warning);
+  line-height: 1.6;
+}
+.disclaimer svg { flex-shrink: 0; margin-top: 1px; }
+
+/* ── Best Practices Grid ── */
+.bp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+@media (max-width: 560px) {
+  .bp-grid { grid-template-columns: 1fr; }
+}
+
+.bp-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+.bp-card .bp-num {
+  font-family: var(--font-display);
+  font-size: 32px;
+  color: var(--border-dark);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+.bp-card h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.bp-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ── FAQ Section ── */
+.faq-section {
+  margin-bottom: 2rem;
+  animation: fadeUp 0.4s 0.15s ease both;
+}
+.faq-list { display: flex; flex-direction: column; gap: 0; }
+.faq-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  border-bottom: none;
+  overflow: hidden;
+}
+.faq-item:first-child { border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+.faq-item:last-child  { border-radius: 0 0 var(--radius-lg) var(--radius-lg); border-bottom: 1px solid var(--border); }
+.faq-item:only-child  { border-radius: var(--radius-lg); border-bottom: 1px solid var(--border); }
+
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.5rem;
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: background var(--transition);
+  min-height: 44px;
+}
+.faq-question:hover { background: var(--surface-alt); }
+.faq-question[aria-expanded="true"] { color: var(--accent-text); }
+.faq-chevron {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+  color: var(--text-muted);
+}
+.faq-question[aria-expanded="true"] .faq-chevron {
+  transform: rotate(180deg);
+  color: var(--accent);
+}
+.faq-answer {
+  display: none;
+  padding: 0 1.5rem 1.25rem;
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  border-top: 1px solid var(--border);
+}
+.faq-item.open .faq-answer { display: block; }
+
+/* ── Related Categories ── */
+.related-section {
+  margin-bottom: 2rem;
+  animation: fadeUp 0.4s 0.2s ease both;
+}
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 640px) {
+  .related-grid { grid-template-columns: 1fr; }
+}
+
+.related-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  text-decoration: none;
+  display: block;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+.related-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.related-card .rc-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--surface-alt);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+.related-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.related-card p {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.related-card .rc-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 10px;
+}
+
+/* ── Footer ── */
+.site-footer {
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Mobile Padding ── */
+@media (max-width: 640px) {
+  .content-section { padding: 1.25rem; }
+  .tool-card       { padding: 1.25rem; }
+  .bp-card         { padding: 1.25rem; }
+  .hero-stats      { gap: 1.25rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<!-- ── Breadcrumb ── -->
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Home</a>
+    <span class="breadcrumb-sep" aria-hidden="true">›</span>
+    <a href="index.html#categories">All Tools</a>
+    <span class="breadcrumb-sep" aria-hidden="true">›</span>
+    <span aria-current="page">Invoice &amp; Payment Tools</span>
+  </div>
+</nav>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-eyebrow" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <rect x="1" y="2" width="12" height="10" rx="2" stroke="#1A5C3A" stroke-width="1.5"/>
+        <path d="M4 6h6M4 8.5h4" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Invoice &amp; Payment Tools
+    </div>
+    <h1 id="page-title">Invoice &amp; Payment Tools</h1>
+    <p class="hero-subtitle">Free calculators to help small businesses manage invoices, track payment deadlines, estimate sales tax, and understand how discounts affect your bottom line.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Free calculators</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">$0</span>
+        <span class="stat-label">No cost, no sign-up</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Browser-based, private</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Directory -->
+  <section class="tools-section" aria-labelledby="tools-heading">
+    <h2 class="section-title" id="tools-heading">Invoice &amp; Payment Calculators</h2>
+    <p class="section-intro">Four free tools to handle the most common invoicing and payment calculations small businesses face.</p>
+
+    <div class="tools-grid">
+
+      <!-- Invoice Due Date Calculator -->
+      <article class="tool-card">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="2" y="3" width="18" height="17" rx="2.5" stroke="#1A5C3A" stroke-width="1.5"/>
+            <path d="M7 2v3M15 2v3M2 8h18" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M7 12h3M12 12h3M7 15.5h3" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Invoice Due Date Calculator</h3>
+        <p>Enter your invoice date and payment terms (Net 15, Net 30, Net 60, or custom days) to calculate the exact due date. Never miss a payment deadline or let a client payment slide unnoticed.</p>
+        <a href="invoice-payment/invoice-due-date-calculator.html" class="btn-tool">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M8 4.5l2.5 2.5L8 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+
+      <!-- Late Payment Fee Calculator -->
+      <article class="tool-card">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="9" stroke="#1A5C3A" stroke-width="1.5"/>
+            <path d="M11 6v5.5l3.5 2" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Late Payment Fee Calculator</h3>
+        <p>Calculate the late fee owed on an overdue invoice based on your rate (percentage per month or flat fee), the original invoice amount, and the number of days past due.</p>
+        <a href="invoice-payment/late-payment-fee-calculator.html" class="btn-tool">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M8 4.5l2.5 2.5L8 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+
+      <!-- Sales Tax Calculator -->
+      <article class="tool-card">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M4 4l14 14M8 5H5v3l9 9 3-3L8 5z" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Sales Tax Calculator</h3>
+        <p>Estimate sales tax on any transaction by entering the sale amount and the applicable tax rate for your state or jurisdiction. Quickly calculate tax-inclusive and tax-exclusive pricing.</p>
+        <div class="disclaimer" role="note" aria-label="Sales tax disclaimer">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="7" stroke="#7A4A10" stroke-width="1.5"/>
+            <path d="M8 4.5V8.5" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="8" cy="11" r="0.75" fill="#7A4A10"/>
+          </svg>
+          <span>Sales tax rates vary by state, county, city, and jurisdiction. This calculator provides estimates only and should not be considered tax advice.</span>
+        </div>
+        <a href="invoice-payment/sales-tax-calculator.html" class="btn-tool" style="margin-top: 1.25rem;">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M8 4.5l2.5 2.5L8 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+
+      <!-- Discount Profit Calculator -->
+      <article class="tool-card">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M11 3L3 11l8 8 8-8-8-8z" stroke="#1A5C3A" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle cx="11" cy="11" r="2.5" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>Discount Profit Calculator</h3>
+        <p>See exactly how a discount affects your revenue, profit margin, and the additional units you'd need to sell to break even on the discount. Know the real cost before you offer a deal.</p>
+        <a href="invoice-payment/discount-profit-calculator.html" class="btn-tool">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M8 4.5l2.5 2.5L8 9.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- Intro Content -->
+  <section class="content-section" aria-labelledby="intro-heading">
+    <h2 id="intro-heading">Why Invoice &amp; Payment Management Makes or Breaks a Small Business</h2>
+    <p>A small business can be profitable on paper and still fail because of cash flow. Revenue that exists on invoices but hasn't arrived in your bank account doesn't pay suppliers, cover payroll, or keep the lights on. For millions of small business owners, the gap between when they deliver work and when they actually receive payment is one of the most persistent and underappreciated threats to survival.</p>
+
+    <h3>Cash Flow Is the Lifeblood of Your Business</h3>
+    <p>Profit tells you whether your business model works. Cash flow tells you whether your business survives. These are not the same thing. A contractor who bills $50,000 in a month but collects $12,000 because clients pay late has a cash flow problem regardless of their margins. The tools on this page are designed to bring clarity and discipline to the payment side of running a small business — the side that too many owners manage reactively rather than proactively.</p>
+
+    <h3>The Real Cost of Late Payments</h3>
+    <p>Late payments create compounding problems. First, you lose the use of money that should already be yours. Second, you may incur your own costs — supplier bills, loan interest, credit card debt — to bridge the gap. Third, chasing payments consumes time that should go toward growing your business. Studies consistently find that small businesses are disproportionately harmed by late payment culture because they lack the reserves that larger firms use to absorb delays.</p>
+    <p>Charging late payment fees is one of the most effective tools to change client behavior. When clients know a fee will apply after the due date, on-time payment rates improve — not because the fee is punitive, but because it signals that you run a professional operation with clear expectations. The key is disclosing your fee policy on every invoice before work begins, so there are no surprises.</p>
+
+    <h3>Managing Customer Invoices Professionally</h3>
+    <p>Invoice management is not just sending a PDF and hoping for the best. It involves setting clear payment terms upfront, issuing invoices the moment work is delivered (not days later), following up systematically on overdue accounts, and tracking your accounts receivable so you always know exactly how much you're owed and for how long. Many small businesses discover that simply tightening their invoicing process — shorter payment terms, immediate issuance, faster follow-up — dramatically improves their cash position without changing their pricing at all.</p>
+    <p>Knowing your invoice due dates precisely is the foundation of this. If you issue an invoice on a Monday and your terms are Net 30, that's a specific date — and missing it by even a day means you're further from payment than you should be. Use the Invoice Due Date Calculator to track exact deadlines and never let them slip by unnoticed.</p>
+
+    <h3>Understanding Your Sales Tax Obligations</h3>
+    <p>For product-based businesses and many service businesses, sales tax is a legal obligation that varies dramatically by location. In the United States, there is no single national sales tax rate. Instead, rates differ by state, county, city, and special taxing district — and the rules about which products and services are taxable vary just as much. Businesses that undercharge sales tax may owe the difference out of their own pocket at audit time. Businesses that overcharge create friction with customers and potential refund liability.</p>
+    <p>While the Sales Tax Calculator on this page provides estimates to help you plan and price, every business with ongoing sales tax obligations should verify their exact rates with a qualified tax professional or their state's department of revenue.</p>
+
+    <h3>The Discount Trap: How Discounts Erode Profitability</h3>
+    <p>Discounts are one of the most misunderstood tools in a small business owner's toolkit. A 20% discount sounds modest. But if your profit margin is 30%, that same discount wipes out more than half your profit on that sale. To recover the lost profit, you'd need to sell significantly more units at the discounted price — a math problem most owners never run before offering a deal.</p>
+    <p>Discounts should be deliberate, measured, and tied to a specific business goal: acquiring a high-value long-term customer, clearing old inventory, or incentivizing early payment. The Discount Profit Calculator helps you see exactly what a given discount does to your revenue, margin, and required sales volume before you commit to it.</p>
+
+    <h3>Building a Payment Collection Process That Works</h3>
+    <p>The businesses that collect most reliably share a common trait: they make payment easy and expectations clear. This means issuing invoices with complete information (due date, payment methods, late fee policy), following up proactively rather than waiting until accounts are seriously overdue, and not hesitating to charge fees that were disclosed upfront. Over time, a consistent collection process also helps you identify which clients are chronic late payers — valuable information when deciding which relationships to prioritize or exit.</p>
+  </section>
+
+  <!-- Educational / Best Practices -->
+  <section aria-labelledby="bestpractices-heading" style="margin-bottom: 2rem;">
+    <h2 class="section-title" id="bestpractices-heading">Invoice &amp; Payment Best Practices</h2>
+    <p class="section-intro">Practical guidance across the four key areas of invoicing, accounts receivable, payment collection, and discounting.</p>
+    <div class="bp-grid">
+
+      <div class="bp-card">
+        <div class="bp-num" aria-hidden="true">01</div>
+        <h3>Invoice Management</h3>
+        <p>Issue invoices the same day work is delivered or goods are shipped. Every day you delay issuing an invoice is a day added to your wait for payment. Include the due date, payment methods, and your late fee policy directly on the invoice — not buried in a contract the client signed months ago.</p>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-num" aria-hidden="true">02</div>
+        <h3>Accounts Receivable</h3>
+        <p>Review your accounts receivable weekly, not monthly. Categorize outstanding invoices by age: current, 1–30 days overdue, 31–60 days overdue, 60+ days. The older an invoice, the less likely it is to be paid in full. Weekly reviews let you intervene early, when collection is still easy.</p>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-num" aria-hidden="true">03</div>
+        <h3>Payment Collection</h3>
+        <p>Send a polite payment reminder 3–5 days before the due date, not after. Follow up within 24 hours of a missed due date. Offer multiple payment methods. For large projects, require a 25–50% deposit upfront to reduce your exposure. Document every follow-up in case you need to escalate.</p>
+      </div>
+
+      <div class="bp-card">
+        <div class="bp-num" aria-hidden="true">04</div>
+        <h3>Discounting Strategy</h3>
+        <p>Never offer a discount without calculating its margin impact first. If you do discount, use it strategically: offer early payment discounts (e.g., 2% if paid within 10 days) to accelerate cash flow rather than just cutting your price for indiscriminate reasons. Time-limited discounts convert better and train fewer bad habits than always-available ones.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq-section" aria-labelledby="faq-heading">
+    <h2 class="section-title" id="faq-heading">Frequently Asked Questions</h2>
+    <div class="faq-list" role="list">
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-1">
+          What is an invoice due date?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-1" role="region">
+          An invoice due date is the deadline by which a customer must pay the amount owed. Common terms are Net 30 (due 30 days from the invoice date), Net 15, Net 60, or Due on Receipt. The due date is calculated from the invoice issue date, not from when the work was completed or delivered.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-2">
+          How do late payment fees work?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-2" role="region">
+          Late payment fees are penalties charged when a customer pays after the invoice due date. They are typically calculated as a percentage of the unpaid balance per month (e.g., 1.5% per month) or as a flat fee per late occurrence. The fee structure must be clearly stated on the original invoice and in your contract to be legally enforceable. State laws vary on maximum allowable late fee rates.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-3">
+          How do discounts affect profit margins?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-3" role="region">
+          Discounts directly reduce your revenue and compress profit margins. A 10% discount on a product with a 30% margin leaves you with roughly a 22% margin — you've given away nearly a third of your profit on that transaction. To compensate, you would need to sell significantly more units at the discounted price. This is why it's essential to run the numbers before offering any discount.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-4">
+          How is sales tax calculated for small businesses?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-4" role="region">
+          Sales tax is calculated by multiplying the taxable sale amount by the applicable tax rate for the customer's jurisdiction. Rates vary significantly by state, county, city, and special district. Most US states use destination-based sourcing, meaning you charge the rate where the buyer is located. Always verify your specific rates with your state's department of revenue or a tax professional — our calculator provides estimates for planning purposes only.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-5">
+          Should small businesses charge late payment fees?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-5" role="region">
+          In most cases, yes. Late payment fees improve on-time payment rates by signaling that you operate professionally and have clear expectations. The fee itself often matters less than the signal it sends. The essential step is disclosing your policy before work begins — on your contract and on every invoice — so there are no surprises that damage the client relationship.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-6">
+          What happens when invoices go unpaid?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-6" role="region">
+          Unpaid invoices create cash flow gaps that can prevent you from covering operating expenses, payroll, and supplier payments. Your escalation options typically follow this sequence: send payment reminders, apply late fees, send a formal demand letter, engage a collections agency (who typically takes 25–50% of what they recover), or file in small claims court for smaller amounts. Truly uncollectible debts can often be written off as a bad debt expense for tax purposes — consult your accountant.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-7">
+          How can small businesses improve cash flow from invoices?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-7" role="region">
+          Key strategies include: issuing invoices immediately upon delivery (not days later), shortening payment terms (Net 15 instead of Net 30 where possible), requiring deposits upfront for large projects, offering a small early payment discount to incentivize faster payment, following up on overdue invoices within 24 hours of the due date, and accepting multiple payment methods to reduce friction for clients.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-8">
+          How often should small businesses track outstanding invoices?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-8" role="region">
+          Review your outstanding invoices at least weekly. A weekly accounts receivable review lets you catch overdue accounts before they age further, send timely follow-ups, and maintain an accurate picture of expected incoming cash. Monthly reviews are too infrequent — by the time you notice a problem, the invoice may already be 45–60 days overdue, making collection significantly harder.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-9">
+          What is accounts receivable?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-9" role="region">
+          Accounts receivable (AR) is the total amount owed to your business by customers for goods or services already delivered but not yet paid for. It appears as a current asset on your balance sheet because it represents money you expect to receive. High AR relative to your revenue often signals a collection problem — your sales may look strong while your actual cash position is weak.
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq-10">
+          Are these tools free to use?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25l4.5-4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-answer" id="faq-10" role="region">
+          Yes, completely. All tools on Small Business Profit Toolkit are free to use with no account required, no sign-up, and no subscription. Every calculation runs entirely in your browser — no data is sent to any server or stored anywhere.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Related Categories -->
+  <section class="related-section" aria-labelledby="related-heading">
+    <h2 class="section-title" id="related-heading">Related Tool Categories</h2>
+    <div class="related-grid">
+
+      <a href="pricing-profit-tools.html" class="related-card">
+        <div class="rc-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm.75 11.5h-1.5v-5h1.5v5zm0-7h-1.5V5h1.5v1.5z" fill="#6B6660"/>
+          </svg>
+        </div>
+        <h3>Pricing &amp; Profit Tools</h3>
+        <p>Margin calculators, markup tools, and break-even analysis.</p>
+        <div class="rc-link" aria-hidden="true">
+          View tools
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M7 3.5L9.5 6 7 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+      <a href="employee-business-cost-tools.html" class="related-card">
+        <div class="rc-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="8" cy="6" r="3" stroke="#6B6660" stroke-width="1.5"/>
+            <path d="M3 17c0-3.314 2.239-6 5-6s5 2.686 5 6" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M14 9l2 2 3-3" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Employee &amp; Business Cost Tools</h3>
+        <p>Payroll estimates, hiring ROI, and total employee cost calculators.</p>
+        <div class="rc-link" aria-hidden="true">
+          View tools
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M7 3.5L9.5 6 7 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+      <a href="time-operations-tools.html" class="related-card">
+        <div class="rc-icon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="#6B6660" stroke-width="1.5"/>
+            <path d="M10 6v4.5l3 1.5" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Time &amp; Operations Tools</h3>
+        <p>Hourly rate estimators, business hours calculators, and project profitability tools.</p>
+        <div class="rc-link" aria-hidden="true">
+          View tools
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6h7M7 3.5L9.5 6 7 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  /* ── FAQ Accordion ── */
+  document.querySelectorAll('.faq-question').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var item   = this.closest('.faq-item');
+      var isOpen = item.classList.contains('open');
+
+      /* Close all */
+      document.querySelectorAll('.faq-item').forEach(function(i) {
+        i.classList.remove('open');
+        i.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+      });
+
+      /* Open clicked (if it was closed) */
+      if (!isOpen) {
+        item.classList.add('open');
+        this.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Break-Even Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Free break-even calculator for small businesses. Find out exactly how many units you must sell to cover your costs and become profitable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #F7F5F0;
+    --surface:     #FFFFFF;
+    --surface-alt: #F0EDE6;
+    --border:      #DDD9D0;
+    --border-dark: #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:      #1A5C3A;
+    --accent-light:#E8F3ED;
+    --accent-text: #0F3D26;
+    --danger:      #9B2828;
+    --danger-light:#FBEAEA;
+    --warning:     #7A4A10;
+    --warning-light:#FDF3E7;
+    --profit-pos:  #1A5C3A;
+    --profit-neg:  #9B2828;
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   16px;
+    --shadow-sm:   0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md:   0 4px 16px rgba(0,0,0,0.09);
+    --font-display:'DM Serif Display', Georgia, serif;
+    --font-body:   'DM Sans', system-ui, sans-serif;
+    --transition:  0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+  }
+  .header-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Main Layout ── */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ── Page Title ── */
+  .page-title {
+    margin-bottom: 2rem;
+    animation: fadeUp 0.4s ease both;
+  }
+  .page-title h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 5vw, 36px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .page-title p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ── Calculator Card ── */
+  .calc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    animation: fadeUp 0.4s 0.08s ease both;
+    margin-bottom: 2rem;
+  }
+
+  /* ── Input Section ── */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .input-grid-three {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 560px) {
+    .input-grid { grid-template-columns: 1fr; }
+    .input-grid-three { grid-template-columns: 1fr; }
+  }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .input-wrap { position: relative; }
+  .input-wrap .prefix {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-muted);
+    pointer-events: none;
+    user-select: none;
+  }
+  .input-wrap input {
+    width: 100%;
+    padding: 11px 14px 11px 30px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-primary);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    -moz-appearance: textfield;
+  }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(26,92,58,0.12);
+  }
+  .input-wrap input.error-input { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(155,40,40,0.1); }
+
+  /* ── Error Message ── */
+  .error-msg {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--danger);
+    background: var(--danger-light);
+    border: 1px solid #F0C8C8;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 1.25rem;
+  }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg.warning {
+    color: var(--warning);
+    background: var(--warning-light);
+    border-color: #F0D8B8;
+    display: flex;
+    animation: none;
+  }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; gap: 10px; }
+  .btn {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 24px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    letter-spacing: 0.01em;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    flex: 1;
+  }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: var(--border-dark);
+  }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.75rem 0;
+  }
+
+  /* ── Results Section ── */
+  .results-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 480px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1rem;
+    text-align: center;
+    transition: all 0.25s ease;
+  }
+  .result-card.highlight {
+    background: var(--accent-light);
+    border-color: #B8D9C5;
+  }
+  .result-card.highlight-neg {
+    background: var(--danger-light);
+    border-color: #F0C8C8;
+  }
+  .result-card .r-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .result-card .r-value {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--text-primary);
+    line-height: 1;
+    transition: color 0.25s ease;
+  }
+  .result-card .r-value.pos { color: var(--profit-pos); }
+  .result-card .r-value.neg { color: var(--profit-neg); }
+  .result-card .r-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 5px;
+  }
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 22px; }
+
+  /* ── Section Spacing ── */
+  .content-section {
+    animation: fadeUp 0.4s 0.16s ease both;
+    margin-bottom: 2rem;
+  }
+  .content-section h2 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── Guide Cards ── */
+  .guide-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+  .guide-card .g-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+  .g-icon.green  { background: var(--accent-light); }
+  .g-icon.blue   { background: #E8F0FA; }
+  .g-icon.amber  { background: #FDF3E7; }
+  .g-icon.purple { background: #F0EAF8; }
+  .guide-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .guide-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .guide-card .formula {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--surface-alt);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    border-left: 3px solid var(--border-dark);
+  }
+
+  /* ── Wide Card ── */
+  .guide-card-wide {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .guide-card-wide h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  /* ── Example Box ── */
+  .example-box {
+    background: var(--accent-light);
+    border: 1px solid #B8D9C5;
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    margin-top: 1rem;
+  }
+  .example-box .ex-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-text);
+    margin-bottom: 6px;
+  }
+  .example-box p {
+    font-size: 13px;
+    color: var(--accent-text);
+    line-height: 1.65;
+  }
+  .example-box strong { font-weight: 600; }
+
+  /* ── Why List ── */
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .why-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* ── Business Uses Grid ── */
+  .uses-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 560px) { .uses-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 360px) { .uses-grid { grid-template-columns: 1fr; } }
+
+  .use-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.1rem;
+  }
+  .use-card .use-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .use-card h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+  }
+  .use-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  /* ── FAQ ── */
+  .faq-list { display: flex; flex-direction: column; gap: 0; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .faq-item:first-child { border-top: 1px solid var(--border); }
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    padding: 1rem 0;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    transition: color var(--transition);
+  }
+  .faq-q:hover { color: var(--accent); }
+  .faq-q .faq-chevron {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--surface-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition), background var(--transition);
+  }
+  .faq-item.open .faq-chevron {
+    transform: rotate(180deg);
+    background: var(--accent-light);
+  }
+  .faq-a {
+    display: none;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    padding-bottom: 1rem;
+  }
+  .faq-item.open .faq-a { display: block; }
+
+  /* ── Related Tools ── */
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 560px) { .related-grid { grid-template-columns: 1fr; } }
+
+  .related-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+  }
+  .related-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-dark);
+    transform: translateY(-2px);
+  }
+  .related-card .rc-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4px;
+    font-size: 16px;
+  }
+  .related-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+  .related-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .related-card .rc-arrow {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-top: auto;
+    padding-top: 6px;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-5px); }
+    40%     { transform: translateX(5px); }
+    60%     { transform: translateX(-3px); }
+    80%     { transform: translateX(3px); }
+  }
+  @keyframes popIn {
+    0%   { transform: scale(0.94); opacity: 0.6; }
+    60%  { transform: scale(1.03); }
+    100% { transform: scale(1);    opacity: 1; }
+  }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Page Title -->
+  <div class="page-title">
+    <h1>Break-Even Calculator</h1>
+    <p>Find out exactly how many units your business must sell to cover costs and become profitable.</p>
+  </div>
+
+  <!-- Calculator Card -->
+  <div class="calc-card">
+
+    <!-- Inputs -->
+    <div class="input-section">
+      <h2>Enter Your Numbers</h2>
+      <div class="input-grid-three">
+        <div class="field">
+          <label for="fixedCosts">Fixed Costs</label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="fixedCosts" placeholder="0.00" min="0" step="0.01" inputmode="decimal" aria-label="Fixed costs in dollars" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="sellPrice">Selling Price / Unit</label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="sellPrice" placeholder="0.00" min="0" step="0.01" inputmode="decimal" aria-label="Selling price per unit in dollars" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="costPerUnit">Cost Per Unit</label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="costPerUnit" placeholder="0.00" min="0" step="0.01" inputmode="decimal" aria-label="Cost per unit in dollars" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" id="calcBtn" onclick="calculate()">Calculate</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Your Results</h2>
+      <div class="results-grid">
+        <div class="result-card" id="card-units">
+          <div class="r-label">Break-Even Units</div>
+          <div class="r-value placeholder" id="val-units">—</div>
+          <div class="r-sub">units to sell</div>
+        </div>
+        <div class="result-card" id="card-contribution">
+          <div class="r-label">Contribution Margin</div>
+          <div class="r-value placeholder" id="val-contribution">—</div>
+          <div class="r-sub">profit per unit sold</div>
+        </div>
+        <div class="result-card" id="card-revenue">
+          <div class="r-label">Revenue Needed</div>
+          <div class="r-value placeholder" id="val-revenue">—</div>
+          <div class="r-sub">to break even</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Understanding Break-Even Section -->
+  <div class="content-section">
+    <h2>Understanding Break-Even Point</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>What is the Break-Even Point?</h3>
+        <p>The break-even point is the number of units you must sell so that your total revenue exactly equals your total costs — you're not making a profit yet, but you're no longer losing money.</p>
+        <div class="formula">Break-Even Units = Fixed Costs ÷ (Selling Price − Cost per Unit)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="10" width="3" height="7" rx="1" fill="#185FA5"/>
+            <rect x="8.5" y="6" width="3" height="11" rx="1" fill="#185FA5"/>
+            <rect x="14" y="2" width="3" height="15" rx="1" fill="#185FA5" opacity="0.5"/>
+          </svg>
+        </div>
+        <h3>What is Contribution Margin?</h3>
+        <p>Contribution margin is how much each unit sale contributes toward covering your fixed costs. Once your total contribution equals your fixed costs, you've hit break-even — every sale after that is profit.</p>
+        <div class="formula">Contribution Margin = Selling Price − Cost per Unit</div>
+      </div>
+
+    </div>
+
+    <div class="guide-card-wide">
+      <h3>Why businesses calculate break-even</h3>
+      <ul class="why-list">
+        <li><strong>Validate your pricing.</strong> If break-even requires more units than your market can support, your price is too low or costs are too high — before you launch.</li>
+        <li><strong>Set a minimum sales target.</strong> Your sales team needs a floor, not just a ceiling. Break-even gives every month a concrete survival number.</li>
+        <li><strong>Evaluate new products or services.</strong> Before investing in inventory or marketing, know exactly what sales volume justifies the spend.</li>
+        <li><strong>Negotiate with confidence.</strong> Banks and investors will ask. Knowing your break-even shows operational literacy and reduces perceived risk.</li>
+        <li><strong>Make smarter cost cuts.</strong> Reducing fixed costs directly lowers break-even units — the calculator makes that tradeoff immediately visible.</li>
+      </ul>
+
+      <div class="example-box">
+        <div class="ex-label">Real Example</div>
+        <p>If your <strong>fixed costs are $5,000</strong>, your <strong>selling price is $50</strong>, and your <strong>cost per unit is $30</strong> — your contribution margin is $20 per unit. You must sell <strong>250 units</strong> to break even, requiring <strong>$12,500 in total revenue</strong>. Unit 251 is where profit begins.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Common Business Uses -->
+  <div class="content-section">
+    <h2>Common Business Uses</h2>
+    <div class="uses-grid">
+      <div class="use-card">
+        <span class="use-icon">🍽️</span>
+        <h4>Restaurants</h4>
+        <p>Calculate how many covers per night cover rent, staff, and food costs before a single dollar of profit is made.</p>
+      </div>
+      <div class="use-card">
+        <span class="use-icon">💼</span>
+        <h4>Agencies</h4>
+        <p>Determine the minimum number of client retainers needed to cover salaries, software, and office overhead.</p>
+      </div>
+      <div class="use-card">
+        <span class="use-icon">🔨</span>
+        <h4>Contractors</h4>
+        <p>Find the minimum billable days per month to cover tools, insurance, fuel, and administrative costs.</p>
+      </div>
+      <div class="use-card">
+        <span class="use-icon">💻</span>
+        <h4>Freelancers</h4>
+        <p>Set a floor on monthly client hours to cover subscriptions, health insurance, and living expenses.</p>
+      </div>
+      <div class="use-card">
+        <span class="use-icon">📦</span>
+        <h4>Product Businesses</h4>
+        <p>Know how many units must move before warehouse costs, manufacturing, and marketing spend are recovered.</p>
+      </div>
+      <div class="use-card">
+        <span class="use-icon">🏗️</span>
+        <h4>New Ventures</h4>
+        <p>Before launching, validate that your projected sales volume is realistically above your break-even threshold.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ Section -->
+  <div class="content-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list" id="faqList">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          What is a break-even point?
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">The break-even point is the level of sales at which your total revenue equals your total costs — fixed and variable. At this exact point, you make zero profit and zero loss. Any sales beyond break-even generate profit; any sales below it produce a loss.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          How do I calculate break-even?
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Divide your total fixed costs by your contribution margin per unit (selling price minus cost per unit). For example: $10,000 fixed costs ÷ ($40 selling price − $15 cost per unit) = 400 units. You need to sell 400 units before a single dollar of profit is earned.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          Why is knowing your break-even point important?
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Without it, you're guessing. Break-even reveals whether your business model is viable at realistic sales volumes, helps you set minimum targets, guides pricing decisions, and gives lenders and investors confidence that you understand your financials. It's the most fundamental survival metric in business.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          Can I reduce my break-even point?
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Yes — three levers exist. First, lower your fixed costs (cheaper premises, fewer subscriptions, leaner staffing). Second, reduce your variable cost per unit through better supplier deals or more efficient production. Third, raise your selling price. Even a modest price increase can dramatically lower the number of units needed to break even.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">
+          What happens after I pass break-even?
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Every unit sold beyond break-even contributes its full contribution margin directly to profit — your fixed costs are already covered. This is why scaling past break-even is so powerful: revenue grows linearly while fixed cost per unit shrinks. The goal is to build enough margin of safety above break-even to withstand slow months and unexpected costs.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Related Tools Section -->
+  <div class="content-section">
+    <h2>Related Tools</h2>
+    <div class="related-grid">
+      <a href="../pricing-profit/profit-margin-calculator.html" class="related-card">
+        <div class="rc-icon">💰</div>
+        <h4>Profit Margin Calculator</h4>
+        <p>Calculate your profit, margin percentage, and markup from cost and selling price.</p>
+        <span class="rc-arrow">Try it →</span>
+      </a>
+      <a href="../pricing-profit/markup-calculator.html" class="related-card">
+        <div class="rc-icon">📈</div>
+        <h4>Markup Calculator</h4>
+        <p>Find the right markup percentage to hit your target profit margin on any product.</p>
+        <span class="rc-arrow">Try it →</span>
+      </a>
+      <a href="../invoice-payment/discount-profit-calculator.html" class="related-card">
+        <div class="rc-icon">🏷️</div>
+        <h4>Discount Profit Calculator</h4>
+        <p>See exactly how discounts affect your profit margin before you offer them.</p>
+        <span class="rc-arrow">Try it →</span>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  /* ── Helpers ── */
+  function fmt(n) {
+    return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtUnits(n) {
+    // Round up — you can't sell a fraction of a unit to break even
+    return Math.ceil(n).toLocaleString('en-US');
+  }
+
+  /* ── Main Calculate ── */
+  function calculate() {
+    const fixedEl  = document.getElementById('fixedCosts');
+    const sellEl   = document.getElementById('sellPrice');
+    const costEl   = document.getElementById('costPerUnit');
+    const errMsg   = document.getElementById('errorMsg');
+    const errTxt   = document.getElementById('errorText');
+
+    const fixedVal = fixedEl.value.trim();
+    const sellVal  = sellEl.value.trim();
+    const costVal  = costEl.value.trim();
+
+    /* Clear previous errors */
+    errMsg.classList.remove('visible', 'warning');
+    [fixedEl, sellEl, costEl].forEach(el => el.classList.remove('error-input'));
+
+    /* Validate: empty */
+    if (fixedVal === '' || sellVal === '' || costVal === '') {
+      const empties = [];
+      if (fixedVal === '') empties.push(fixedEl);
+      if (sellVal  === '') empties.push(sellEl);
+      if (costVal  === '') empties.push(costEl);
+      showError('Please fill in all three fields to calculate your break-even point.', empties);
+      return;
+    }
+
+    const fixed = parseFloat(fixedVal);
+    const sell  = parseFloat(sellVal);
+    const cost  = parseFloat(costVal);
+
+    /* Validate: negatives */
+    const negEls = [];
+    if (fixed < 0) negEls.push(fixedEl);
+    if (sell  < 0) negEls.push(sellEl);
+    if (cost  < 0) negEls.push(costEl);
+    if (negEls.length) {
+      showError('Values cannot be negative. Please enter positive numbers.', negEls);
+      return;
+    }
+
+    /* Validate: selling price must be greater than cost per unit */
+    if (sell <= cost) {
+      showError('Selling price must be higher than cost per unit — otherwise each sale increases your loss.', [sellEl, costEl]);
+      return;
+    }
+
+    /* Validate: selling price cannot be zero */
+    if (sell === 0) {
+      showError('Selling price cannot be zero.', [sellEl]);
+      return;
+    }
+
+    /* Calculations */
+    const contribution = sell - cost;                          // Contribution margin per unit
+    const beUnits      = fixed / contribution;                 // Exact break-even units
+    const beRevenue    = Math.ceil(beUnits) * sell;            // Revenue at ceiling units
+
+    /* Render */
+    renderResult('val-units',        'card-units',        fmtUnits(beUnits),   'pos');
+    renderResult('val-contribution', 'card-contribution', '$' + fmt(contribution), 'pos');
+    renderResult('val-revenue',      'card-revenue',      '$' + fmt(beRevenue), 'pos');
+  }
+
+  function renderResult(valId, cardId, text, cls) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    card.className = 'result-card highlight';
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function showError(msg, els, isWarning) {
+    const errMsg = document.getElementById('errorMsg');
+    const errTxt = document.getElementById('errorText');
+    errTxt.textContent = msg;
+    if (isWarning) {
+      errMsg.classList.add('warning');
+    } else {
+      errMsg.classList.add('visible');
+    }
+    if (els) els.forEach(el => { if (el) el.classList.add('error-input'); });
+  }
+
+  /* ── Reset ── */
+  function resetCalc() {
+    ['fixedCosts','sellPrice','costPerUnit'].forEach(id => {
+      const el = document.getElementById(id);
+      el.value = '';
+      el.classList.remove('error-input');
+    });
+    document.getElementById('errorMsg').classList.remove('visible', 'warning');
+
+    ['val-units','val-contribution','val-revenue'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    ['card-units','card-contribution','card-revenue'].forEach(id => {
+      document.getElementById(id).className = 'result-card';
+    });
+  }
+
+  /* ── FAQ Toggle ── */
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.faq-item.open').forEach(i => {
+      i.classList.remove('open');
+      i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+    });
+    // Open clicked if it was closed
+    if (!isOpen) {
+      item.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  /* ── Enter key support ── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') calculate();
+  });
+</script>
+</body>
+</html>

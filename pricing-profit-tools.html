@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pricing & Profit Tools | Free Small Business Calculators | Small Business Profit Toolkit</title>
+<meta name="description" content="Free pricing and profit calculators for small business owners. Calculate profit margins, markup, break-even points, freelance rates, and service pricing — no signup required." />
+<meta property="og:title" content="Pricing & Profit Tools — Free Small Business Calculators" />
+<meta property="og:description" content="Free calculators designed to help small business owners improve pricing decisions, estimate profitability, calculate margins, and plan revenue goals." />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Small Business Profit Toolkit" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --radius-xl:      24px;
+    --shadow-sm:      0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --shadow-lg:      0 8px 32px rgba(0,0,0,0.11);
+    --font-display:   'DM Serif Display', Georgia, serif;
+    --font-body:      'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+  .logo span { color: var(--accent); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .header-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Breadcrumb ── */
+  .breadcrumb {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+  }
+  .breadcrumb-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .breadcrumb a { color: var(--text-secondary); text-decoration: none; }
+  .breadcrumb a:hover { color: var(--accent); }
+  .breadcrumb-sep { color: var(--border-dark); }
+  .breadcrumb-current { color: var(--text-primary); font-weight: 500; }
+
+  /* ── Hero ── */
+  .hero {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 3.5rem 1rem 3rem;
+  }
+  .hero-inner {
+    max-width: 1080px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: center;
+  }
+  @media (max-width: 640px) { .hero-inner { grid-template-columns: 1fr; } }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 1rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(32px, 5.5vw, 52px);
+    font-weight: 400;
+    line-height: 1.15;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+  }
+  .hero p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 580px;
+  }
+  .hero-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  @media (max-width: 640px) { .hero-stats { flex-direction: row; flex-wrap: wrap; } }
+
+  .hero-stat {
+    background: var(--accent-light);
+    border: 1px solid #B8D9C5;
+    border-radius: var(--radius-md);
+    padding: 14px 20px;
+    text-align: center;
+    min-width: 110px;
+  }
+  .hero-stat .stat-num {
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .hero-stat .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-text);
+    margin-top: 4px;
+  }
+
+  /* ── Main ── */
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  /* ── Section spacing ── */
+  .section { margin-bottom: 3.5rem; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── Tool Grid ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 900px) { .tools-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .tools-grid { grid-template-columns: 1fr; } }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+  .tool-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: #B8D9C5;
+    transform: translateY(-2px);
+  }
+  .tool-card.featured {
+    border-color: #B8D9C5;
+    background: linear-gradient(135deg, #FAFDF9 0%, #EEF7F2 100%);
+  }
+  .featured-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    border: 1px solid #B8D9C5;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+  .tool-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .tool-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .tool-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .tool-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-light);
+    border: 1px solid #B8D9C5;
+    border-radius: var(--radius-sm);
+    padding: 9px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition), border-color var(--transition);
+    min-height: 44px;
+    width: 100%;
+    justify-content: center;
+  }
+  .tool-btn:hover { background: #D4ECDE; border-color: #9DCDB1; }
+  .tool-btn svg { flex-shrink: 0; }
+
+  /* ── Intro Prose ── */
+  .prose-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem 2.25rem;
+    box-shadow: var(--shadow-sm);
+  }
+  @media (max-width: 640px) { .prose-card { padding: 1.5rem 1.25rem; } }
+
+  .prose-card h2 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .prose-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-top: 1.75rem;
+    margin-bottom: 0.6rem;
+  }
+  .prose-card p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+  .prose-card p:last-child { margin-bottom: 0; }
+
+  .callout {
+    background: var(--accent-light);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding: 14px 18px;
+    margin: 1.5rem 0;
+    font-size: 14px;
+    color: var(--accent-text);
+    line-height: 1.65;
+    font-weight: 500;
+  }
+
+  /* ── Topics Grid ── */
+  .topics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 900px) { .topics-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .topics-grid { grid-template-columns: 1fr; } }
+
+  .topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+  .topic-card .t-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  .topic-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .topic-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .topic-card .formula {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--surface-alt);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    border-left: 3px solid var(--border-dark);
+  }
+
+  /* ── FAQ ── */
+  .faq-list { display: flex; flex-direction: column; gap: 0; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .faq-item:first-child { border-radius: var(--radius-lg) var(--radius-lg) 0 0; border: 1px solid var(--border); }
+  .faq-item:last-child  { border-radius: 0 0 var(--radius-lg) var(--radius-lg); border: 1px solid var(--border); border-top: none; }
+  .faq-item:not(:first-child):not(:last-child) { border: 1px solid var(--border); border-top: none; }
+
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    text-align: left;
+    padding: 1.1rem 1.5rem;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 44px;
+    transition: background var(--transition);
+  }
+  .faq-q:hover { background: var(--bg); }
+  .faq-q[aria-expanded="true"] { color: var(--accent); }
+  .faq-chevron {
+    flex-shrink: 0;
+    transition: transform var(--transition);
+    color: var(--text-muted);
+  }
+  .faq-q[aria-expanded="true"] .faq-chevron { transform: rotate(180deg); color: var(--accent); }
+
+  .faq-a {
+    padding: 0 1.5rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.2s ease;
+  }
+  .faq-a.open {
+    max-height: 400px;
+    padding-bottom: 1.1rem;
+  }
+  .faq-a p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  /* ── Related Categories ── */
+  .related-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 640px) { .related-grid { grid-template-columns: 1fr; } }
+
+  .related-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: box-shadow var(--transition), border-color var(--transition), transform var(--transition);
+  }
+  .related-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--border-dark);
+    transform: translateY(-2px);
+  }
+  .related-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: var(--surface-alt);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .related-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+  }
+  .related-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .related-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ── Page H2 Titles ── */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 4vw, 28px);
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .anim-1 { animation: fadeUp 0.4s 0.00s ease both; }
+  .anim-2 { animation: fadeUp 0.4s 0.07s ease both; }
+  .anim-3 { animation: fadeUp 0.4s 0.14s ease both; }
+  .anim-4 { animation: fadeUp 0.4s 0.21s ease both; }
+</style>
+
+<!-- FAQ Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is profit margin and why does it matter for small businesses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Profit margin is the percentage of revenue you keep as profit after covering costs. For small businesses, tracking margin—not just revenue—reveals whether growth is actually sustainable or just masking thin returns."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between markup and profit margin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Markup is calculated on cost: if something costs $50 and you charge $75, the markup is 50%. Margin is calculated on revenue: that same sale has a 33% profit margin. They measure different things—confusing them is one of the most common small business pricing mistakes."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate break-even for my business?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Break-even is the point where your total revenue exactly covers all costs—fixed and variable. The formula is: Fixed Costs ÷ (Selling Price − Variable Cost per Unit). Our Break-Even Calculator handles this automatically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What profit margin should a small business aim for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It varies by industry. Retail typically runs 2–10%. Service businesses can achieve 15–30%+. Software and consulting often exceed 40%. More important than hitting an industry benchmark is understanding your own margin trend—whether it's stable, growing, or eroding."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should freelancers calculate their hourly rate?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Start with your target annual income, add business expenses and taxes, then divide by your billable hours per year (typically 1,000–1,200 for full-time freelancers). Don't forget to account for unpaid time: client acquisition, admin, and downtime between projects."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a service pricing calculator used for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A service pricing calculator helps you set rates that cover your labor costs, overhead, desired profit margin, and taxes—so you aren't guessing or undercharging. It's especially useful for consultants, trades, and service businesses quoting custom work."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I price a contractor job profitably?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Contractor pricing should account for materials, labor (including subcontractors), overhead allocation, and your target margin. A common mistake is pricing at material cost plus a flat day rate—without factoring overhead, unexpected delays, or warranty obligations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is revenue forecasting and how do I do it for a small business?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Revenue forecasting means projecting future income based on pricing, sales volume, and market assumptions. For small businesses, a simple model multiplies average transaction value by projected transaction volume—then stress-tests that against a conservative and optimistic scenario."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do small businesses fail on pricing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most common failures: pricing based on what competitors charge (without knowing your own costs), confusing markup with margin, not accounting for overhead in service prices, and not revisiting prices as costs rise. These tools are designed to eliminate all four errors."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are these calculators free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every calculator on Small Business Profit Toolkit is completely free, requires no account or signup, and runs entirely in your browser. No data is stored or shared."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+   <a href="index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <div class="header-right">
+      <span class="header-tag">Free Tools</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── Breadcrumb ── -->
+<nav class="breadcrumb" aria-label="Breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Home</a>
+    <span class="breadcrumb-sep" aria-hidden="true">›</span>
+    <span class="breadcrumb-current">Pricing &amp; Profit Tools</span>
+  </div>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-inner">
+    <div class="anim-1">
+      <div class="hero-eyebrow">Pricing &amp; Profit Tools</div>
+      <h1 id="hero-heading">Know your numbers.<br>Price with confidence.</h1>
+      <p>Free calculators designed to help small business owners improve pricing decisions, estimate profitability, calculate margins, and plan revenue goals — no spreadsheet required.</p>
+    </div>
+    <div class="hero-stats anim-2" aria-hidden="true">
+      <div class="hero-stat">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Free Tools</div>
+      </div>
+      <div class="hero-stat">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Signups</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Main Content ── -->
+<main>
+
+  <!-- ── Tool Directory ── -->
+  <section class="section anim-2" aria-labelledby="tools-heading">
+    <p class="section-label">All Tools in This Category</p>
+    <h2 class="section-title" id="tools-heading">Pricing &amp; Profit Calculators</h2>
+    <div class="tools-grid">
+
+      <div class="tool-card featured">
+        <span class="featured-badge">Popular</span>
+        <div class="tool-icon" aria-hidden="true">📊</div>
+        <h3>Profit Margin Calculator</h3>
+        <p>Enter cost and selling price to instantly see profit amount, margin percentage, and markup in one view.</p>
+        <a href="pricing-profit/profit-margin-calculator.html" class="tool-btn">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">🏷️</div>
+        <h3>Markup Calculator</h3>
+        <p>Calculate the right selling price from your cost price and desired markup percentage — and see the resulting margin.</p>
+        <a href="pricing-profit/markup-calculator.html" class="tool-btn">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">⚖️</div>
+        <h3>Break-Even Calculator</h3>
+        <p>Find the exact sales volume where your revenue covers all costs — and discover how far above break-even you're operating.</p>
+        <a href="pricing-profit/break-even-calculator.html" class="tool-btn">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">🛠️</div>
+        <h3>Service Pricing Calculator</h3>
+        <p>Build a service price from the ground up — covering labor, overhead, profit margin, and applicable taxes.</p>
+        <a href="pricing-profit/service-pricing-calculator.html" class="tool-btn">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">💻</div>
+        <h3>Freelance Rate Calculator</h3>
+        <p>Calculate the hourly or project rate you need to hit your income target after taxes, expenses, and unbillable time.</p>
+        <a href="pricing-profit/freelance-rate-calculator.html" class="tool-btn">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">📋</div>
+        <h3>Contractor Quote Calculator</h3>
+        <p>Build profitable job quotes with materials, labor, subcontractors, overhead, and your target margin all accounted for.</p>
+        <a href="pricing-profit/contractor-quote-calculator.html" class="tool-btn">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">🎯</div>
+        <h3>Target Income Rate Calculator</h3>
+        <p>Work backward from a target income to find the rate, pricing, or sales volume you need to get there.</p>
+        <a href="pricing-profit/target-income-rate-calculator.html" class="tool-btn">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">📈</div>
+        <h3>Business Profit Estimator</h3>
+        <p>Estimate monthly or annual profit from revenue, cost of goods, and operating expenses — with a margin breakdown.</p>
+        <a href="pricing-profit/business-profit-estimator.html" class="tool-btn">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Introductory Content ── -->
+  <section class="section anim-3" aria-labelledby="intro-heading">
+    <p class="section-label">Why Pricing Matters</p>
+    <div class="prose-card">
+      <h2 id="intro-heading">Pricing is the most powerful lever in your business — and most owners underuse it</h2>
+
+      <p>Most small business owners spend enormous energy on marketing, operations, and customer service — and almost none on the one decision that shapes everything else: pricing. A 1% improvement in price has a larger impact on profit than a 1% reduction in costs or a 1% increase in volume. Yet pricing is the business lever touched least often, understood least clearly, and set most casually.</p>
+
+      <p>This isn't a criticism — it's a structural problem. When you're running a business day to day, pricing feels solved once you've set a number and people are buying. But "people are buying" is not the same as "this is working financially." Plenty of businesses grow revenue every year while their margins quietly erode, their owners taking home less despite doing more.</p>
+
+      <div class="callout">The three most common small business pricing mistakes: guessing based on competitors, confusing markup with margin, and never revisiting prices as costs change.</div>
+
+      <h3>Why pricing mistakes are so expensive</h3>
+      <p>When a business underprices by even a small amount, the damage compounds. A $200 service priced at $180 is a 10% revenue shortfall — but it might represent 50% of your profit on that job, depending on your cost structure. The problem scales: underpricing by 10% across 500 jobs a year isn't a minor inefficiency, it's the difference between a healthy business and one that's always short on cash despite staying busy.</p>
+
+      <p>Overpricing carries its own risks — lost customers, slower growth, a reputation for being expensive. But the risk of overpricing is at least visible: lost sales are countable. The risk of underpricing is hidden. You stay busy, you cover your bills, and the real cost — years of foregone profit — only becomes clear in hindsight.</p>
+
+      <h3>Understanding margin versus markup</h3>
+      <p>The most common and costly confusion in small business pricing is treating markup and margin as interchangeable. They measure different things. Markup is the percentage added on top of cost. Margin is the percentage of revenue kept as profit. A 100% markup on a $50 product produces a $100 selling price and a 50% margin — not a 100% margin. A 25% markup produces only a 20% margin.</p>
+
+      <p>This distinction matters when setting price targets. If your accountant tells you that your category needs a 40% margin to be sustainable, and you interpret that as a 40% markup, you're underpricing every product by a meaningful amount. Over a full year of sales, the gap between the margin you think you have and the margin you actually have can be thousands of dollars.</p>
+
+      <h3>The break-even point as a business foundation</h3>
+      <p>Before you can price confidently, you need to know what it costs to keep your business running — not just per product, but in total. Fixed costs (rent, insurance, subscriptions, salaries) continue whether you make one sale or a thousand. Variable costs scale with volume. Your break-even point is the minimum revenue needed before any real profit begins.</p>
+
+      <p>Owners who know their break-even number make better decisions in every direction: they know when they can afford to discount, when a new product needs a higher price to contribute meaningfully, and when a slow month is genuinely alarming versus temporarily below target. It's the financial floor that makes all other numbers meaningful.</p>
+
+      <h3>Revenue planning: from goals to prices</h3>
+      <p>Most small business owners set revenue goals informally — "I want to make more than last year." A more useful approach runs the math backward from a real target. If your goal is $120,000 in annual profit, and your average margin is 30%, you need $400,000 in revenue to get there. If your average sale is $800, you need 500 customers. If you currently close 40% of quotes, you need to generate 1,250 leads. Each of those numbers is actionable in a way that "make more money" is not.</p>
+
+      <p>The tools in this category are built to support exactly this kind of thinking — connecting a desired financial outcome to the pricing and volume decisions that produce it.</p>
+
+      <h3>Service businesses and the hidden cost of time</h3>
+      <p>Product-based businesses have a relatively straightforward cost structure: materials plus labor plus overhead. Service businesses are more complex because the primary input — your time — has an opportunity cost that doesn't appear on any invoice. An hour spent on admin is an hour not billed. A week chasing a slow-paying client is a week of cash tied up. A project that runs long eats into every other job's margin.</p>
+
+      <p>Freelancers and service providers need a rate that covers not just billable hours, but all the unbillable time that surrounds them. The Freelance Rate Calculator and Service Pricing Calculator in this category are built specifically for this reality — they account for taxes, expenses, and the gap between available hours and actually-billable hours, so your rate reflects what you genuinely need to charge.</p>
+
+      <h3>Margin management is an ongoing discipline, not a one-time decision</h3>
+      <p>Costs change. Supplier prices increase. Wages rise. Rent goes up. But prices — once set — have a tendency to stay put, because changing them feels risky. The result is margin compression: the same prices, higher costs, shrinking profit. Businesses that review their margins regularly catch this drift early, when a modest price adjustment is all that's needed. Businesses that ignore it for years often find themselves facing a difficult choice: a large, disruptive price increase, or accepting a business model that no longer supports their goals.</p>
+
+      <p>These calculators are a starting point for that discipline. Use them not just to set prices, but to check them — quarterly, after any significant cost change, and whenever growth feels harder than the revenue numbers suggest it should be.</p>
+    </div>
+  </section>
+
+  <!-- ── Related Topics ── -->
+  <section class="section anim-3" aria-labelledby="topics-heading">
+    <p class="section-label">Key Concepts</p>
+    <h2 class="section-title" id="topics-heading">Related Topics</h2>
+    <div class="topics-grid">
+
+      <div class="topic-card">
+        <div class="t-icon" aria-hidden="true">📉</div>
+        <h3>Profit Margins</h3>
+        <p>Margin shows what share of every dollar of revenue you actually keep. It's the clearest single measure of pricing health and cost control in one number.</p>
+        <div class="formula">Margin = (Revenue − Costs) ÷ Revenue × 100</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="t-icon" aria-hidden="true">🏷️</div>
+        <h3>Markup</h3>
+        <p>Markup tells you how much you've added above cost. Unlike margin, it's calculated against cost — so a high markup percentage does not mean a proportionally high margin.</p>
+        <div class="formula">Markup = Profit ÷ Cost × 100</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="t-icon" aria-hidden="true">⚖️</div>
+        <h3>Break-Even Analysis</h3>
+        <p>Understanding when total revenue covers all costs — fixed and variable — tells you the minimum viable volume at any given price point.</p>
+        <div class="formula">Break-Even = Fixed Costs ÷ (Price − Variable Cost)</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="t-icon" aria-hidden="true">📅</div>
+        <h3>Revenue Forecasting</h3>
+        <p>Projecting future revenue by combining price, average transaction size, and expected volume. Useful for cash flow planning and setting realistic growth targets.</p>
+        <div class="formula">Revenue = Avg. Sale × Projected Transactions</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="t-icon" aria-hidden="true">🛠️</div>
+        <h3>Service Pricing</h3>
+        <p>Setting rates for services is more complex than product pricing — it must account for labor, overhead, unbillable time, and the desired net margin after taxes.</p>
+        <div class="formula">Rate = (Costs + Profit Target) ÷ Billable Hours</div>
+      </div>
+
+      <div class="topic-card">
+        <div class="t-icon" aria-hidden="true">💰</div>
+        <h3>Cost of Goods Sold</h3>
+        <p>COGS is the direct cost to produce what you sell — materials, direct labor, manufacturing. It's the foundation of both margin calculation and break-even analysis.</p>
+        <div class="formula">Gross Profit = Revenue − COGS</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── FAQ ── -->
+  <section class="section anim-4" aria-labelledby="faq-heading">
+    <p class="section-label">Common Questions</p>
+    <h2 class="section-title" id="faq-heading">Frequently Asked Questions</h2>
+    <div class="faq-list" role="list">
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-1" onclick="toggleFaq(this)">
+          What is profit margin and why does it matter for small businesses?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-1" role="region">
+          <p>Profit margin is the percentage of your revenue that you keep as profit after covering all costs. For example, a 30% margin on $10,000 in monthly revenue means $3,000 in profit. For small businesses, margin is a better indicator of financial health than revenue — a business with $500,000 in revenue and a 5% margin is earning less profit than one with $200,000 in revenue and a 20% margin. Tracking margin over time reveals whether your pricing and cost management are working, or quietly eroding.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-2" onclick="toggleFaq(this)">
+          What is the difference between markup and profit margin?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-2" role="region">
+          <p>Markup is calculated on cost: if something costs $50 and you sell it for $75, the markup is 50%. Margin is calculated on revenue: that same transaction has a 33% profit margin. They measure different things — confusing them is one of the most common small business pricing mistakes. A 100% markup sounds large, but it only produces a 50% margin. If you're targeting a specific margin, you need a higher markup than that margin figure to reach it.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-3" onclick="toggleFaq(this)">
+          How do I calculate break-even for my business?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-3" role="region">
+          <p>The break-even formula is: Fixed Costs ÷ (Selling Price − Variable Cost per Unit). For example, if your fixed monthly costs are $5,000, each unit sells for $50, and the variable cost per unit is $20, your break-even is 167 units per month. Above that, every additional sale contributes directly to profit. Knowing this number tells you the minimum viable performance level — everything below it is a loss, everything above it is building profit.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-4" onclick="toggleFaq(this)">
+          What profit margin should a small business aim for?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-4" role="region">
+          <p>Target margins vary significantly by industry. Retail and grocery businesses typically operate on 2–10% net margins. Service businesses like cleaners and landscapers often run 10–20%. Consulting and professional services can achieve 20–35%+. More important than hitting an industry benchmark is understanding your own margin trend. A consistently stable 12% margin is healthier than a 20% margin that's been falling for two years. Use the Business Profit Estimator to track yours.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-5" onclick="toggleFaq(this)">
+          How should freelancers calculate their hourly rate?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-5" role="region">
+          <p>Start with your target annual income, add your annual business expenses, then divide by your realistically billable hours. Full-time freelancers typically bill 1,000–1,200 hours per year — far below 2,080 (the standard 40-hour work year) once you account for client acquisition, admin, vacation, and downtime between projects. If you need $80,000 to live and have $10,000 in expenses, and you can bill 1,100 hours, your minimum rate is around $82/hour before taxes. The Freelance Rate Calculator handles all of this automatically.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-6" onclick="toggleFaq(this)">
+          What is a service pricing calculator used for?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-6" role="region">
+          <p>A service pricing calculator builds your rate from the bottom up — starting with your actual costs (labor, materials, overhead), then adding your desired profit margin and any applicable taxes. This is more reliable than market-based pricing (charging what competitors charge) because it ties your price to your specific cost structure. It's especially useful for consultants, tradespeople, cleaning services, and any business quoting custom work where costs vary by job.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-7" onclick="toggleFaq(this)">
+          How do I price a contractor job profitably?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-7" role="region">
+          <p>Contractor pricing should account for materials (with a markup to cover procurement time and supplier risk), direct labor, any subcontractor costs, a share of overhead (insurance, vehicle, tools, admin), and your target profit margin. A common mistake is pricing materials at cost and adding a flat day rate — this fails to account for overhead allocation, scope creep risk, or warranty obligations. Use the Contractor Quote Calculator to build a quote that covers all of these components with your target margin built in.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-8" onclick="toggleFaq(this)">
+          What is revenue forecasting and how do I do it for a small business?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-8" role="region">
+          <p>Revenue forecasting means projecting future income based on your pricing, expected transaction volume, and market assumptions. A simple approach: multiply your average transaction value by your projected number of transactions per month. Then build two variants — a conservative scenario (10–20% below your base case) and an optimistic one. The real value of forecasting isn't accuracy, it's forcing you to understand which variables most affect your income — usually price and close rate, not volume alone.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-9" onclick="toggleFaq(this)">
+          Why do small businesses fail on pricing?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-9" role="region">
+          <p>The most common failures: setting prices based on what competitors charge without knowing your own cost structure, confusing markup with margin and underpricing as a result, not including overhead in service-based pricing, and never updating prices as costs rise. A secondary failure is anchoring prices too low at launch (to attract customers) and never raising them as the business matures. These tools are designed to eliminate all of these errors by grounding every price in actual numbers rather than guesswork.</p>
+        </div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" aria-controls="faq-a-10" onclick="toggleFaq(this)">
+          Are these calculators free to use?
+          <svg class="faq-chevron" width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a" id="faq-a-10" role="region">
+          <p>Yes, completely. Every calculator on Small Business Profit Toolkit is free, requires no account or email signup, and runs entirely in your browser. No data is sent to any server or stored anywhere. You can use them as many times as you like, bookmark them, and share them with other business owners.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Related Categories ── -->
+  <section class="section anim-4" aria-labelledby="related-heading">
+    <p class="section-label">More Tools</p>
+    <h2 class="section-title" id="related-heading">Related Categories</h2>
+    <div class="related-grid">
+
+      <a href="employee-business-cost-tools.html" class="related-card">
+        <div class="related-icon" aria-hidden="true">👥</div>
+        <div>
+          <h3>Employee &amp; Business Cost Tools</h3>
+          <p>Calculate the true cost of hiring, payroll estimates, overtime, and employee ROI — so staffing decisions are based on real numbers.</p>
+          <span class="related-link">
+            Browse tools
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </a>
+
+      <a href="time-operations-tools.html" class="related-card">
+        <div class="related-icon" aria-hidden="true">⏱️</div>
+        <div>
+          <h3>Time &amp; Operations Tools</h3>
+          <p>Business hours calculators, project profitability estimators, and scheduling tools to help you run a tighter, more efficient operation.</p>
+          <span class="related-link">
+            Browse tools
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  function toggleFaq(btn) {
+    const expanded = btn.getAttribute('aria-expanded') === 'true';
+    const targetId = btn.getAttribute('aria-controls');
+    const panel = document.getElementById(targetId);
+
+    // Close all
+    document.querySelectorAll('.faq-q').forEach(b => b.setAttribute('aria-expanded', 'false'));
+    document.querySelectorAll('.faq-a').forEach(p => p.classList.remove('open'));
+
+    // Open this one if it was closed
+    if (!expanded) {
+      btn.setAttribute('aria-expanded', 'true');
+      panel.classList.add('open');
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Freelance Rate Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Calculate the ideal freelance hourly rate based on expenses, taxes, billable hours, and profit goals." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --profit-pos:     #1A5C3A;
+    --profit-neg:     #9B2828;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-sm:      0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:  'DM Serif Display', Georgia, serif;
+    --font-body:     'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+  }
+  .header-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Main ── */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ── Page Title ── */
+  .page-title {
+    margin-bottom: 2rem;
+    animation: fadeUp 0.4s ease both;
+  }
+  .page-title h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 5vw, 36px);
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .page-title p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ── Calc Card ── */
+  .calc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    animation: fadeUp 0.4s 0.08s ease both;
+    margin-bottom: 2rem;
+  }
+
+  /* ── Section headings ── */
+  .section-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+
+  /* ── Input grid ── */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .field .field-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: -3px;
+  }
+
+  /* Tooltip */
+  .tip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    cursor: default;
+  }
+  .tip-icon {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--border-dark);
+    color: var(--text-secondary);
+    font-size: 9px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .tip-box {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text-primary);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 7px 10px;
+    border-radius: var(--radius-sm);
+    width: 200px;
+    white-space: normal;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .tip:hover .tip-box { display: block; }
+
+  /* Inputs */
+  .input-wrap { position: relative; }
+  .input-wrap .prefix {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  .input-wrap input {
+    width: 100%;
+    padding: 11px 14px 11px 30px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    color: var(--text-primary);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    -moz-appearance: textfield;
+  }
+  .input-wrap input.no-prefix { padding-left: 14px; }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(26,92,58,0.12);
+  }
+  .input-wrap input.error-input {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(155,40,40,0.1);
+  }
+
+  /* Slider */
+  .slider-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .slider-hint { font-size: 11px; color: var(--text-muted); }
+  .slider-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-light);
+    padding: 3px 10px;
+    border-radius: 20px;
+    min-width: 46px;
+    text-align: center;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    border-radius: 10px;
+    background: var(--border);
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform var(--transition);
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #fff;
+    cursor: pointer;
+  }
+
+  /* Project hours inline band */
+  .project-band {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+    flex-wrap: wrap;
+  }
+  .project-band label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .project-band .input-wrap { flex: 1; min-width: 120px; max-width: 200px; }
+  .project-band .band-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    flex: 2;
+    min-width: 160px;
+  }
+
+  /* Error */
+  .error-msg {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--danger);
+    background: var(--danger-light);
+    border: 1px solid #F0C8C8;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 1.25rem;
+  }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* Insight banners */
+  .insight-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .insight-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid;
+    animation: fadeUp 0.3s ease both;
+    line-height: 1.5;
+  }
+  .insight-banner svg { flex-shrink: 0; margin-top: 1px; }
+  .insight-banner.warn { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .insight-banner.info { color: var(--accent-text); background: var(--accent-light); border-color: #B8D9C5; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .btn {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 24px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    letter-spacing: 0.01em;
+  }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); flex: 1; }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset { background: transparent; color: var(--text-secondary); border-color: var(--border-dark); }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy {
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 9px 18px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    border: 1px solid #B8D9C5;
+    background: var(--accent-light);
+    color: var(--accent-text);
+    transition: all var(--transition);
+    letter-spacing: 0.01em;
+    display: none;
+  }
+  .btn-copy:hover { background: #d4ecde; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* Results */
+  .results-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .result-primary {
+    background: var(--accent-light);
+    border: 1px solid #B8D9C5;
+    border-radius: var(--radius-md);
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+    margin-bottom: 12px;
+    transition: all 0.25s ease;
+  }
+  .result-primary .r-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--accent-text);
+    margin-bottom: 6px;
+  }
+  .result-primary .r-value {
+    font-family: var(--font-display);
+    font-size: 46px;
+    color: var(--profit-pos);
+    line-height: 1;
+    transition: color 0.25s ease;
+  }
+  .result-primary .r-sub {
+    font-size: 12px;
+    color: var(--accent-text);
+    margin-top: 6px;
+    opacity: 0.8;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 560px) { .results-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 380px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1rem;
+    text-align: center;
+    transition: all 0.25s ease;
+  }
+  .result-card.highlight { background: var(--accent-light); border-color: #B8D9C5; }
+  .result-card .r-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .result-card .r-value {
+    font-family: var(--font-display);
+    font-size: 24px;
+    color: var(--text-primary);
+    line-height: 1;
+    transition: color 0.25s ease;
+  }
+  .result-card .r-value.pos { color: var(--profit-pos); }
+  .result-card .r-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 22px; }
+  .result-primary .r-value.placeholder { font-size: 28px; }
+
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  /* ── Guide Section ── */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section > h2,
+  .faq-section > h2 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+  }
+  .guide-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+  .guide-card .g-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.amber { background: #FDF3E7; }
+  .g-icon.slate { background: #EEF0F5; }
+  .guide-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .guide-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .guide-card .formula {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--surface-alt);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    border-left: 3px solid var(--border-dark);
+  }
+
+  .guide-card-wide {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .guide-card-wide h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .why-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* ── Examples ── */
+  .examples-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 560px) { .examples-grid { grid-template-columns: 1fr; } }
+
+  .example-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+  }
+  .example-card .e-role {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+  .example-card h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .example-card .e-detail {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .example-card .e-price {
+    margin-top: 10px;
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--profit-pos);
+  }
+
+  /* ── FAQ ── */
+  .faq-section { margin-top: 2.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .faq-q {
+    width: 100%;
+    text-align: left;
+    padding: 1rem 1.25rem;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    transition: background var(--transition);
+  }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s ease; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a {
+    display: none;
+    padding: 0 1.25rem 1rem;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    border-top: 1px solid var(--border);
+    padding-top: 0.75rem;
+  }
+  .faq-item.open .faq-a { display: block; }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-5px); }
+    40%     { transform: translateX(5px); }
+    60%     { transform: translateX(-3px); }
+    80%     { transform: translateX(3px); }
+  }
+  @keyframes popIn {
+    0%   { transform: scale(0.94); opacity: 0.6; }
+    60%  { transform: scale(1.03); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>Freelance Rate Calculator</h1>
+    <p>Find out exactly what to charge clients. Built on your real income goals, taxes, expenses, and billable hours — not guesswork.</p>
+  </div>
+
+  <div class="calc-card">
+
+    <!-- Income & Expenses -->
+    <div class="input-section">
+      <h2 class="section-label">Your Financial Goals</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="annualIncome">
+            Desired Annual Income
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">The take-home amount you want to earn after business expenses — before taxes.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="annualIncome" placeholder="80,000" min="0" step="100" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="annualExpenses">
+            Annual Business Expenses
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Software, equipment, subscriptions, internet, co-working space — anything you pay to run your business.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="annualExpenses" placeholder="10,000" min="0" step="100" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Billable Hours -->
+    <div class="input-section">
+      <h2 class="section-label">Your Working Schedule</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="billableHours">
+            Billable Hours Per Week
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Only hours actually charged to clients. Admin, marketing, and emails don't count here — those are non-billable.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="billableHours" class="no-prefix" placeholder="25" min="1" max="80" step="1" inputmode="numeric" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="weeksWorked">
+            Weeks Worked Per Year
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Subtract vacation, public holidays, and sick days. Most freelancers use 46–50 weeks.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="weeksWorked" class="no-prefix" placeholder="48" min="1" max="52" step="1" inputmode="numeric" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sliders -->
+    <div class="input-section">
+      <h2 class="section-label">Buffers & Protection</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label>
+            Tax Buffer
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Self-employed taxes in the US typically run 25–35% of net income. Set this to match your expected bracket.</span>
+            </span>
+          </label>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-hint">Self-employment tax reserve</span>
+              <span class="slider-value" id="taxDisplay">25%</span>
+            </div>
+            <input type="range" id="taxBuffer" min="0" max="50" step="1" value="25"
+              oninput="document.getElementById('taxDisplay').textContent = this.value + '%'" />
+          </div>
+        </div>
+        <div class="field">
+          <label>
+            Profit Buffer
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Extra margin for business growth, slow months, equipment upgrades, or savings. Adds to your rate on top of income and tax.</span>
+            </span>
+          </label>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-hint">Growth &amp; safety margin</span>
+              <span class="slider-value" id="profitDisplay">20%</span>
+            </div>
+            <input type="range" id="profitBuffer" min="0" max="100" step="1" value="20"
+              oninput="document.getElementById('profitDisplay').textContent = this.value + '%'" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Hours Band -->
+    <div class="project-band">
+      <label for="projectHours">Estimated Project Hours</label>
+      <div class="input-wrap">
+        <input type="number" id="projectHours" class="no-prefix" placeholder="10" min="0.5" step="0.5" inputmode="decimal" value="10" />
+      </div>
+      <span class="band-hint">Optional: get an instant project quote based on your calculated hourly rate.</span>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-area" id="insightArea"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate My Rate</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Your Rate Breakdown</h2>
+
+      <div class="result-primary" id="card-hourly">
+        <div class="r-label">Recommended Hourly Rate</div>
+        <div class="r-value placeholder" id="val-hourly">—</div>
+        <div class="r-sub" id="sub-hourly">your minimum profitable rate</div>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-card" id="card-project">
+          <div class="r-label">Project Estimate</div>
+          <div class="r-value placeholder" id="val-project">—</div>
+          <div class="r-sub" id="sub-project">based on project hours</div>
+        </div>
+        <div class="result-card" id="card-revenue">
+          <div class="r-label">Annual Revenue Goal</div>
+          <div class="r-value placeholder" id="val-revenue">—</div>
+          <div class="r-sub">to hit your income target</div>
+        </div>
+        <div class="result-card" id="card-billable">
+          <div class="r-label">Billable Hours / Year</div>
+          <div class="r-value placeholder" id="val-billable">—</div>
+          <div class="r-sub">total client hours</div>
+        </div>
+      </div>
+
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn" onclick="copySummary()">Copy Rate Summary</button>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Guide Section -->
+  <div class="guide-section">
+    <h2>Understanding Your Rate</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>How Your Rate Is Built</h3>
+        <p>Your rate must cover personal income, business expenses, taxes, and a profit buffer. Remove any one of these and you're subsidising your clients out of your own pocket.</p>
+        <div class="formula">Rate = Revenue Goal ÷ Annual Billable Hours</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 10h12M10 4l6 6-6 6" stroke="#185FA5" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Billable vs Total Hours</h3>
+        <p>You work 40+ hours a week but only bill for a fraction. Admin, proposals, invoicing, and business development are real work — they just aren't billable. Your rate must absorb them.</p>
+        <div class="formula">Annual Billable Hrs = Weekly Hrs × Weeks Worked</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon amber">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="4" width="14" height="13" rx="2" stroke="#7A4A10" stroke-width="1.5"/>
+            <path d="M7 2v4M13 2v4M3 9h14" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Why You Need a Tax Buffer</h3>
+        <p>Self-employed professionals in the US pay self-employment tax (15.3%) plus income tax. Together these routinely hit 25–35% of income. Charging without a buffer means paying taxes out of savings.</p>
+        <div class="formula">After-Tax Cost = Income × (1 + Tax%)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon slate">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 10l4 4 6-7" stroke="#4A5568" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="10" cy="10" r="8" stroke="#4A5568" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>What the Profit Buffer Does</h3>
+        <p>A profit buffer above break-even funds slow months, equipment upgrades, emergency savings, and business growth. It's not greed — it's resilience. Without it, one slow quarter breaks you.</p>
+        <div class="formula">Final Rate = Cost Rate × (1 + Profit%)</div>
+      </div>
+
+    </div>
+
+    <!-- Business Examples -->
+    <h2 style="margin-top:2.5rem; margin-bottom:1.25rem;">Business Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="e-role">Freelance Designer</span>
+        <h4>Mid-Level Brand Designer</h4>
+        <div class="e-detail">$70k income goal · $8k expenses · 25 billable hrs/week · 48 weeks · 25% tax · 20% profit buffer</div>
+        <div class="e-price">≈ $88/hr</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Consultant</span>
+        <h4>Marketing Strategy Consultant</h4>
+        <div class="e-detail">$120k income goal · $12k expenses · 20 billable hrs/week · 46 weeks · 30% tax · 25% profit buffer</div>
+        <div class="e-price">≈ $220/hr</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Video Editor</span>
+        <h4>YouTube &amp; Social Content Editor</h4>
+        <div class="e-detail">$60k income goal · $6k expenses · 30 billable hrs/week · 50 weeks · 25% tax · 15% profit buffer</div>
+        <div class="e-price">≈ $62/hr</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Contractor</span>
+        <h4>Software Development Contractor</h4>
+        <div class="e-detail">$150k income goal · $15k expenses · 35 billable hrs/week · 48 weeks · 30% tax · 20% profit buffer</div>
+        <div class="e-price">≈ $175/hr</div>
+      </div>
+    </div>
+
+    <!-- Why freelancers undercharge -->
+    <div class="guide-card-wide">
+      <h3>Why freelancers undercharge — and how to fix it</h3>
+      <ul class="why-list">
+        <li><strong>Ignoring taxes entirely.</strong> Charging $80/hr sounds great until you owe 30% of it in taxes. Your rate must account for what the government takes — not just what you keep.</li>
+        <li><strong>Counting all hours as billable.</strong> Every hour spent on emails, proposals, admin, and marketing is unbillable time you still get paid nothing for. Your hourly rate has to carry that weight.</li>
+        <li><strong>Copying competitor rates blindly.</strong> Another freelancer's rate reflects their costs, lifestyle, and location — not yours. Build from your own numbers every time.</li>
+        <li><strong>Forgetting business expenses.</strong> Software, a good laptop, subscriptions, and insurance are business costs. They belong in your rate, not in your personal budget.</li>
+        <li><strong>No buffer for slow months.</strong> Freelance income is inconsistent. A profit buffer converts good months into security for bad ones, not a temporary windfall you spend immediately.</li>
+      </ul>
+    </div>
+
+  </div><!-- /.guide-section -->
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How many billable hours should I enter?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Only enter hours you actually invoice clients for. Most full-time freelancers bill between 20–30 hours per week; the rest goes to admin, marketing, and business development. Overstating billable hours will make your calculated rate look lower than it needs to be.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What tax buffer percentage should I use?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">In the US, self-employed individuals pay 15.3% self-employment tax plus federal and state income tax. A combined effective rate of 25–30% is conservative and safe for most freelancers. Those earning above $100k/year should consider 30–35% or consult a CPA.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          My calculated rate feels too high. Should I lower it?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Before lowering your rate, consider whether you can increase billable hours, reduce expenses, or work more weeks per year. If the rate still feels high relative to your market, the real answer is usually to increase your value and positioning — not to charge less than you need to be profitable.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Should I charge the same hourly rate for every project?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Your calculated rate is a floor, not a ceiling. You can charge more for rush projects, specialist skills, or high-stakes work. Think of this as your minimum profitable rate — anything above it is upside you've earned by knowing your numbers.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What's the difference between the profit buffer and my income goal?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Your income goal is what you need to live on. The profit buffer is additional margin that stays inside the business — for savings, equipment, slow months, and growth. They serve different purposes. The income goal covers your life; the profit buffer protects your business.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How often should I recalculate my rate?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Revisit your rate at least once a year, and any time your expenses change significantly, your income goal changes, or you're changing your working schedule. Most experienced freelancers review pricing every 12 months and raise rates with new clients each year.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  /* ── Helpers ── */
+  function fmtDollar(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+  function fmtRate(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '/hr';
+  }
+  function fmtNum(n) {
+    return Math.round(n).toLocaleString('en-US');
+  }
+
+  /* ── Calculate ── */
+  function calculate() {
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+
+    const incomeVal   = document.getElementById('annualIncome').value.trim();
+    const expensesVal = document.getElementById('annualExpenses').value.trim();
+    const billableVal = document.getElementById('billableHours').value.trim();
+    const weeksVal    = document.getElementById('weeksWorked').value.trim();
+    const taxPct      = parseFloat(document.getElementById('taxBuffer').value);
+    const profitPct   = parseFloat(document.getElementById('profitBuffer').value);
+    const projHrsVal  = document.getElementById('projectHours').value.trim();
+
+    /* Validate */
+    if (!incomeVal || !expensesVal || !billableVal || !weeksVal) {
+      showError('Please fill in all four fields: income goal, expenses, billable hours, and weeks worked.');
+      return;
+    }
+
+    const income   = parseFloat(incomeVal);
+    const expenses = parseFloat(expensesVal);
+    const billable = parseFloat(billableVal);
+    const weeks    = parseFloat(weeksVal);
+    const projHrs  = parseFloat(projHrsVal) || 0;
+
+    if (income   <= 0) { showError('Desired annual income must be greater than zero.'); return; }
+    if (billable <= 0) { showError('Billable hours must be greater than zero.'); return; }
+    if (weeks    <= 0 || weeks > 52) { showError('Weeks worked must be between 1 and 52.'); return; }
+
+    /* ── Formula ── */
+    // Step 1: Total cost target
+    const totalCost = income + expenses;
+    // Step 2: Add tax buffer
+    const afterTax  = totalCost * (1 + taxPct / 100);
+    // Step 3: Add profit buffer
+    const revenueGoal = afterTax * (1 + profitPct / 100);
+    // Step 4: Annual billable hours
+    const annualHours = billable * weeks;
+    // Step 5: Hourly rate
+    const hourlyRate  = revenueGoal / annualHours;
+    // Step 6: Project estimate
+    const projectEst  = projHrs > 0 ? hourlyRate * projHrs : null;
+
+    /* ── Render ── */
+    const primVal  = document.getElementById('val-hourly');
+    const primCard = document.getElementById('card-hourly');
+    primVal.textContent = fmtRate(hourlyRate);
+    primVal.className = 'r-value pop pos';
+    primCard.className = 'result-primary';
+    primVal.addEventListener('animationend', () => primVal.classList.remove('pop'), { once: true });
+
+    renderCard('val-project',  'card-project',
+      projectEst !== null ? fmtDollar(projectEst) : 'N/A', 'pos');
+    document.getElementById('sub-project').textContent =
+      projHrs > 0 ? projHrs + '-hour project' : 'enter project hours above';
+
+    renderCard('val-revenue',  'card-revenue',  fmtDollar(revenueGoal), 'pos');
+    renderCard('val-billable', 'card-billable', fmtNum(annualHours) + ' hrs', 'pos');
+
+    /* Insights */
+    buildInsights(taxPct, profitPct, billable);
+
+    /* Copy btn */
+    document.getElementById('copyBtn').style.display = 'inline-block';
+
+    /* Store */
+    window._lastResult = { hourlyRate, projectEst, revenueGoal, annualHours, projHrs, taxPct, profitPct, income };
+  }
+
+  function renderCard(valId, cardId, text, cls) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    card.className = 'result-card highlight';
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function showError(msg) {
+    document.getElementById('errorText').textContent = msg;
+    document.getElementById('errorMsg').classList.add('visible');
+  }
+
+  /* ── Insights ── */
+  function buildInsights(tax, profit, billable) {
+    const area = document.getElementById('insightArea');
+    area.innerHTML = '';
+    const add = (type, msg) => {
+      const d = document.createElement('div');
+      d.className = 'insight-banner ' + type;
+      d.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg> ${msg}`;
+      area.appendChild(d);
+    };
+    if (billable < 20) add('warn', 'Low billable hours detected. Your hourly rate will be higher — consider whether you can increase billable time or raise your income floor.');
+    if (tax < 15)      add('warn', 'Tax buffer below 15% may not cover US self-employment taxes. Consider raising it to at least 25%.');
+    if (profit === 0)  add('warn', 'No profit buffer set. You\'re pricing at exact break-even — one slow month or unexpected expense puts you in the red.');
+  }
+
+  /* ── Copy Summary ── */
+  function copySummary() {
+    const r = window._lastResult;
+    if (!r) return;
+    const text =
+      `Freelance Rate Summary\n` +
+      `──────────────────────\n` +
+      `Recommended Hourly Rate: ${fmtRate(r.hourlyRate)}\n` +
+      (r.projectEst ? `Project Estimate (${r.projHrs} hrs): $${Math.round(r.projectEst).toLocaleString()}\n` : '') +
+      `Annual Revenue Goal: $${Math.round(r.revenueGoal).toLocaleString()}\n` +
+      `Annual Billable Hours: ${Math.round(r.annualHours).toLocaleString()} hrs\n` +
+      `Tax Buffer: ${r.taxPct}%  |  Profit Buffer: ${r.profitPct}%\n` +
+      `Generated by Small Business Profit Toolkit`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Rate Summary'; }, 2000);
+    });
+  }
+
+  /* ── Reset ── */
+  function resetCalc() {
+    ['annualIncome','annualExpenses','billableHours','weeksWorked'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('projectHours').value = '10';
+    document.getElementById('taxBuffer').value    = '25';
+    document.getElementById('taxDisplay').textContent = '25%';
+    document.getElementById('profitBuffer').value = '20';
+    document.getElementById('profitDisplay').textContent = '20%';
+    document.getElementById('errorMsg').classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+    document.getElementById('copyBtn').style.display = 'none';
+
+    ['val-hourly','val-project','val-revenue','val-billable'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    document.getElementById('card-hourly').className = 'result-primary';
+    ['card-project','card-revenue','card-billable'].forEach(id => {
+      document.getElementById(id).className = 'result-card';
+    });
+    document.getElementById('sub-project').textContent = 'based on project hours';
+    document.getElementById('sub-hourly').textContent  = 'your minimum profitable rate';
+  }
+
+  /* ── FAQ Toggle ── */
+  function toggleFaq(btn) {
+    btn.closest('.faq-item').classList.toggle('open');
+  }
+
+  /* ── Enter key ── */
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>

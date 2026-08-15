@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Discount Profit Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Calculate how discounts affect profit, margin, and revenue. Free discount profit calculator for small businesses." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --blue:           #185FA5;
+    --blue-light:     #E8F0FA;
+    --profit-pos:     #1A5C3A;
+    --profit-neg:     #9B2828;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:  'DM Serif Display', Georgia, serif;
+    --font-body:     'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1.5rem; }
+  .header-inner { max-width: 780px; margin: 0 auto; height: 58px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); text-decoration: none; letter-spacing: -0.01em; }
+  .logo span { color: var(--accent); }
+  .header-tag { font-size: 12px; font-weight: 500; color: var(--accent-text); background: var(--accent-light); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  /* Main */
+  main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* Page title */
+  .page-title { margin-bottom: 2rem; animation: fadeUp 0.4s ease both; }
+  .page-title h1 { font-family: var(--font-display); font-size: clamp(26px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+  .page-title p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* Calc card */
+  .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); animation: fadeUp 0.4s 0.08s ease both; margin-bottom: 2rem; }
+
+  .section-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Input grid */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .field .field-hint { font-size: 11px; color: var(--text-muted); margin-top: -3px; }
+
+  /* Inputs */
+  .input-wrap { position: relative; }
+  .input-wrap .prefix { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 500; color: var(--text-muted); pointer-events: none; }
+  .input-wrap input {
+    width: 100%; padding: 11px 14px 11px 30px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; -moz-appearance: textfield;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+  .input-wrap input.error-input { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(155,40,40,0.1); }
+
+  /* Slider — full width */
+  .slider-field { margin-bottom: 1.75rem; }
+  .slider-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; }
+  .slider-hint { font-size: 11px; color: var(--text-muted); }
+  .slider-value { font-size: 18px; font-weight: 700; color: var(--accent); background: var(--accent-light); padding: 4px 14px; border-radius: 20px; min-width: 60px; text-align: center; transition: background 0.2s, color 0.2s; }
+  .slider-value.high { background: var(--danger-light); color: var(--danger); }
+  .slider-value.warn { background: var(--warning-light); color: var(--warning); }
+  input[type="range"] { -webkit-appearance: none; width: 100%; height: 6px; border-radius: 10px; background: var(--border); outline: none; cursor: pointer; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.2); cursor: pointer; transition: transform var(--transition); }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; cursor: pointer; }
+  .slider-ticks { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-muted); padding: 0 2px; }
+
+  /* Error */
+  .error-msg { display: none; align-items: center; gap: 8px; font-size: 13px; color: var(--danger); background: var(--danger-light); border: 1px solid #F0C8C8; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 1.25rem; }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* Insights */
+  .insight-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .insight-banner { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid; animation: fadeUp 0.3s ease both; line-height: 1.5; }
+  .insight-banner svg { flex-shrink: 0; margin-top: 1px; }
+  .insight-banner.info   { color: var(--accent-text); background: var(--accent-light); border-color: #B8D9C5; }
+  .insight-banner.warn   { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .insight-banner.danger { color: var(--danger);  background: var(--danger-light);  border-color: #F0C8C8; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .btn { font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 11px 24px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid transparent; transition: all var(--transition); letter-spacing: 0.01em; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); flex: 1; }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset { background: transparent; color: var(--text-secondary); border-color: var(--border-dark); }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy { font-family: var(--font-body); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid #B8D9C5; background: var(--accent-light); color: var(--accent-text); transition: all var(--transition); display: none; }
+  .btn-copy:hover { background: #d4ecde; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* Results */
+  .results-section h2 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Dual primary */
+  .result-primary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 480px) { .result-primary-row { grid-template-columns: 1fr; } }
+
+  .result-primary { border-radius: var(--radius-md); padding: 1.4rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-primary.price-card  { background: var(--blue-light);   border: 1px solid #BDD4EE; }
+  .result-primary.profit-card { background: var(--accent-light); border: 1px solid #B8D9C5; }
+  .result-primary.loss-card   { background: var(--danger-light); border: 1px solid #F0C8C8; }
+  .result-primary .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .price-card  .r-label { color: var(--blue); }
+  .profit-card .r-label { color: var(--accent-text); }
+  .loss-card   .r-label { color: var(--danger); }
+  .result-primary .r-value { font-family: var(--font-display); font-size: 38px; line-height: 1; }
+  .price-card  .r-value { color: var(--blue); }
+  .profit-card .r-value { color: var(--profit-pos); }
+  .loss-card   .r-value { color: var(--profit-neg); }
+  .result-primary .r-sub { font-size: 11px; margin-top: 5px; opacity: 0.8; }
+  .price-card  .r-sub { color: var(--blue); }
+  .profit-card .r-sub { color: var(--accent-text); }
+  .loss-card   .r-sub { color: var(--danger); }
+
+  /* KPI grid — 4 cards */
+  .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 480px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-card.highlight      { background: var(--accent-light); border-color: #B8D9C5; }
+  .result-card.highlight-neg  { background: var(--danger-light); border-color: #F0C8C8; }
+  .result-card.highlight-warn { background: var(--warning-light); border-color: #F0D8A8; }
+  .result-card.highlight-blue { background: var(--blue-light);   border-color: #BDD4EE; }
+  .result-card .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .result-card .r-value { font-family: var(--font-display); font-size: 24px; color: var(--text-primary); line-height: 1; }
+  .result-card .r-value.pos  { color: var(--profit-pos); }
+  .result-card .r-value.neg  { color: var(--profit-neg); }
+  .result-card .r-value.warn { color: var(--warning); }
+  .result-card .r-value.blue { color: var(--blue); }
+  .result-card .r-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 20px; }
+  .result-primary .r-value.placeholder { font-size: 26px; }
+
+  /* Before/after comparison band */
+  .compare-band { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 12px; display: none; }
+  .compare-band.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .compare-band h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 12px; }
+  .compare-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 480px) { .compare-cols { grid-template-columns: 1fr; } }
+  .compare-col { display: flex; flex-direction: column; gap: 6px; }
+  .compare-col-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 4px; }
+  .compare-col-label.before { color: var(--text-muted); }
+  .compare-col-label.after  { color: var(--accent-text); }
+  .compare-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); }
+  .compare-row span:last-child { font-weight: 600; color: var(--text-primary); }
+  .compare-row.highlight-row span:last-child { color: var(--danger); }
+
+  /* Margin change bar */
+  .margin-compare { margin-top: 10px; }
+  .margin-compare-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .margin-bars { display: flex; flex-direction: column; gap: 6px; }
+  .margin-bar-row { display: flex; align-items: center; gap: 10px; }
+  .margin-bar-label { font-size: 12px; color: var(--text-secondary); width: 60px; flex-shrink: 0; }
+  .margin-bar-track { flex: 1; height: 10px; background: var(--border); border-radius: 10px; overflow: hidden; }
+  .margin-bar-fill  { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
+  .margin-bar-fill.before { background: var(--accent); }
+  .margin-bar-fill.after  { background: var(--blue); }
+  .margin-bar-fill.after-neg { background: var(--danger); }
+  .margin-bar-pct { font-size: 12px; font-weight: 600; width: 44px; text-align: right; flex-shrink: 0; }
+
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  /* Guide */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section > h2, .faq-section > h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--text-primary); margin-bottom: 1.25rem; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .guide-card .g-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.amber { background: #FDF3E7; }
+  .g-icon.red   { background: var(--danger-light); }
+  .guide-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .guide-card p  { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .guide-card .formula { margin-top: 10px; padding: 8px 12px; background: var(--surface-alt); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--text-secondary); font-family: 'Courier New', monospace; border-left: 3px solid var(--border-dark); }
+
+  .guide-card-wide { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .guide-card-wide h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .why-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Examples */
+  .examples-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .examples-grid { grid-template-columns: 1fr; } }
+  .example-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .example-card .e-role { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-text); background: var(--accent-light); display: inline-block; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+  .example-card h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .example-card .e-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.65; }
+  .example-card .e-price { margin-top: 10px; font-family: var(--font-display); font-size: 18px; }
+  .example-card .e-price.pos { color: var(--profit-pos); }
+  .example-card .e-price.neg { color: var(--profit-neg); }
+
+  /* FAQ */
+  .faq-section { margin-top: 2.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .faq-q { width: 100%; text-align: left; padding: 1rem 1.25rem; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background var(--transition); }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s ease; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0.75rem 1.25rem 1rem; font-size: 13px; color: var(--text-secondary); line-height: 1.65; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-a { display: block; }
+
+  /* Footer */
+  .site-footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--surface); }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+  @keyframes popIn { 0% { transform: scale(0.94); opacity: 0.6; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>Discount Profit Calculator</h1>
+    <p>Find out exactly how a discount affects your profit and margin before you offer it. A 10% discount almost never means a 10% profit cut — see the real numbers instantly.</p>
+  </div>
+
+  <div class="calc-card">
+
+    <!-- Prices -->
+    <div class="input-section">
+      <h2 class="section-label">Pricing Details</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="costPrice">Cost Price</label>
+          <span class="field-hint">What you pay to produce or acquire the item</span>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="costPrice" placeholder="50.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="sellingPrice">Selling Price</label>
+          <span class="field-hint">Your normal price before any discount</span>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="sellingPrice" placeholder="100.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Discount slider -->
+    <div class="slider-field">
+      <h2 class="section-label">Discount Amount</h2>
+      <div class="slider-wrap">
+        <div class="slider-header">
+          <span style="font-size:13px; font-weight:500; color:var(--text-secondary);">Drag to set discount percentage</span>
+          <span class="slider-value" id="discountDisplay">10%</span>
+        </div>
+        <input type="range" id="discountSlider" min="0" max="80" step="1" value="10"
+          oninput="updateSlider(this.value)" />
+        <div class="slider-ticks">
+          <span>0%</span><span>10%</span><span>20%</span><span>30%</span><span>40%</span><span>50%</span><span>60%</span><span>70%</span><span>80%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-area" id="insightArea"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate Discount Impact</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Profit Impact Dashboard</h2>
+
+      <!-- Dual primary -->
+      <div class="result-primary-row">
+        <div class="result-primary price-card" id="card-discprice">
+          <div class="r-label">Discounted Selling Price</div>
+          <div class="r-value placeholder" id="val-discprice">—</div>
+          <div class="r-sub" id="sub-discprice">new client price</div>
+        </div>
+        <div class="result-primary profit-card" id="card-newprofit">
+          <div class="r-label">New Profit</div>
+          <div class="r-value placeholder" id="val-newprofit">—</div>
+          <div class="r-sub" id="sub-newprofit">after discount</div>
+        </div>
+      </div>
+
+      <!-- KPI grid -->
+      <div class="results-grid">
+        <div class="result-card" id="card-lostprofit">
+          <div class="r-label">Profit Lost</div>
+          <div class="r-value placeholder" id="val-lostprofit">—</div>
+          <div class="r-sub">per unit vs. full price</div>
+        </div>
+        <div class="result-card" id="card-origprofit">
+          <div class="r-label">Original Profit</div>
+          <div class="r-value placeholder" id="val-origprofit">—</div>
+          <div class="r-sub">at full selling price</div>
+        </div>
+        <div class="result-card" id="card-newmargin">
+          <div class="r-label">New Profit Margin</div>
+          <div class="r-value placeholder" id="val-newmargin">—</div>
+          <div class="r-sub" id="sub-newmargin">after discount</div>
+        </div>
+        <div class="result-card" id="card-discamt">
+          <div class="r-label">Discount Amount</div>
+          <div class="r-value placeholder" id="val-discamt">—</div>
+          <div class="r-sub">taken off price</div>
+        </div>
+      </div>
+
+      <!-- Comparison band -->
+      <div class="compare-band" id="compareBand">
+        <h3>Before &amp; After Comparison</h3>
+        <div class="compare-cols">
+          <div class="compare-col">
+            <div class="compare-col-label before">Before Discount</div>
+            <div class="compare-row"><span>Selling Price</span><span id="cmp-origprice">—</span></div>
+            <div class="compare-row"><span>Cost Price</span><span id="cmp-cost">—</span></div>
+            <div class="compare-row"><span>Profit</span><span id="cmp-origprofit">—</span></div>
+            <div class="compare-row"><span>Margin</span><span id="cmp-origmargin">—</span></div>
+          </div>
+          <div class="compare-col">
+            <div class="compare-col-label after">After Discount</div>
+            <div class="compare-row"><span>Selling Price</span><span id="cmp-newprice">—</span></div>
+            <div class="compare-row"><span>Cost Price</span><span id="cmp-newcost">—</span></div>
+            <div class="compare-row highlight-row"><span>Profit</span><span id="cmp-newprofit">—</span></div>
+            <div class="compare-row highlight-row"><span>Margin</span><span id="cmp-newmargin">—</span></div>
+          </div>
+        </div>
+        <!-- Margin bars -->
+        <div class="margin-compare">
+          <div class="margin-compare-label">Profit Margin Comparison</div>
+          <div class="margin-bars">
+            <div class="margin-bar-row">
+              <span class="margin-bar-label">Before</span>
+              <div class="margin-bar-track"><div class="margin-bar-fill before" id="bar-before" style="width:0%"></div></div>
+              <span class="margin-bar-pct" id="pct-before">—</span>
+            </div>
+            <div class="margin-bar-row">
+              <span class="margin-bar-label">After</span>
+              <div class="margin-bar-track"><div class="margin-bar-fill after" id="bar-after" style="width:0%"></div></div>
+              <span class="margin-bar-pct" id="pct-after">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn" onclick="copySummary()">Copy Discount Summary</button>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Guide -->
+  <div class="guide-section">
+    <h2>How Discounts Destroy Profit</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>The Discount Illusion</h3>
+        <p>A 10% price discount almost never reduces profit by just 10%. If your margin is 50%, a 10% discount cuts profit by 20%. If your margin is 20%, the same 10% discount cuts profit by 50%. The lower the margin, the more dangerous the discount.</p>
+        <div class="formula">Profit Loss % = Discount% ÷ Margin%</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 15l10-10M8 6h-3v3" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Discounted Price Formula</h3>
+        <p>The discounted price is simply your original selling price multiplied by one minus the discount rate. The new profit is whatever remains after subtracting cost from this lower price.</p>
+        <div class="formula">New Price = Sell × (1 − Discount%)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon amber">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 4v12M4 10h12" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Break-Even Discount</h3>
+        <p>There is a maximum discount you can offer before you start selling below cost. For any product, this is determined by your gross margin. Below that threshold, you lose money on every sale — no volume makes up for it.</p>
+        <div class="formula">Max Discount = (Sell − Cost) ÷ Sell × 100</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon red">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 6v5M10 14v.5" stroke="#9B2828" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M3.5 16.5l6.5-11 6.5 11H3.5z" stroke="#9B2828" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Volume Can't Save a Bad Discount</h3>
+        <p>Many business owners believe "I'll make it up in volume." If each sale loses money, more sales lose more money. Volume only helps when the margin is positive. Use this calculator to confirm profitability before running any promotion.</p>
+        <div class="formula">Profit = (New Price − Cost) × Units Sold</div>
+      </div>
+
+    </div>
+
+    <!-- Examples -->
+    <h2 style="margin-top:2.5rem; margin-bottom:1.25rem;">Business Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="e-role">Retailer</span>
+        <h4>$80 Product, $40 Cost</h4>
+        <div class="e-detail">50% original margin · 20% discount offered · Discounted price: $64</div>
+        <div class="e-price pos">New profit: $24 (was $40) — 40% loss</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Freelancer</span>
+        <h4>$500 Service, $200 Cost</h4>
+        <div class="e-detail">60% original margin · 15% discount offered · Discounted price: $425</div>
+        <div class="e-price pos">New profit: $225 (was $300) — 25% loss</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">E-commerce</span>
+        <h4>$30 Product, $22 Cost</h4>
+        <div class="e-detail">26.7% original margin · 20% discount offered · Discounted price: $24</div>
+        <div class="e-price neg">New profit: $2 — margin collapses to 8.3%</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Contractor</span>
+        <h4>$2,000 Job, $1,200 Cost</h4>
+        <div class="e-detail">40% original margin · 10% discount offered · Discounted price: $1,800</div>
+        <div class="e-price pos">New profit: $600 (was $800) — 25% loss</div>
+      </div>
+    </div>
+
+    <!-- Why discounts hurt -->
+    <div class="guide-card-wide">
+      <h3>When discounts make sense — and when they don't</h3>
+      <ul class="why-list">
+        <li><strong>Calculate profit impact first, always.</strong> Never offer a discount based on feel or competitor pressure. Run the numbers. If the new margin drops below your minimum viable level, the discount is unaffordable regardless of the sales volume promised.</li>
+        <li><strong>Discounts on low-margin products are especially dangerous.</strong> A business selling at 20% margin has very little room. Even a 10% discount can cut profit in half. High-margin products can absorb discounts; low-margin products usually can't.</li>
+        <li><strong>Non-price alternatives are often better.</strong> Before discounting, consider adding value instead — free shipping, extended warranty, bundled services, or faster delivery. These cost less than a price cut but can feel equally valuable to the buyer.</li>
+        <li><strong>Loyalty discounts can be profitable.</strong> A small discount for a long-term retainer or repeat client can make sense if it locks in recurring revenue and reduces acquisition cost. Calculate the lifetime value, not just the per-transaction impact.</li>
+        <li><strong>Discounts can reset price expectations.</strong> Once clients know you'll discount, many will expect it on every purchase. Be strategic about when and how you offer promotions to protect your standard pricing.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Why does a 10% discount cut profit by more than 10%?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Because your cost doesn't go down when you lower your price. If you sell a product for $100 that costs $60 to produce, your profit is $40 (40% margin). A 10% discount drops the price to $90, but your cost stays at $60 — so profit falls to $30. That's a 25% drop in profit from a 10% price reduction. The math gets worse as your margin gets thinner.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What's the maximum safe discount I can offer?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">The absolute maximum before you sell at a loss equals your gross margin percentage. If you have a 40% margin, discounting more than 40% means selling below cost. In practice, your safe maximum is much lower — most businesses need to retain at least 10–15% margin to cover overhead and remain viable. Use this calculator to find the exact threshold for your product.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Should I offer discounts to win clients?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Only if the long-term relationship value justifies it and you've calculated the real profit impact. A small introductory discount to win a client who will buy repeatedly over years can be a good investment. A discount simply to beat a competitor's price on a one-off transaction is usually a mistake that trains clients to expect low prices and devalues your offering.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How do I know how many extra units I need to sell to offset a discount?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Divide your original profit per unit by your new profit per unit. For example: original profit $40, discounted profit $30 — you need to sell 40÷30 = 1.33x the volume just to break even in total profit. That means a 33% increase in sales just to stay flat. For most businesses, achieving that volume increase from a discount alone is unrealistic.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is there a better alternative to discounting?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Yes — value-adds almost always protect margin better than price cuts. Bundle a complementary product or service, offer priority support, extend a guarantee, or add free delivery. These additions often cost far less than the price reduction would have, while providing perceived value that matches or exceeds the discount. Customers often prefer more value to a lower price.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  function updateSlider(val) {
+    const disp = document.getElementById('discountDisplay');
+    disp.textContent = val + '%';
+    disp.className = 'slider-value' + (val > 30 ? ' high' : val > 20 ? ' warn' : '');
+  }
+
+  function fmt(n) {
+    const abs = Math.abs(n);
+    const str = abs.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return (n < 0 ? '-$' : '$') + str;
+  }
+  function fmtAbs(n) {
+    return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+  function calculate() {
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+
+    const costVal    = document.getElementById('costPrice').value.trim();
+    const sellVal    = document.getElementById('sellingPrice').value.trim();
+    const discountPct = parseFloat(document.getElementById('discountSlider').value);
+
+    if (!costVal || !sellVal) {
+      document.getElementById('errorText').textContent = 'Please enter both cost price and selling price.';
+      errMsg.classList.add('visible');
+      return;
+    }
+
+    const cost = parseFloat(costVal);
+    const sell = parseFloat(sellVal);
+
+    if (cost < 0 || sell < 0) {
+      document.getElementById('errorText').textContent = 'Prices cannot be negative.'; errMsg.classList.add('visible'); return;
+    }
+    if (sell === 0) {
+      document.getElementById('errorText').textContent = 'Selling price cannot be zero.'; errMsg.classList.add('visible'); return;
+    }
+    if (cost > sell) {
+      document.getElementById('errorText').textContent = 'Cost price is higher than selling price — you are already selling at a loss before any discount.';
+      errMsg.classList.add('visible');
+    }
+
+    /* Calculations */
+    const discountAmt   = sell * (discountPct / 100);
+    const discPrice     = sell - discountAmt;
+    const origProfit    = sell - cost;
+    const newProfit     = discPrice - cost;
+    const profitLost    = origProfit - newProfit;
+    const origMargin    = sell > 0 ? (origProfit / sell) * 100 : 0;
+    const newMargin     = discPrice > 0 ? (newProfit / discPrice) * 100 : 0;
+    const isLoss        = newProfit < 0;
+    const isThin        = newMargin < 10 && !isLoss;
+
+    /* Primary cards */
+    const discPriceEl = document.getElementById('val-discprice');
+    discPriceEl.textContent = fmtAbs(discPrice);
+    discPriceEl.className = 'r-value pop';
+    document.getElementById('sub-discprice').textContent = discountPct + '% off $' + sell.toFixed(2);
+    discPriceEl.addEventListener('animationend', () => discPriceEl.classList.remove('pop'), { once: true });
+
+    const newProfitCard = document.getElementById('card-newprofit');
+    const newProfitEl   = document.getElementById('val-newprofit');
+    newProfitCard.className = 'result-primary ' + (isLoss ? 'loss-card' : 'profit-card');
+    newProfitEl.textContent = fmt(newProfit);
+    newProfitEl.className = 'r-value pop';
+    document.getElementById('sub-newprofit').textContent = isLoss ? 'selling at a loss' : fmtPct(newMargin) + ' margin';
+    newProfitEl.addEventListener('animationend', () => newProfitEl.classList.remove('pop'), { once: true });
+
+    /* KPI cards */
+    renderCard('val-lostprofit', 'card-lostprofit', fmtAbs(profitLost), 'neg', 'highlight-neg');
+    renderCard('val-origprofit', 'card-origprofit', fmtAbs(origProfit), 'pos', 'highlight');
+    const marginCls = isLoss ? 'neg' : isThin ? 'warn' : 'pos';
+    const marginCardCls = isLoss ? 'highlight-neg' : isThin ? 'highlight-warn' : 'highlight';
+    renderCard('val-newmargin', 'card-newmargin', fmtPct(newMargin), marginCls, marginCardCls);
+    document.getElementById('sub-newmargin').textContent = isLoss ? 'loss — below break-even' : isThin ? 'very thin margin' : 'after discount';
+    renderCard('val-discamt',   'card-discamt',   fmtAbs(discountAmt), 'warn', 'highlight-warn');
+
+    /* Comparison band */
+    buildComparison(sell, cost, origProfit, origMargin, discPrice, newProfit, newMargin);
+
+    /* Insights */
+    buildInsights(discountPct, newProfit, newMargin, isLoss, origMargin, profitLost, origProfit);
+
+    document.getElementById('copyBtn').style.display = 'inline-block';
+    window._last = { cost, sell, discountPct, discPrice, discountAmt, origProfit, newProfit, profitLost, origMargin, newMargin };
+  }
+
+  function renderCard(valId, cardId, text, cls, cardCls) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    card.className = 'result-card ' + cardCls;
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function buildComparison(sell, cost, origP, origM, discPrice, newP, newM) {
+    const band = document.getElementById('compareBand');
+    band.classList.add('visible');
+    document.getElementById('cmp-origprice').textContent  = fmtAbs(sell);
+    document.getElementById('cmp-cost').textContent       = fmtAbs(cost);
+    document.getElementById('cmp-origprofit').textContent = fmtAbs(origP);
+    document.getElementById('cmp-origmargin').textContent = fmtPct(origM);
+    document.getElementById('cmp-newprice').textContent   = fmtAbs(discPrice);
+    document.getElementById('cmp-newcost').textContent    = fmtAbs(cost);
+    document.getElementById('cmp-newprofit').textContent  = fmt(newP);
+    document.getElementById('cmp-newmargin').textContent  = fmtPct(newM);
+
+    /* Margin bars */
+    const beforePct = Math.max(0, Math.min(origM, 100));
+    const afterPct  = Math.max(0, Math.min(newM, 100));
+    document.getElementById('pct-before').textContent = fmtPct(origM);
+    document.getElementById('pct-after').textContent  = fmtPct(newM);
+    const afterBar = document.getElementById('bar-after');
+    afterBar.className = 'margin-bar-fill ' + (newM < 0 ? 'after-neg' : 'after');
+    setTimeout(() => {
+      document.getElementById('bar-before').style.width = beforePct + '%';
+      afterBar.style.width = afterPct + '%';
+    }, 60);
+  }
+
+  function buildInsights(disc, newP, newM, isLoss, origM, lost, origP) {
+    const area = document.getElementById('insightArea');
+    area.innerHTML = '';
+    const add = (type, msg) => {
+      const d = document.createElement('div');
+      d.className = 'insight-banner ' + type;
+      d.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg> ${msg}`;
+      area.appendChild(d);
+    };
+    if (isLoss) add('danger', `This discount eliminates all profit and creates a loss of ${fmtAbs(newP)} per unit. You are selling below cost.`);
+    else if (newM < 10) add('warn', `Profit margin after discount is only ${fmtPct(newM)} — very thin. One unexpected cost could turn this into a loss.`);
+    else if (disc > 30) add('warn', `A ${disc}% discount removes ${fmtPct((lost/origP)*100)} of your original profit. Ensure increased volume justifies this.`);
+    else add('info', `This ${disc}% discount reduces profit by ${fmtAbs(lost)} per unit (${fmtPct((lost/origP)*100)} of original profit). Your new margin is ${fmtPct(newM)}.`);
+  }
+
+  function copySummary() {
+    const r = window._last;
+    if (!r) return;
+    const text =
+      `Discount Profit Summary\n` +
+      `───────────────────────\n` +
+      `Cost Price:             ${fmtAbs(r.cost)}\n` +
+      `Original Selling Price: ${fmtAbs(r.sell)}\n` +
+      `Original Profit:        ${fmtAbs(r.origProfit)}  (${fmtPct(r.origMargin)} margin)\n` +
+      `Discount:               ${r.discountPct}% (${fmtAbs(r.discountAmt)})\n` +
+      `Discounted Price:       ${fmtAbs(r.discPrice)}\n` +
+      `New Profit:             ${fmt(r.newProfit)}  (${fmtPct(r.newMargin)} margin)\n` +
+      `Profit Lost:            ${fmtAbs(r.profitLost)}\n` +
+      `Generated by Small Business Profit Toolkit`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Discount Summary'; }, 2000);
+    });
+  }
+
+  function resetCalc() {
+    document.getElementById('costPrice').value   = '';
+    document.getElementById('sellingPrice').value = '';
+    document.getElementById('discountSlider').value = 10;
+    updateSlider(10);
+    document.getElementById('errorMsg').classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+    document.getElementById('copyBtn').style.display = 'none';
+    document.getElementById('compareBand').classList.remove('visible');
+    document.getElementById('bar-before').style.width = '0%';
+    document.getElementById('bar-after').style.width  = '0%';
+
+    ['val-discprice','val-newprofit','val-lostprofit','val-origprofit','val-newmargin','val-discamt'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    document.getElementById('card-discprice').className  = 'result-primary price-card';
+    document.getElementById('card-newprofit').className  = 'result-primary profit-card';
+    ['card-lostprofit','card-origprofit','card-newmargin','card-discamt'].forEach(id => {
+      document.getElementById(id).className = 'result-card';
+    });
+    document.getElementById('sub-discprice').textContent = 'new client price';
+    document.getElementById('sub-newprofit').textContent = 'after discount';
+    document.getElementById('sub-newmargin').textContent = 'after discount';
+  }
+
+  function toggleFaq(btn) { btn.closest('.faq-item').classList.toggle('open'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>

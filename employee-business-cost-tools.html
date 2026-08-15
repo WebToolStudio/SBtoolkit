@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Employee & Business Cost Tools | Small Business Profit Toolkit</title>
+<meta name="description" content="Free employee cost calculators for small businesses. Calculate true labor costs, payroll estimates, overtime expenses, and hiring ROI instantly — no signup needed." />
+<meta property="og:title" content="Employee & Business Cost Tools | Small Business Profit Toolkit" />
+<meta property="og:description" content="Free calculators to help small business owners understand payroll costs, employee expenses, overtime impact, and hiring decisions." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://smallbusinessprofittoolkit.com/employee-cost-tools" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-sm:      0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:   'DM Serif Display', Georgia, serif;
+    --font-body:      'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Main Layout ── */
+  main { padding: 0; }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  /* ── Breadcrumb ── */
+  .breadcrumb {
+    padding: 1rem 1rem 0;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .breadcrumb-list {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    list-style: none;
+    flex-wrap: wrap;
+  }
+  .breadcrumb-list li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+  .breadcrumb-list a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .breadcrumb-list a:hover { text-decoration: underline; }
+  .breadcrumb-list .sep { color: var(--border-dark); font-size: 12px; }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 3rem 1rem 2.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    animation: fadeUp 0.4s ease both;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    border: 1px solid #B8D9C5;
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 1.25rem;
+  }
+  .hero-eyebrow svg { flex-shrink: 0; }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 5vw, 42px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.15;
+    margin-bottom: 1rem;
+    max-width: 680px;
+  }
+  .hero p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 580px;
+    margin-bottom: 1.75rem;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .hero-stat .stat-num {
+    font-family: var(--font-display);
+    font-size: 26px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .hero-stat .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* ── Section Spacing ── */
+  .section {
+    padding: 3rem 1rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .section-header {
+    margin-bottom: 1.75rem;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .section-header h2 {
+    font-family: var(--font-display);
+    font-size: clamp(22px, 3.5vw, 30px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .section-header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    max-width: 560px;
+  }
+
+  /* ── Divider ── */
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* ── Tool Directory ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 640px) { .tools-grid { grid-template-columns: 1fr; } }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+    animation: fadeUp 0.4s ease both;
+  }
+  .tool-card:hover {
+    border-color: var(--border-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .tool-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .tool-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .tool-icon.blue-icon { background: #E8F0FA; }
+  .tool-icon.orange-icon { background: #FDF3E7; }
+  .tool-icon.purple-icon { background: #F0EAFA; }
+  .tool-card-text { flex: 1; min-width: 0; }
+  .tool-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .tool-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .tool-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+  }
+  .tool-badge {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    background: var(--surface-alt);
+    padding: 3px 8px;
+    border-radius: 4px;
+  }
+  .btn-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    border: 1px solid #B8D9C5;
+    border-radius: var(--radius-md);
+    padding: 8px 16px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all var(--transition);
+    min-height: 44px;
+  }
+  .btn-tool:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+
+  /* ── Benefits ── */
+  .benefits-section {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .benefits-section .section { padding: 3rem 1rem; }
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 768px) { .benefits-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .benefits-grid { grid-template-columns: 1fr; } }
+
+  .benefit-card {
+    padding: 1.5rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    animation: fadeUp 0.4s ease both;
+  }
+  .benefit-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+  }
+  .benefit-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 7px;
+    line-height: 1.4;
+  }
+  .benefit-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ── Educational Content ── */
+  .edu-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+  @media (max-width: 640px) { .edu-grid { grid-template-columns: 1fr; } }
+
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+  .edu-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .edu-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+  .edu-card .formula {
+    margin-top: 12px;
+    padding: 9px 13px;
+    background: var(--surface-alt);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    border-left: 3px solid var(--border-dark);
+  }
+  .edu-card-wide {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+  }
+  .edu-card-wide h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+  }
+  .edu-card-wide p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1rem;
+  }
+  .edu-card-wide p:last-child { margin-bottom: 0; }
+
+  .cost-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 13px;
+  }
+  .cost-table th {
+    text-align: left;
+    padding: 9px 14px;
+    background: var(--surface-alt);
+    font-weight: 600;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .cost-table td {
+    padding: 10px 14px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  .cost-table tr:last-child td { border-bottom: none; }
+  .cost-table td:first-child { font-weight: 500; color: var(--text-primary); }
+  .cost-table td.accent-cell { color: var(--accent); font-weight: 600; }
+  @media (max-width: 560px) {
+    .cost-table th:last-child, .cost-table td:last-child { display: none; }
+  }
+
+  /* ── FAQ ── */
+  .faq-list { display: flex; flex-direction: column; gap: 0; }
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .faq-item:first-child { border-top: 1px solid var(--border); }
+  .faq-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.1rem 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--font-body);
+    min-height: 44px;
+  }
+  .faq-btn h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+  .faq-chevron {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition), background var(--transition);
+  }
+  .faq-btn[aria-expanded="true"] .faq-chevron {
+    transform: rotate(180deg);
+    background: var(--accent-light);
+    border-color: #B8D9C5;
+  }
+  .faq-body {
+    display: none;
+    padding-bottom: 1.1rem;
+  }
+  .faq-body.open { display: block; }
+  .faq-body p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  /* ── Related Categories ── */
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 640px) { .related-grid { grid-template-columns: 1fr; } }
+
+  .related-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  }
+  .related-card:hover {
+    border-color: var(--border-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .related-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .related-icon.blue-icon  { background: #E8F0FA; }
+  .related-icon.orange-icon { background: #FDF3E7; }
+  .related-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .related-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .related-link-text {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: auto;
+    padding-top: 0.5rem;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<!-- FAQ Schema -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the true cost of an employee?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The true cost of an employee is typically 1.25 to 1.4 times their base salary. Beyond gross wages, employers pay payroll taxes (Social Security, Medicare, FUTA, SUTA), health and dental insurance premiums, workers' compensation, retirement contributions, paid time off, equipment, training, and overhead allocation. A $50,000 salary employee commonly costs $62,000–$70,000 or more per year when all factors are included."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do payroll deductions work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Payroll deductions reduce an employee's gross pay to arrive at their net (take-home) pay. Pre-tax deductions — such as 401(k) contributions and health insurance premiums — reduce taxable income. Post-tax deductions — like Roth contributions or wage garnishments — are taken after tax is calculated. Employers separately pay their share of FICA taxes (7.65%), federal unemployment (FUTA), and state unemployment (SUTA) taxes on top of wages."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What expenses should be included in employee cost calculations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A complete employee cost calculation should include: gross salary or hourly wages, employer FICA taxes (Social Security and Medicare), federal and state unemployment taxes, health and dental insurance contributions, workers' compensation premiums, paid time off and holidays, retirement plan matching, equipment and software costs, recruitment and onboarding costs, training and development, and a share of facility overhead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is overtime calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under the federal Fair Labor Standards Act (FLSA), non-exempt employees must be paid at least 1.5 times their regular hourly rate for all hours worked beyond 40 in a workweek. Some states have daily overtime rules (California requires overtime after 8 hours in a day). For salaried non-exempt employees, the regular rate is calculated by dividing weekly salary by hours worked, then multiplying overtime hours by 1.5 times that rate."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is hiring ROI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hiring ROI (Return on Investment) measures whether the revenue or value generated by a new employee exceeds the total cost of employing them. It accounts for salary, benefits, taxes, training, and time-to-productivity. A positive hiring ROI means the employee contributes more value than they cost. Calculating hiring ROI before making an offer helps small businesses avoid premature hires that strain cash flow."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can small businesses reduce labor costs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Small businesses can reduce labor costs by optimizing scheduling to eliminate unnecessary overtime, cross-training employees to reduce headcount needs, using part-time or contract workers for variable workloads, reviewing benefit plans annually for cost efficiency, investing in productivity tools that increase output per hour, and reducing turnover through better hiring and retention practices — since replacing an employee typically costs 50–200% of their annual salary."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What employee costs are often overlooked?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most commonly overlooked employee costs include: employer-side payroll taxes (many owners only think about the employee's deductions), workers' compensation insurance, paid time off (which is a real cost even if it seems like it's 'built in'), recruitment and job board fees, onboarding and training time from existing staff, equipment depreciation, and the productivity gap during the first 1–3 months while a new hire ramps up."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How should businesses budget for payroll?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Businesses should budget payroll as a percentage of projected revenue — typically 15–30% for product-based businesses and 30–50% for service businesses. Build in a buffer of 10–15% above base wages to cover employer taxes and benefits. Run payroll projections monthly, not just annually, to catch cash flow gaps. If you use bi-weekly pay periods, remember that two months per year will have three payroll cycles instead of two."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is workforce planning important for small businesses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Workforce planning helps small businesses avoid two costly mistakes: overstaffing (which inflates fixed costs and reduces margins) and understaffing (which leads to missed revenue, burnout, and turnover). Proactive planning aligns headcount with business cycles, identifies skills gaps before they become bottlenecks, and ensures payroll commitments are backed by revenue projections — making the business more resilient and scalable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are these employee cost tools free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. All calculators in the Small Business Profit Toolkit are completely free to use with no account required, no paywalls, and no hidden fees. The tools run entirely in your browser — no data is submitted or stored anywhere. You can use them as many times as needed."
+      }
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Breadcrumb -->
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <ol class="breadcrumb-list">
+      <li><a href="index.html">Home</a></li>
+      <li><span class="sep">›</span></li>
+      <li><a href="index.html#categories">Tools</a></li>
+      <li><span class="sep">›</span></li>
+      <li>Employee &amp; Business Cost Tools</li>
+    </ol>
+  </nav>
+
+  <!-- ── SECTION 1: Hero ── -->
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero-eyebrow" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <circle cx="7" cy="5" r="2.5" stroke="#1A5C3A" stroke-width="1.3"/>
+        <path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="#1A5C3A" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+      Employee &amp; Business Cost Tools
+    </div>
+    <h1 id="hero-heading">Know Exactly What Your Team Costs</h1>
+    <p>Free calculators designed to help small business owners understand payroll costs, employee expenses, overtime impact, and hiring decisions — so you can build a team without guessing.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Free tools</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">100%</span>
+        <span class="stat-label">Browser-based</span>
+      </div>
+      <div class="hero-stat">
+        <span class="stat-num">$0</span>
+        <span class="stat-label">No signup needed</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 2: Tool Directory ── -->
+  <section class="section" aria-labelledby="tools-heading">
+    <div class="section-header">
+      <p class="section-eyebrow">Tool Directory</p>
+      <h2 id="tools-heading">Employee &amp; Cost Calculators</h2>
+      <p>Four tools covering every angle of workforce cost — from onboarding a first hire to managing overtime on a tight margin.</p>
+    </div>
+    <div class="tools-grid">
+
+      <!-- Employee Cost Calculator -->
+      <div class="tool-card" style="animation-delay: 0.05s">
+        <div class="tool-card-top">
+          <div class="tool-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <circle cx="11" cy="7" r="3.5" stroke="#1A5C3A" stroke-width="1.5"/>
+              <path d="M4 19c0-3.87 3.13-7 7-7s7 3.13 7 7" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M16 3l1.5 1.5L20 2" stroke="#1A5C3A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="tool-card-text">
+            <h3>Employee Cost Calculator</h3>
+            <p>Estimate the true annual cost of employing staff — including salary, payroll taxes, benefits, insurance, and overhead — so you price labor into your business correctly.</p>
+          </div>
+        </div>
+        <div class="tool-card-footer">
+          <span class="tool-badge">Labor Costs</span>
+          <a href="employee-business-cost/employee-cost-calculator.html" class="btn-tool">
+            Open Tool
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Payroll Estimate Calculator -->
+      <div class="tool-card" style="animation-delay: 0.1s">
+        <div class="tool-card-top">
+          <div class="tool-icon blue-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <rect x="3" y="3" width="16" height="16" rx="3" stroke="#185FA5" stroke-width="1.5"/>
+              <path d="M7 8h8M7 11h5M7 14h6" stroke="#185FA5" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="tool-card-text">
+            <h3>Payroll Estimate Calculator</h3>
+            <p>Calculate gross pay, pre-tax and post-tax deductions, employer tax obligations, and estimated net take-home pay for any employee pay period.</p>
+          </div>
+        </div>
+        <div class="tool-card-footer">
+          <span class="tool-badge">Payroll</span>
+          <a href="employee-business-cost/payroll-estimate-calculator.html" class="btn-tool">
+            Open Tool
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Overtime Cost Estimator -->
+      <div class="tool-card" style="animation-delay: 0.15s">
+        <div class="tool-card-top">
+          <div class="tool-icon orange-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" stroke="#7A4A10" stroke-width="1.5"/>
+              <path d="M11 7v4.5l3 1.5" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="tool-card-text">
+            <h3>Overtime Cost Estimator</h3>
+            <p>Measure the real financial impact of overtime hours before they hit your books. Model different scenarios to understand when overtime crosses from useful to expensive.</p>
+          </div>
+        </div>
+        <div class="tool-card-footer">
+          <span class="tool-badge">Overtime</span>
+          <a href="employee-business-cost/overtime-cost-estimator.html" class="btn-tool">
+            Open Tool
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Hiring ROI Calculator -->
+      <div class="tool-card" style="animation-delay: 0.2s">
+        <div class="tool-card-top">
+          <div class="tool-icon purple-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+              <path d="M4 17l4-5 3 3 3-4 4-4" stroke="#5A2A8A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="17" cy="7" r="2.5" stroke="#5A2A8A" stroke-width="1.4"/>
+            </svg>
+          </div>
+          <div class="tool-card-text">
+            <h3>Hiring ROI Calculator</h3>
+            <p>Evaluate whether a new employee generates enough revenue or value to justify the full cost of employment — before you make an offer and commit to a salary.</p>
+          </div>
+        </div>
+        <div class="tool-card-footer">
+          <span class="tool-badge">Hiring</span>
+          <a href="employee-business-cost/hiring-roi-calculator.html" class="btn-tool">
+            Open Tool
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
+              <path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 3: Benefits ── -->
+  <section class="benefits-section" aria-labelledby="benefits-heading">
+    <div class="section container">
+      <div class="section-header">
+        <p class="section-eyebrow">Why It Matters</p>
+        <h2 id="benefits-heading">Built for how small businesses actually think about people costs</h2>
+      </div>
+      <div class="benefits-grid">
+        <div class="benefit-card" style="animation-delay:0.05s">
+          <div class="benefit-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+            </svg>
+          </div>
+          <h3>Understand True Labor Costs</h3>
+          <p>Salary is only 70–80% of what an employee costs. See the complete picture — taxes, insurance, benefits, and overhead — before budgeting a hire.</p>
+        </div>
+        <div class="benefit-card" style="animation-delay:0.1s">
+          <div class="benefit-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M3 14l4-5 3 3 3-4 4-4" stroke="#1A5C3A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Improve Hiring Decisions</h3>
+          <p>The Hiring ROI Calculator puts a number on whether a new role actually pays for itself — so you hire from data, not gut instinct.</p>
+        </div>
+        <div class="benefit-card" style="animation-delay:0.15s">
+          <div class="benefit-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <rect x="3" y="10" width="3" height="7" rx="1" fill="#1A5C3A"/>
+              <rect x="8.5" y="6" width="3" height="11" rx="1" fill="#1A5C3A"/>
+              <rect x="14" y="3" width="3" height="14" rx="1" fill="#1A5C3A"/>
+            </svg>
+          </div>
+          <h3>Control Payroll Expenses</h3>
+          <p>Model different pay structures and schedules before committing. Identify where overtime is eating into margins before it becomes a habit.</p>
+        </div>
+        <div class="benefit-card" style="animation-delay:0.2s">
+          <div class="benefit-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <circle cx="10" cy="10" r="7.5" stroke="#1A5C3A" stroke-width="1.5"/>
+              <path d="M10 6.5v4l2.5 1.5" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Increase Business Efficiency</h3>
+          <p>When you know the exact cost per labor hour, it's easier to price services correctly, schedule smarter, and grow without sacrificing margins.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 4: Educational Content ── -->
+  <section class="section" aria-labelledby="edu-heading">
+    <div class="section-header">
+      <p class="section-eyebrow">Knowledge Base</p>
+      <h2 id="edu-heading">Understanding Employee Costs &amp; Payroll</h2>
+      <p>What every small business owner should know before hiring, running payroll, or budgeting for their workforce.</p>
+    </div>
+
+    <!-- Wide intro card -->
+    <div class="edu-card-wide">
+      <h3>The Hidden Cost of Every Employee</h3>
+      <p>Most small business owners think about employee cost in terms of salary — but salary is only part of the story. The true cost of an employee includes every obligation the business takes on when someone joins the payroll. When you factor in employer-side taxes, insurance, benefits, paid time off, equipment, and a proportional share of rent and utilities, the real cost is typically 1.25 to 1.4 times base wages. For a $50,000 salary, that's $62,500 to $70,000 per year in actual business expenditure.</p>
+      <p>The gap is not incidental. Employer payroll taxes alone add 7.65% on top of every dollar you pay in wages. Workers' compensation, which is legally required in most states, adds another 1–5% depending on your industry risk classification. Health insurance contributions — if you offer them — can add $300 to $700 per employee per month. These aren't optional costs; they're the baseline cost of compliance for any business with employees on the books.</p>
+    </div>
+
+    <div class="edu-grid">
+      <div class="edu-card">
+        <h3>How Payroll Taxes Work</h3>
+        <p>Every dollar you pay an employee triggers two sets of tax obligations: the employee's share (withheld from their paycheck) and the employer's share (paid separately by the business). FICA taxes — Social Security and Medicare — split evenly at 7.65% each side. The business also owes federal unemployment (FUTA) at 6% on the first $7,000 of each employee's wages annually, and state unemployment (SUTA), which varies by state and claims history.</p>
+        <div class="formula">Employer Payroll Tax ≈ Gross Wages × 7.65% + FUTA + SUTA</div>
+      </div>
+      <div class="edu-card">
+        <h3>Benefits &amp; Insurance Expenses</h3>
+        <p>Benefits are often the largest single cost beyond wages that business owners underestimate. Offering health insurance is a competitive necessity in most markets, yet premiums for employer-sponsored plans average $7,000–$8,000 per employee annually for individual coverage, with employers typically covering 70–80% of that cost. Retirement plan matching, dental, vision, and life insurance add further overhead that compounds as your team grows.</p>
+        <div class="formula">Benefits Load ≈ 20–35% of Gross Salary</div>
+      </div>
+    </div>
+
+    <!-- Overtime Card -->
+    <div class="edu-card-wide">
+      <h3>Overtime: When It Helps and When It Hurts</h3>
+      <p>Overtime is one of the most misunderstood levers in small business labor management. In the short term, asking existing employees to work extra hours is cheaper than recruiting, onboarding, and training a new hire. An existing employee working overtime costs 1.5× their regular rate — but they're already trained, already productive, and require no benefits ramp-up. For short-term surges in demand, overtime is often the right call.</p>
+      <p>The danger is when overtime becomes structural. When employees regularly work 45–50+ hour weeks, overtime stops being a flexible cost and becomes a fixed one — and a warning sign that headcount has fallen below what the business actually needs. Chronic overtime also drives burnout and turnover, and the cost of replacing an experienced employee typically runs 50–200% of their annual salary. The Overtime Cost Estimator helps you see which side of that equation you're on before it becomes a retention problem.</p>
+    </div>
+
+    <!-- Cost Breakdown Table -->
+    <div class="edu-card-wide">
+      <h3>Typical Employee Cost Breakdown</h3>
+      <p>The following breakdown is based on a $55,000 annual salary employee at a service-based small business in a mid-range cost state. Your numbers will vary based on industry, location, and benefit choices.</p>
+      <table class="cost-table" aria-label="Employee cost breakdown">
+        <thead>
+          <tr>
+            <th>Cost Category</th>
+            <th>Estimated Amount</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Base Salary</td>
+            <td class="accent-cell">$55,000</td>
+            <td>Gross annual wages</td>
+          </tr>
+          <tr>
+            <td>Employer FICA (7.65%)</td>
+            <td>$4,208</td>
+            <td>Social Security + Medicare</td>
+          </tr>
+          <tr>
+            <td>FUTA + SUTA</td>
+            <td>$800–$1,200</td>
+            <td>Varies by state and claims</td>
+          </tr>
+          <tr>
+            <td>Workers' Compensation</td>
+            <td>$1,100–$2,750</td>
+            <td>2–5% of payroll (industry dependent)</td>
+          </tr>
+          <tr>
+            <td>Health Insurance</td>
+            <td>$5,600–$6,400</td>
+            <td>Employer share ~75% of premium</td>
+          </tr>
+          <tr>
+            <td>Paid Time Off (15 days)</td>
+            <td>~$3,173</td>
+            <td>Based on daily wage equivalent</td>
+          </tr>
+          <tr>
+            <td>Retirement Matching (3%)</td>
+            <td>$1,650</td>
+            <td>Optional but increasingly expected</td>
+          </tr>
+          <tr>
+            <td>Equipment &amp; Software</td>
+            <td>$1,200–$2,500</td>
+            <td>Laptop, licenses, tools</td>
+          </tr>
+          <tr>
+            <td><strong>Total Estimated Cost</strong></td>
+            <td class="accent-cell"><strong>$72,700–$77,000</strong></td>
+            <td>1.32–1.40× base salary</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="edu-grid">
+      <div class="edu-card">
+        <h3>Hiring ROI Analysis</h3>
+        <p>Before posting a job, the right question isn't "Can I afford this person?" — it's "Will this person generate more value than they cost?" Hiring ROI forces you to estimate what revenue or cost savings the role will produce, and compare that to total employment cost. A sales hire who brings in $150,000 in new revenue and costs $70,000 all-in delivers a 2.1× ROI. A general admin hire who saves 10 hours of owner time per week at an effective rate of $80/hour delivers $41,600 in recovered capacity annually — worth comparing carefully against an $45,000 salary.</p>
+        <div class="formula">Hiring ROI = (Value Generated − Total Cost) ÷ Total Cost × 100</div>
+      </div>
+      <div class="edu-card">
+        <h3>Workforce Planning for Small Teams</h3>
+        <p>For businesses with fewer than 20 employees, each hire has an outsized impact on culture, cash flow, and operational capacity. Effective workforce planning means projecting revenue for the next 6–12 months, mapping that to labor needs, identifying the point at which current staff becomes the bottleneck, and planning the hire 60–90 days before it's urgent — because urgent hiring is expensive hiring. It also means having a clear plan for what happens if revenue falls short of projections after you've added headcount.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 5: FAQ ── -->
+  <section class="section" aria-labelledby="faq-heading">
+    <div class="section-header">
+      <p class="section-eyebrow">FAQ</p>
+      <h2 id="faq-heading">Frequently Asked Questions</h2>
+    </div>
+    <div class="faq-list" id="faqList">
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>What is the true cost of an employee?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>The true cost of an employee is typically 1.25 to 1.4 times their base salary. Beyond gross wages, employers pay payroll taxes (Social Security, Medicare, FUTA, SUTA), health and dental insurance premiums, workers' compensation, retirement contributions, paid time off, equipment, training, and overhead allocation. A $50,000 salary employee commonly costs $62,000–$70,000 or more per year when all factors are included.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>How do payroll deductions work?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>Payroll deductions reduce an employee's gross pay to arrive at their net (take-home) pay. Pre-tax deductions — such as 401(k) contributions and health insurance premiums — reduce taxable income. Post-tax deductions — like Roth contributions or wage garnishments — are taken after tax is calculated. Employers separately pay their share of FICA taxes (7.65%), federal unemployment (FUTA), and state unemployment (SUTA) taxes on top of wages.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>What expenses should be included in employee cost calculations?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>A complete employee cost calculation should include: gross salary or hourly wages, employer FICA taxes, federal and state unemployment taxes, health and dental insurance contributions, workers' compensation premiums, paid time off and holidays, retirement plan matching, equipment and software costs, recruitment and onboarding costs, training, and a share of facility overhead.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>How is overtime calculated?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>Under the federal Fair Labor Standards Act (FLSA), non-exempt employees must be paid at least 1.5 times their regular hourly rate for all hours worked beyond 40 in a workweek. Some states have daily overtime rules — California requires overtime after 8 hours in a day. For salaried non-exempt employees, the regular rate is calculated by dividing weekly salary by hours worked, then multiplying overtime hours by 1.5 times that rate.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>What is hiring ROI?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>Hiring ROI measures whether the revenue or value generated by a new employee exceeds the total cost of employing them. It accounts for salary, benefits, taxes, training, and time-to-productivity. A positive hiring ROI means the employee contributes more value than they cost. Calculating hiring ROI before making an offer helps small businesses avoid premature hires that strain cash flow.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>How can small businesses reduce labor costs?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>Small businesses can reduce labor costs by optimizing scheduling to eliminate unnecessary overtime, cross-training employees to reduce headcount needs, using part-time or contract workers for variable workloads, reviewing benefit plans annually for cost efficiency, investing in productivity tools that increase output per hour, and reducing turnover — since replacing an employee typically costs 50–200% of their annual salary.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>What employee costs are often overlooked?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>The most commonly overlooked employee costs include: employer-side payroll taxes (many owners only consider the employee's deductions), workers' compensation insurance, the real dollar cost of paid time off, recruitment and job board fees, onboarding time from existing staff, equipment depreciation, and the productivity gap during the first 1–3 months while a new hire ramps up.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>How should businesses budget for payroll?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>Budget payroll as a percentage of projected revenue — typically 15–30% for product-based businesses and 30–50% for service businesses. Build in a 10–15% buffer above base wages for employer taxes and benefits. Run payroll projections monthly, not just annually. If you use bi-weekly pay periods, two months per year will have three payroll cycles — plan cash accordingly.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>Why is workforce planning important for small businesses?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>Workforce planning helps small businesses avoid two costly mistakes: overstaffing (which inflates fixed costs and reduces margins) and understaffing (which leads to missed revenue, burnout, and turnover). Proactive planning aligns headcount with business cycles, identifies skills gaps before they become bottlenecks, and ensures payroll commitments are backed by revenue projections.</p>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-btn" aria-expanded="false" onclick="toggleFaq(this)">
+          <h3>Are these tools free to use?</h3>
+          <span class="faq-chevron" aria-hidden="true">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M2 3.5l3.5 3.5L9 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-body">
+          <p>Yes. All calculators in the Small Business Profit Toolkit are completely free with no account required, no paywalls, and no hidden fees. The tools run entirely in your browser — no data is submitted or stored anywhere. Use them as often as you need.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 6: Related Categories ── -->
+  <section class="section" aria-labelledby="related-heading">
+    <div class="section-header">
+      <p class="section-eyebrow">Explore More Tools</p>
+      <h2 id="related-heading">Related Categories</h2>
+      <p>More free toolkits to help you price smarter, get paid faster, and run operations efficiently.</p>
+    </div>
+    <div class="related-grid">
+
+      <a href="pricing-profit-tools.html" class="related-card" aria-label="Pricing and Profit Tools">
+        <div class="related-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="7.5" stroke="#1A5C3A" stroke-width="1.4"/>
+            <path d="M10 6v8M7.5 8.5h4a1.5 1.5 0 010 3H8a1.5 1.5 0 000 3H12" stroke="#1A5C3A" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Pricing &amp; Profit Tools</h3>
+        <p>Profit margin, markup, break-even, and service pricing calculators to help you set prices that actually work.</p>
+        <span class="related-link-text">
+          Explore tools
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+
+      <a href="invoice-payment-tools.html" class="related-card" aria-label="Invoice and Payment Tools">
+        <div class="related-icon blue-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <rect x="3" y="2.5" width="14" height="15" rx="2.5" stroke="#185FA5" stroke-width="1.4"/>
+            <path d="M6.5 7h7M6.5 10.5h7M6.5 14h4.5" stroke="#185FA5" stroke-width="1.3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Invoice &amp; Payment Tools</h3>
+        <p>Invoice due date calculators, late payment fee estimators, and payment planning tools to keep cash flow healthy.</p>
+        <span class="related-link-text">
+          Explore tools
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+
+      <a href="time-operations-tools.html" class="related-card" aria-label="Time and Operations Tools">
+        <div class="related-icon orange-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+            <circle cx="10" cy="10" r="7.5" stroke="#7A4A10" stroke-width="1.4"/>
+            <path d="M10 6.5v4l2.5 1.5" stroke="#7A4A10" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Time &amp; Operations Tools</h3>
+        <p>Business hours calculators, project profitability estimators, and hourly rate tools to optimize how you use time.</p>
+        <span class="related-link-text">
+          Explore tools
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M2.5 6.5h8M7 3l3.5 3.5L7 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  function toggleFaq(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!isOpen));
+    body.classList.toggle('open', !isOpen);
+  }
+</script>
+</body>
+</html>

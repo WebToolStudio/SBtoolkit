@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contractor Quote Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Calculate accurate contractor quotes based on labor, materials, overhead, and profit margin. Free contractor estimate tool." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --profit-pos:     #1A5C3A;
+    --profit-neg:     #9B2828;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:  'DM Serif Display', Georgia, serif;
+    --font-body:     'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1.5rem; }
+  .header-inner {
+    max-width: 780px; margin: 0 auto; height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); text-decoration: none; letter-spacing: -0.01em; }
+  .logo span { color: var(--accent); }
+  .header-tag { font-size: 12px; font-weight: 500; color: var(--accent-text); background: var(--accent-light); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  /* ── Main ── */
+  main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* ── Page Title ── */
+  .page-title { margin-bottom: 2rem; animation: fadeUp 0.4s ease both; }
+  .page-title h1 { font-family: var(--font-display); font-size: clamp(26px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+  .page-title p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* ── Calc Card ── */
+  .calc-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 2rem; box-shadow: var(--shadow-md); animation: fadeUp 0.4s 0.08s ease both; margin-bottom: 2rem;
+  }
+
+  /* ── Section label ── */
+  .section-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* ── Input grid ── */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .field .field-hint { font-size: 11px; color: var(--text-muted); margin-top: -3px; }
+
+  /* Tooltip */
+  .tip { position: relative; display: inline-flex; align-items: center; cursor: default; }
+  .tip-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--border-dark); color: var(--text-secondary); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tip-box { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--text-primary); color: #fff; font-size: 11px; font-weight: 400; line-height: 1.5; padding: 7px 10px; border-radius: var(--radius-sm); width: 210px; white-space: normal; z-index: 10; pointer-events: none; }
+  .tip:hover .tip-box { display: block; }
+
+  /* Inputs */
+  .input-wrap { position: relative; }
+  .input-wrap .prefix { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 500; color: var(--text-muted); pointer-events: none; }
+  .input-wrap input {
+    width: 100%; padding: 11px 14px 11px 30px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    -moz-appearance: textfield;
+  }
+  .input-wrap input.no-prefix { padding-left: 14px; }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+  .input-wrap input.error-input { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(155,40,40,0.1); }
+
+  /* Select */
+  .field select {
+    width: 100%; padding: 11px 36px 11px 14px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239E9990' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+    transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
+  }
+  .field select:focus { border-color: var(--accent); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* Slider */
+  .slider-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; }
+  .slider-hint { font-size: 11px; color: var(--text-muted); }
+  .slider-value { font-size: 14px; font-weight: 600; color: var(--accent); background: var(--accent-light); padding: 3px 10px; border-radius: 20px; min-width: 46px; text-align: center; }
+  input[type="range"] { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 10px; background: var(--border); outline: none; cursor: pointer; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.2); cursor: pointer; transition: transform var(--transition); }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; cursor: pointer; }
+
+  /* Cost breakdown mini-band */
+  .cost-band {
+    background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md);
+    padding: 1rem 1.25rem; margin-bottom: 1.75rem;
+  }
+  .cost-band h3 { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+  .cost-rows { display: flex; flex-direction: column; gap: 6px; }
+  .cost-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); }
+  .cost-row span:last-child { font-weight: 600; color: var(--text-primary); }
+  .cost-row.total { border-top: 1px solid var(--border-dark); padding-top: 6px; margin-top: 2px; }
+  .cost-row.total span { color: var(--accent); font-weight: 700; }
+
+  /* Error */
+  .error-msg { display: none; align-items: center; gap: 8px; font-size: 13px; color: var(--danger); background: var(--danger-light); border: 1px solid #F0C8C8; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 1.25rem; }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* Insights */
+  .insight-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .insight-banner { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid; animation: fadeUp 0.3s ease both; line-height: 1.5; }
+  .insight-banner svg { flex-shrink: 0; margin-top: 1px; }
+  .insight-banner.warn { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .insight-banner.info { color: var(--accent-text); background: var(--accent-light); border-color: #B8D9C5; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .btn { font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 11px 24px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid transparent; transition: all var(--transition); letter-spacing: 0.01em; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); flex: 1; }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset { background: transparent; color: var(--text-secondary); border-color: var(--border-dark); }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy { font-family: var(--font-body); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid #B8D9C5; background: var(--accent-light); color: var(--accent-text); transition: all var(--transition); letter-spacing: 0.01em; display: none; }
+  .btn-copy:hover { background: #d4ecde; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* Results */
+  .results-section h2 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+  .result-primary { background: var(--accent-light); border: 1px solid #B8D9C5; border-radius: var(--radius-md); padding: 1.5rem 1.25rem; text-align: center; margin-bottom: 12px; transition: all 0.25s ease; }
+  .result-primary.highlight-neg { background: var(--danger-light); border-color: #F0C8C8; }
+  .result-primary .r-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-text); margin-bottom: 6px; }
+  .result-primary.highlight-neg .r-label { color: var(--danger); }
+  .result-primary .r-value { font-family: var(--font-display); font-size: 46px; color: var(--profit-pos); line-height: 1; transition: color 0.25s ease; }
+  .result-primary .r-value.neg { color: var(--profit-neg); }
+  .result-primary .r-sub { font-size: 12px; color: var(--accent-text); margin-top: 6px; opacity: 0.8; }
+
+  .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 480px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-card.highlight { background: var(--accent-light); border-color: #B8D9C5; }
+  .result-card.highlight-neg { background: var(--danger-light); border-color: #F0C8C8; }
+  .result-card .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .result-card .r-value { font-family: var(--font-display); font-size: 26px; color: var(--text-primary); line-height: 1; transition: color 0.25s ease; }
+  .result-card .r-value.pos { color: var(--profit-pos); }
+  .result-card .r-value.neg { color: var(--profit-neg); }
+  .result-card .r-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 22px; }
+  .result-primary .r-value.placeholder { font-size: 28px; }
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  /* ── Guide Section ── */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section > h2, .faq-section > h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--text-primary); margin-bottom: 1.25rem; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .guide-card .g-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.amber { background: #FDF3E7; }
+  .g-icon.slate { background: #EEF0F5; }
+  .guide-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .guide-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .guide-card .formula { margin-top: 10px; padding: 8px 12px; background: var(--surface-alt); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--text-secondary); font-family: 'Courier New', monospace; border-left: 3px solid var(--border-dark); }
+
+  .guide-card-wide { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .guide-card-wide h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .why-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Examples */
+  .examples-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .examples-grid { grid-template-columns: 1fr; } }
+  .example-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .example-card .e-role { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-text); background: var(--accent-light); display: inline-block; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+  .example-card h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .example-card .e-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.65; }
+  .example-card .e-price { margin-top: 10px; font-family: var(--font-display); font-size: 22px; color: var(--profit-pos); }
+
+  /* FAQ */
+  .faq-section { margin-top: 2.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .faq-q { width: 100%; text-align: left; padding: 1rem 1.25rem; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background var(--transition); }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s ease; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0.75rem 1.25rem 1rem; font-size: 13px; color: var(--text-secondary); line-height: 1.65; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-a { display: block; }
+
+  /* Footer */
+  .site-footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--surface); }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+  @keyframes popIn { 0% { transform: scale(0.94); opacity: 0.6; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>Contractor Quote Calculator</h1>
+    <p>Build accurate, profitable job quotes in seconds. Enter your labor, materials, overhead, and margin — and know exactly what to charge before you send the estimate.</p>
+  </div>
+
+  <div class="calc-card">
+
+    <!-- Labor -->
+    <div class="input-section">
+      <h2 class="section-label">Labor</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="laborHours">
+            Estimated Labor Hours
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Total hours for all workers on this job. For multiple workers, multiply headcount × hours each.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="laborHours" class="no-prefix" placeholder="10" min="0" step="0.5" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="laborRate">
+            Hourly Labor Rate
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Your fully-loaded labor cost per hour — include wages, workers' comp, and payroll taxes if applicable.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="laborRate" placeholder="75.00" min="0" step="0.50" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Costs -->
+    <div class="input-section">
+      <h2 class="section-label">Project Costs</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="materialCost">
+            Material Cost
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">All supplies, materials, and parts for this job. Include a markup if you resell materials to clients.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="materialCost" placeholder="0.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="equipmentCost">
+            Equipment Cost
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Equipment rental, tool wear and tear, or machinery usage allocated to this job.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="equipmentCost" placeholder="0.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="travelCost">
+            Travel Cost
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Fuel, mileage, tolls, or per diem for travel to and from the job site.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="travelCost" placeholder="0.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buffers & Margin -->
+    <div class="input-section">
+      <h2 class="section-label">Overhead, Buffer &amp; Profit</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label>
+            Overhead Percentage
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Covers insurance, licensing, admin, office costs, and other indirect expenses not tied to a single job.</span>
+            </span>
+          </label>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-hint">Insurance, admin, licensing</span>
+              <span class="slider-value" id="overheadDisplay">15%</span>
+            </div>
+            <input type="range" id="overheadPct" min="0" max="50" step="1" value="15"
+              oninput="document.getElementById('overheadDisplay').textContent = this.value + '%'" />
+          </div>
+        </div>
+        <div class="field">
+          <label>
+            Desired Profit Margin
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Profit on top of all costs. Industry standard for contractors is 10–25%. Never go below 10%.</span>
+            </span>
+          </label>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-hint">Net profit on the job</span>
+              <span class="slider-value" id="marginDisplay">25%</span>
+            </div>
+            <input type="range" id="profitMargin" min="0" max="100" step="1" value="25"
+              oninput="document.getElementById('marginDisplay').textContent = this.value + '%'" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="contingency">
+            Contingency Buffer
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Reserve for unexpected delays, hidden damage, extra material needs, or scope additions mid-job.</span>
+            </span>
+          </label>
+          <select id="contingency">
+            <option value="0">0% — No buffer</option>
+            <option value="5">5% — Low risk job</option>
+            <option value="10" selected>10% — Standard</option>
+            <option value="15">15% — Complex job</option>
+            <option value="20">20% — High uncertainty</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-area" id="insightArea"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate Quote</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Your Quote Breakdown</h2>
+
+      <div class="result-primary" id="card-quote">
+        <div class="r-label">Recommended Quote Price</div>
+        <div class="r-value placeholder" id="val-quote">—</div>
+        <div class="r-sub" id="sub-quote">your profitable client price</div>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-card" id="card-labor">
+          <div class="r-label">Labor Cost</div>
+          <div class="r-value placeholder" id="val-labor">—</div>
+          <div class="r-sub" id="sub-labor">hours × rate</div>
+        </div>
+        <div class="result-card" id="card-breakeven">
+          <div class="r-label">Break-Even Price</div>
+          <div class="r-value placeholder" id="val-breakeven">—</div>
+          <div class="r-sub">never quote below this</div>
+        </div>
+        <div class="result-card" id="card-profit">
+          <div class="r-label">Estimated Profit</div>
+          <div class="r-value placeholder" id="val-profit">—</div>
+          <div class="r-sub">on this job</div>
+        </div>
+        <div class="result-card" id="card-margin">
+          <div class="r-label">Profit Margin</div>
+          <div class="r-value placeholder" id="val-margin">—</div>
+          <div class="r-sub">of quote price</div>
+        </div>
+      </div>
+
+      <!-- Live cost breakdown -->
+      <div class="cost-band" id="costBand" style="display:none;">
+        <h3>Cost Breakdown</h3>
+        <div class="cost-rows">
+          <div class="cost-row"><span>Labor</span><span id="bd-labor">—</span></div>
+          <div class="cost-row"><span>Materials</span><span id="bd-materials">—</span></div>
+          <div class="cost-row"><span>Equipment</span><span id="bd-equipment">—</span></div>
+          <div class="cost-row"><span>Travel</span><span id="bd-travel">—</span></div>
+          <div class="cost-row"><span>Overhead</span><span id="bd-overhead">—</span></div>
+          <div class="cost-row"><span>Contingency</span><span id="bd-contingency">—</span></div>
+          <div class="cost-row total"><span>Total Cost (before profit)</span><span id="bd-total">—</span></div>
+        </div>
+      </div>
+
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn" onclick="copySummary()">Copy Quote Summary</button>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Guide -->
+  <div class="guide-section">
+    <h2>Understanding Your Quote</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>What Goes Into a Quote</h3>
+        <p>A profitable quote covers labor, materials, equipment, travel, overhead, a contingency buffer for surprises, and your profit margin. Leave any one out and you absorb that cost yourself.</p>
+        <div class="formula">Quote = (All Costs + Overhead + Buffer) + Profit</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 3v14M3 10h14" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Why Overhead Matters</h3>
+        <p>Overhead includes insurance, vehicle costs, admin time, licensing fees, and office expenses. These are real costs spread across every job. A typical contractor overhead runs 10–20% of job cost.</p>
+        <div class="formula">Overhead Cost = Base Cost × Overhead %</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon amber">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 4v4l3 2" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="10" cy="10" r="8" stroke="#7A4A10" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>What Is a Contingency Buffer?</h3>
+        <p>Jobs rarely go exactly as planned. Hidden damage, bad weather, extra material needs — a contingency buffer absorbs these without killing your margin. 10% is standard for most jobs.</p>
+        <div class="formula">Buffered Cost = Cost × (1 + Contingency %)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon slate">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 15l10-10M8 6h-3v3" stroke="#4A5568" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Break-Even vs Quote Price</h3>
+        <p>Break-even is the floor — the minimum you must charge to avoid losing money. Your quote price is above that floor by your profit margin. Never negotiate below break-even for any reason.</p>
+        <div class="formula">Break-Even = Total Cost incl. Overhead + Buffer</div>
+      </div>
+
+    </div>
+
+    <!-- Examples -->
+    <h2 style="margin-top:2.5rem; margin-bottom:1.25rem;">Business Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="e-role">Electrician</span>
+        <h4>Panel Upgrade — 200A</h4>
+        <div class="e-detail">12 hrs labor @ $85/hr · $600 materials · $50 travel · 15% overhead · 10% contingency · 25% margin</div>
+        <div class="e-price">≈ $2,440</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Painter</span>
+        <h4>Interior House Paint (3BR)</h4>
+        <div class="e-detail">24 hrs labor @ $55/hr · $400 materials · $30 travel · 12% overhead · 10% contingency · 20% margin</div>
+        <div class="e-price">≈ $2,580</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Landscaper</span>
+        <h4>Backyard Renovation</h4>
+        <div class="e-detail">16 hrs labor @ $65/hr · $800 materials · $200 equipment · $40 travel · 15% overhead · 15% contingency · 25% margin</div>
+        <div class="e-price">≈ $3,570</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">General Contractor</span>
+        <h4>Bathroom Remodel</h4>
+        <div class="e-detail">40 hrs labor @ $90/hr · $3,500 materials · $200 equipment · $100 travel · 20% overhead · 15% contingency · 25% margin</div>
+        <div class="e-price">≈ $11,250</div>
+      </div>
+    </div>
+
+    <!-- Why contractors underquote -->
+    <div class="guide-card-wide">
+      <h3>Why contractors underquote — and how to stop</h3>
+      <ul class="why-list">
+        <li><strong>Forgetting overhead entirely.</strong> Insurance, licensing, admin, vehicle costs, and office expenses are real costs that belong in every quote. Most contractors skip them and then wonder why the numbers don't work out.</li>
+        <li><strong>Underestimating labor hours.</strong> Jobs always take longer than expected. Add a realistic estimate, then add a buffer. Quoting the best-case scenario means you work for free when reality hits.</li>
+        <li><strong>No contingency for surprises.</strong> Hidden damage, material shortages, weather delays, and scope creep happen on almost every job. A 10% buffer is not padding — it's professionalism.</li>
+        <li><strong>Competing purely on price.</strong> Clients who only want the lowest price are often the most difficult. Quote your real costs, hold your margin, and let the right clients find you.</li>
+        <li><strong>Confusing revenue with profit.</strong> A $10,000 job sounds great until you account for $9,200 in costs. Know your break-even on every job before you send the quote.</li>
+      </ul>
+    </div>
+
+  </div><!-- /.guide-section -->
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What overhead percentage should I use?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Most trade contractors run 10–20% overhead. Solo operators with minimal admin costs can use 10–12%. Businesses with employees, a physical office, a fleet of vehicles, or significant insurance costs should use 15–20% or higher. Track your actual overhead annually and update accordingly.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Should I include subcontractor costs in materials or labor?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Treat subcontractor costs like a direct job cost. You can add them to the material cost field or calculate the subcontractor total separately and add it there. Make sure you still apply overhead and margin on top — you're managing the sub and taking on the liability.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What profit margin is normal for contractors?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Net profit margins for contractors typically range from 10–25%. Specialty trades (electrical, HVAC, plumbing) can often command 20–30% on service calls. Remodeling and general contracting often runs 15–25%. Below 10% net margin leaves no room for error or business reinvestment.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          My client says the quote is too high. Should I lower it?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Only lower the price if you can remove scope — fewer hours, less material, a smaller job footprint. Never reduce your margin below break-even. If the client can't meet your minimum, it's better to decline the job than to lose money completing it. Unprofitable jobs drain time and cash you could spend on profitable ones.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Should I mark up materials in my quote?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Yes — most contractors mark up materials 10–20%. You source, transport, and manage the materials. Your time and expertise have value beyond just the labor hours. If you're entering your material cost here, consider whether it's already marked up. If not, factor the markup into the overhead or profit margin slider.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How often should I update my labor rate?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Revisit your labor rate at least once a year, and any time wages, insurance costs, or benefits change. Many contractors undercharge because they set a rate years ago and never raised it. Inflation, insurance premiums, and wage increases erode margin over time without a rate adjustment.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+  function fmtPct(n) {
+    return n.toFixed(1) + '%';
+  }
+
+  function calculate() {
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+
+    const laborHrsVal  = document.getElementById('laborHours').value.trim();
+    const laborRateVal = document.getElementById('laborRate').value.trim();
+    const materialVal  = document.getElementById('materialCost').value.trim();
+    const equipVal     = document.getElementById('equipmentCost').value.trim();
+    const travelVal    = document.getElementById('travelCost').value.trim();
+    const overheadPct  = parseFloat(document.getElementById('overheadPct').value);
+    const profitPct    = parseFloat(document.getElementById('profitMargin').value);
+    const contingency  = parseFloat(document.getElementById('contingency').value);
+
+    if (!laborHrsVal || !laborRateVal) {
+      showError('Please enter at least the labor hours and hourly labor rate.');
+      return;
+    }
+
+    const laborHrs  = parseFloat(laborHrsVal);
+    const laborRate = parseFloat(laborRateVal);
+    const material  = parseFloat(materialVal)  || 0;
+    const equip     = parseFloat(equipVal)      || 0;
+    const travel    = parseFloat(travelVal)     || 0;
+
+    if (laborHrs  <= 0) { showError('Labor hours must be greater than zero.'); return; }
+    if (laborRate <= 0) { showError('Hourly labor rate must be greater than zero.'); return; }
+
+    /* ── Formula ── */
+    const laborCost    = laborHrs * laborRate;
+    const baseJobCost  = laborCost + material + equip + travel;
+    const overheadAmt  = baseJobCost * (overheadPct / 100);
+    const afterOverhead = baseJobCost + overheadAmt;
+    const contingencyAmt = afterOverhead * (contingency / 100);
+    const breakEven    = afterOverhead + contingencyAmt;   // total cost incl. overhead + buffer
+    const finalQuote   = breakEven / (1 - profitPct / 100); // margin formula
+    const profit       = finalQuote - breakEven;
+    const actualMargin = (profit / finalQuote) * 100;
+    const isLoss       = profit < 0;
+
+    /* ── Results ── */
+    const primVal  = document.getElementById('val-quote');
+    const primCard = document.getElementById('card-quote');
+    primVal.textContent = fmt(finalQuote);
+    primVal.className   = 'r-value pop ' + (isLoss ? 'neg' : 'pos');
+    primCard.className  = 'result-primary' + (isLoss ? ' highlight-neg' : '');
+    document.getElementById('sub-quote').textContent = laborHrs + ' labor hrs · ' + fmtPct(profitPct) + ' margin';
+    primVal.addEventListener('animationend', () => primVal.classList.remove('pop'), { once: true });
+
+    renderCard('val-labor',    'card-labor',    fmt(laborCost),  'pos');
+    document.getElementById('sub-labor').textContent = laborHrs + ' hrs × $' + laborRate + '/hr';
+    renderCard('val-breakeven','card-breakeven', fmt(breakEven), 'pos');
+    renderCard('val-profit',   'card-profit',    fmt(profit),    isLoss ? 'neg' : 'pos');
+    renderCard('val-margin',   'card-margin',    fmtPct(actualMargin), isLoss ? 'neg' : 'pos');
+
+    /* Breakdown band */
+    document.getElementById('costBand').style.display = 'block';
+    document.getElementById('bd-labor').textContent       = fmt(laborCost);
+    document.getElementById('bd-materials').textContent   = fmt(material);
+    document.getElementById('bd-equipment').textContent   = fmt(equip);
+    document.getElementById('bd-travel').textContent      = fmt(travel);
+    document.getElementById('bd-overhead').textContent    = fmt(overheadAmt);
+    document.getElementById('bd-contingency').textContent = fmt(contingencyAmt);
+    document.getElementById('bd-total').textContent       = fmt(breakEven);
+
+    /* Insights */
+    buildInsights(profitPct, contingency, laborHrs);
+
+    document.getElementById('copyBtn').style.display = 'inline-block';
+    window._lastResult = { finalQuote, laborCost, breakEven, profit, actualMargin, laborHrs, laborRate, profitPct, contingency, overheadPct };
+  }
+
+  function renderCard(valId, cardId, text, cls) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    card.className = 'result-card ' + (cls === 'pos' ? 'highlight' : 'highlight-neg');
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function showError(msg) {
+    document.getElementById('errorText').textContent = msg;
+    document.getElementById('errorMsg').classList.add('visible');
+  }
+
+  function buildInsights(margin, contingency, laborHrs) {
+    const area = document.getElementById('insightArea');
+    area.innerHTML = '';
+    const add = (type, msg) => {
+      const d = document.createElement('div');
+      d.className = 'insight-banner ' + type;
+      d.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg> ${msg}`;
+      area.appendChild(d);
+    };
+    if (margin < 10)       add('warn', 'Profit margin below 10%. A small cost overrun or delay could eliminate your profit entirely.');
+    if (contingency === 0) add('warn', 'No contingency buffer. Unexpected issues mid-job will come directly out of your profit.');
+    if (laborHrs > 40)     add('info', 'Large job detected. Consider premium pricing — bigger projects carry more risk and management complexity.');
+  }
+
+  function copySummary() {
+    const r = window._lastResult;
+    if (!r) return;
+    const text =
+      `Contractor Quote Summary\n` +
+      `────────────────────────\n` +
+      `Recommended Quote: ${fmt(r.finalQuote)}\n` +
+      `Break-Even Price:  ${fmt(r.breakEven)}\n` +
+      `Labor Cost:        ${fmt(r.laborCost)}  (${r.laborHrs} hrs @ $${r.laborRate}/hr)\n` +
+      `Estimated Profit:  ${fmt(r.profit)}\n` +
+      `Profit Margin:     ${r.actualMargin.toFixed(1)}%\n` +
+      `Overhead:          ${r.overheadPct}%  |  Contingency: ${r.contingency}%\n` +
+      `Generated by Small Business Profit Toolkit`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Quote Summary'; }, 2000);
+    });
+  }
+
+  function resetCalc() {
+    ['laborHours','laborRate','materialCost','equipmentCost','travelCost'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('overheadPct').value    = '15';
+    document.getElementById('overheadDisplay').textContent = '15%';
+    document.getElementById('profitMargin').value   = '25';
+    document.getElementById('marginDisplay').textContent   = '25%';
+    document.getElementById('contingency').value    = '10';
+    document.getElementById('errorMsg').classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+    document.getElementById('copyBtn').style.display = 'none';
+    document.getElementById('costBand').style.display = 'none';
+
+    ['val-quote','val-labor','val-breakeven','val-profit','val-margin'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    document.getElementById('card-quote').className = 'result-primary';
+    ['card-labor','card-breakeven','card-profit','card-margin'].forEach(id => {
+      document.getElementById(id).className = 'result-card';
+    });
+    document.getElementById('sub-quote').textContent  = 'your profitable client price';
+    document.getElementById('sub-labor').textContent  = 'hours × rate';
+  }
+
+  function toggleFaq(btn) {
+    btn.closest('.faq-item').classList.toggle('open');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>

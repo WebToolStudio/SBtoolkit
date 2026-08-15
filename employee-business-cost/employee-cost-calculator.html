@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Employee Cost Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Estimate the real cost of an employee including salary, payroll taxes, benefits, insurance, and other expenses." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --blue:           #185FA5;
+    --blue-light:     #E8F0FA;
+    --profit-pos:     #1A5C3A;
+    --profit-neg:     #9B2828;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:  'DM Serif Display', Georgia, serif;
+    --font-body:     'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1rem; }
+  .header-inner { max-width: 780px; margin: 0 auto; height: 58px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); text-decoration: none; letter-spacing: -0.01em; }
+  .logo span { color: var(--accent); }
+  .header-tag { font-size: 12px; font-weight: 500; color: var(--accent-text); background: var(--accent-light); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  /* Main */
+  main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
+
+  /* Page title */
+  .page-title { margin-bottom: 2rem; animation: fadeUp 0.4s ease both; }
+  .page-title h1 { font-family: var(--font-display); font-size: clamp(26px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+  .page-title p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* Calc card */
+  .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); animation: fadeUp 0.4s 0.08s ease both; margin-bottom: 2rem; }@media (max-width: 640px) { .calc-card { padding: 1.25rem; } }
+
+  .section-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Input grid */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .field .field-hint { font-size: 11px; color: var(--text-muted); margin-top: -3px; }
+
+  /* Tooltip */
+  .tip { position: relative; display: inline-flex; align-items: center; cursor: default; }
+  .tip-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--border-dark); color: var(--text-secondary); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tip-box { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--text-primary); color: #fff; font-size: 11px; line-height: 1.5; padding: 7px 10px; border-radius: var(--radius-sm); width: 220px; z-index: 10; pointer-events: none; }
+  .tip:hover .tip-box { display: block; }
+
+  /* Number inputs */
+  .input-wrap { position: relative; }
+  .input-wrap .prefix { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 500; color: var(--text-muted); pointer-events: none; }
+  .input-wrap input {
+    width: 100%; padding: 11px 14px 11px 30px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; -moz-appearance: textfield;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* Slider */
+  .slider-section { margin-bottom: 1.75rem; }
+  .slider-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; }
+  .slider-hint { font-size: 11px; color: var(--text-muted); }
+  .slider-value { font-size: 14px; font-weight: 600; color: var(--accent); background: var(--accent-light); padding: 3px 10px; border-radius: 20px; min-width: 52px; text-align: center; }
+  input[type="range"] { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 10px; background: var(--border); outline: none; cursor: pointer; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.2); cursor: pointer; transition: transform var(--transition); }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; cursor: pointer; }
+
+  /* Error */
+  .error-msg { display: none; align-items: center; gap: 8px; font-size: 13px; color: var(--danger); background: var(--danger-light); border: 1px solid #F0C8C8; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 1.25rem; }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* Insights */
+  .insight-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .insight-banner { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid; animation: fadeUp 0.3s ease both; line-height: 1.5; }
+  .insight-banner svg { flex-shrink: 0; margin-top: 1px; }
+  .insight-banner.info   { color: var(--accent-text); background: var(--accent-light); border-color: #B8D9C5; }
+  .insight-banner.warn   { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .insight-banner.danger { color: var(--danger);  background: var(--danger-light);  border-color: #F0C8C8; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .btn { font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 11px 24px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid transparent; transition: all var(--transition); letter-spacing: 0.01em; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); flex: 1; }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset { background: transparent; color: var(--text-secondary); border-color: var(--border-dark); }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy { font-family: var(--font-body); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid #B8D9C5; background: var(--accent-light); color: var(--accent-text); transition: all var(--transition); display: none; }
+  .btn-copy:hover { background: #d4ecde; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* Results */
+  .results-section h2 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Dual primary */
+  .result-primary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 480px) { .result-primary-row { grid-template-columns: 1fr; } }
+
+  .result-primary { border-radius: var(--radius-md); padding: 1.5rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-primary.annual-card  { background: var(--danger-light); border: 1px solid #F0C8C8; }
+  .result-primary.monthly-card { background: var(--warning-light); border: 1px solid #F0D8A8; }
+  .result-primary .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .annual-card  .r-label { color: var(--danger); }
+  .monthly-card .r-label { color: var(--warning); }
+  .result-primary .r-value { font-family: var(--font-display); font-size: 38px; line-height: 1; }
+  .annual-card  .r-value { color: var(--profit-neg); }
+  .monthly-card .r-value { color: var(--warning); }
+  .result-primary .r-sub { font-size: 11px; margin-top: 5px; opacity: 0.85; }
+  .annual-card  .r-sub { color: var(--danger); }
+  .monthly-card .r-sub { color: var(--warning); }
+
+  /* KPI grid */
+  .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 560px) { .results-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 380px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-card.highlight      { background: var(--accent-light); border-color: #B8D9C5; }
+  .result-card.highlight-blue { background: var(--blue-light);   border-color: #BDD4EE; }
+  .result-card.highlight-warn { background: var(--warning-light); border-color: #F0D8A8; }
+  .result-card .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .result-card .r-value { font-family: var(--font-display); font-size: 22px; color: var(--text-primary); line-height: 1; }
+  .result-card .r-value.warn { color: var(--warning); }
+  .result-card .r-value.blue { color: var(--blue); }
+  .result-card .r-value.pos  { color: var(--profit-pos); }
+  .result-card .r-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 20px; }
+  .result-primary .r-value.placeholder { font-size: 26px; }
+
+  /* Cost breakdown band */
+  .breakdown-band { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 12px; display: none; }
+  .breakdown-band.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .breakdown-band h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 12px; }
+  .bd-rows { display: flex; flex-direction: column; gap: 0; }
+  .bd-row { display: flex; align-items: center; justify-content: space-between; font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--border); color: var(--text-secondary); gap: 12px; }
+  .bd-row:last-child { border-bottom: none; }
+  .bd-row .bd-label { flex: 1; }
+  .bd-row .bd-bar-wrap { flex: 2; height: 6px; background: var(--border); border-radius: 6px; overflow: hidden; }
+  .bd-row .bd-bar { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+  .bd-row .bd-val { font-weight: 600; color: var(--text-primary); min-width: 80px; text-align: right; }
+  .bd-row .bd-pct { font-size: 11px; color: var(--text-muted); min-width: 40px; text-align: right; }
+  .bd-row.salary-row .bd-bar { background: var(--accent); }
+  .bd-row.tax-row    .bd-bar { background: var(--danger); }
+  .bd-row.ben-row    .bd-bar { background: var(--blue); }
+  .bd-row.ins-row    .bd-bar { background: var(--warning); }
+  .bd-row.other-row  .bd-bar { background: var(--border-dark); }
+  .bd-row.total-row  { border-top: 2px solid var(--border-dark); padding-top: 10px; margin-top: 4px; font-weight: 700; font-size: 14px; }
+  .bd-row.total-row .bd-val { color: var(--profit-neg); font-size: 15px; }
+
+  /* Cost multiplier callout */
+  .multiplier-callout { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 12px; display: none; text-align: center; }
+  .multiplier-callout.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .multiplier-callout .mc-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+  .multiplier-callout .mc-value { font-family: var(--font-display); font-size: 28px; color: var(--profit-neg); }
+  .multiplier-callout .mc-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  /* Guide */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section > h2, .faq-section > h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--text-primary); margin-bottom: 1.25rem; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .guide-card .g-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.amber { background: #FDF3E7; }
+  .g-icon.red   { background: var(--danger-light); }
+  .guide-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .guide-card p  { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .guide-card .formula { margin-top: 10px; padding: 8px 12px; background: var(--surface-alt); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--text-secondary); font-family: 'Courier New', monospace; border-left: 3px solid var(--border-dark); }
+
+  .guide-card-wide { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .guide-card-wide h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .why-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Examples */
+  .examples-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .examples-grid { grid-template-columns: 1fr; } }
+  .example-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .example-card .e-role { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-text); background: var(--accent-light); display: inline-block; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+  .example-card h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .example-card .e-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.65; }
+  .example-card .e-price { margin-top: 10px; font-family: var(--font-display); font-size: 20px; color: var(--profit-neg); }
+
+  /* FAQ */
+  .faq-section { margin-top: 2.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .faq-q { width: 100%; text-align: left; padding: 1rem 1.25rem; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background var(--transition); }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s ease; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0.75rem 1.25rem 1rem; font-size: 13px; color: var(--text-secondary); line-height: 1.65; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-a { display: block; }
+
+  /* Footer */
+  .site-footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--surface); }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+  @keyframes popIn { 0% { transform: scale(0.94); opacity: 0.6; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>Employee Cost Calculator</h1>
+    <p>Salary is just the starting point. Enter the full picture — payroll taxes, benefits, insurance, and other costs — to see what this employee truly costs your business.</p>
+  </div>
+
+  <div class="calc-card">
+
+    <!-- Salary -->
+    <div class="input-section">
+      <h2 class="section-label">Base Salary</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="annualSalary">
+            Annual Salary
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">The employee's agreed gross annual salary before any deductions or employer add-ons.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="annualSalary" placeholder="60,000" min="0" step="100" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payroll tax slider -->
+    <div class="slider-section">
+      <h2 class="section-label">Payroll Tax (Employer Portion)</h2>
+      <div class="slider-wrap">
+        <div class="slider-header">
+          <span style="font-size:13px; font-weight:500; color:var(--text-secondary);">
+            FICA employer match + FUTA/SUTA
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Employer pays 7.65% FICA (6.2% SS + 1.45% Medicare) plus FUTA (0.6%) and state unemployment. Default 7.65% is FICA only — adjust upward for state taxes.</span>
+            </span>
+          </span>
+          <span class="slider-value" id="taxDisplay">7.65%</span>
+        </div>
+        <input type="range" id="payrollTax" min="0" max="20" step="0.5" value="7.65"
+          oninput="updateTax(this.value)" />
+        <div style="display:flex; justify-content:space-between; font-size:10px; color:var(--text-muted); padding:0 2px;">
+          <span>0%</span><span>5%</span><span>10%</span><span>15%</span><span>20%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Additional costs -->
+    <div class="input-section">
+      <h2 class="section-label">Additional Employee Costs</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="benefitsCost">
+            Annual Benefits Cost
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Employer contributions toward health, dental, vision, life insurance, FSA/HSA, or wellness programs.</span>
+            </span>
+          </label>
+          <span class="field-hint">Health, dental, vision, 401(k) match, wellness</span>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="benefitsCost" placeholder="5,000" min="0" step="100" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="insuranceCost">
+            Annual Insurance Cost
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Workers' compensation insurance, general liability, and any other insurance costs allocated to this employee.</span>
+            </span>
+          </label>
+          <span class="field-hint">Workers' comp, liability, professional indemnity</span>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="insuranceCost" placeholder="2,000" min="0" step="100" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="otherCosts">
+            Other Annual Costs
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Equipment, software licences, training, office space allocation, recruiting fees, uniforms, or any other costs tied to this employee.</span>
+            </span>
+          </label>
+          <span class="field-hint">Equipment, training, software, recruiting, office</span>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="otherCosts" placeholder="1,000" min="0" step="100" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-area" id="insightArea"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate True Employee Cost</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>True Cost Dashboard</h2>
+
+      <!-- Dual primary -->
+      <div class="result-primary-row">
+        <div class="result-primary annual-card" id="card-annual">
+          <div class="r-label">Total Annual Cost</div>
+          <div class="r-value placeholder" id="val-annual">—</div>
+          <div class="r-sub" id="sub-annual">per year to employ</div>
+        </div>
+        <div class="result-primary monthly-card" id="card-monthly">
+          <div class="r-label">Monthly Cost</div>
+          <div class="r-value placeholder" id="val-monthly">—</div>
+          <div class="r-sub">per month average</div>
+        </div>
+      </div>
+
+      <!-- Multiplier callout -->
+      <div class="multiplier-callout" id="multiplierCard">
+        <div class="mc-label">Cost Multiplier — true cost vs base salary</div>
+        <div class="mc-value" id="mc-value">—</div>
+        <div class="mc-sub" id="mc-sub">times the annual salary</div>
+      </div>
+
+      <!-- KPI cards -->
+      <div class="results-grid">
+        <div class="result-card" id="card-tax">
+          <div class="r-label">Payroll Tax Cost</div>
+          <div class="r-value placeholder" id="val-tax">—</div>
+          <div class="r-sub" id="sub-tax">employer FICA + payroll</div>
+        </div>
+        <div class="result-card" id="card-benefits">
+          <div class="r-label">Benefits Cost</div>
+          <div class="r-value placeholder" id="val-benefits">—</div>
+          <div class="r-sub">annual employer cost</div>
+        </div>
+        <div class="result-card" id="card-insurance">
+          <div class="r-label">Insurance Cost</div>
+          <div class="r-value placeholder" id="val-insurance">—</div>
+          <div class="r-sub">annual coverage</div>
+        </div>
+      </div>
+
+      <!-- Breakdown band -->
+      <div class="breakdown-band" id="breakdownBand">
+        <h3>Cost Breakdown</h3>
+        <div class="bd-rows" id="bdRows"></div>
+      </div>
+
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn" onclick="copySummary()">Copy Cost Summary</button>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Guide -->
+  <div class="guide-section">
+    <h2>Why Employees Cost More Than Salary</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon red">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#9B2828"/>
+          </svg>
+        </div>
+        <h3>The True Cost Formula</h3>
+        <p>Beyond salary, every employer pays FICA taxes, unemployment insurance, workers' comp, benefits, and indirect costs like equipment and office space. The true cost is typically 1.2–1.4× the base salary.</p>
+        <div class="formula">True Cost = Salary + Tax + Benefits + Insurance + Other</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 3v14M3 10h14" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Employer Payroll Taxes</h3>
+        <p>Employers must match the employee's Social Security (6.2%) and Medicare (1.45%) contributions — totalling 7.65% of gross wages. Add FUTA (0.6% on first $7,000) and SUTA (varies by state) for the full tax burden.</p>
+        <div class="formula">FICA Employer = 6.2% SS + 1.45% Medicare</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon amber">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="5" width="14" height="10" rx="2" stroke="#7A4A10" stroke-width="1.5"/>
+            <path d="M3 8h14" stroke="#7A4A10" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>Benefits Are a Significant Cost</h3>
+        <p>Health insurance alone averages $6,000–$8,000 per year per employee for employer contributions in the US. Add dental, vision, life insurance, 401(k) matching, and PTO — and benefits often exceed $10,000 annually per full-time employee.</p>
+        <div class="formula">US Average Benefits: ~$12–15K / year</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 10l4 4 6-7" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Hidden Costs Add Up Fast</h3>
+        <p>Equipment, software licences, recruiting fees, onboarding, training, desk space, and management time are real costs. A fully-loaded employee often costs 1.4–1.6× base salary once everything is accounted for properly.</p>
+        <div class="formula">Loaded Cost = Salary × 1.2 to 1.6×</div>
+      </div>
+
+    </div>
+
+    <!-- Examples -->
+    <h2 style="margin-top:2.5rem; margin-bottom:1.25rem;">Business Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="e-role">Office Admin</span>
+        <h4>$45,000 Salary</h4>
+        <div class="e-detail">7.65% FICA · $4,000 health · $1,500 workers' comp · $1,000 equipment</div>
+        <div class="e-price">True cost ≈ $55,943/yr</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Software Developer</span>
+        <h4>$110,000 Salary</h4>
+        <div class="e-detail">7.65% FICA · $8,000 health · $2,000 insurance · $5,000 equipment/software</div>
+        <div class="e-price">True cost ≈ $133,415/yr</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Field Technician</span>
+        <h4>$55,000 Salary</h4>
+        <div class="e-detail">8.25% payroll tax · $3,500 benefits · $4,000 workers' comp · $2,000 tools/vehicle</div>
+        <div class="e-price">True cost ≈ $69,038/yr</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Marketing Manager</span>
+        <h4>$75,000 Salary</h4>
+        <div class="e-detail">7.65% FICA · $6,000 health · $1,800 insurance · $3,000 tools/training</div>
+        <div class="e-price">True cost ≈ $91,538/yr</div>
+      </div>
+    </div>
+
+    <!-- Why employers underestimate -->
+    <div class="guide-card-wide">
+      <h3>Why employers underestimate the cost of hiring</h3>
+      <ul class="why-list">
+        <li><strong>Salary is the number everyone sees.</strong> Job postings, offer letters, and budgets focus on salary. But every dollar of salary carries an automatic 7.65% employer FICA tax on top — before any benefits are counted.</li>
+        <li><strong>Benefits costs are rising rapidly.</strong> Health insurance premiums increase 5–10% per year on average. An employee you hired at $50,000 with $5,000 in benefits today may cost significantly more by year three without a salary change.</li>
+        <li><strong>Recruiting and onboarding are expensive.</strong> The cost to hire and onboard a new employee averages 20–50% of their first-year salary when you factor in job ads, recruiter time, background checks, training, and the productivity ramp-up period.</li>
+        <li><strong>Workers' comp rates vary by risk.</strong> A desk worker pays 0.2–0.5% of wages. A construction worker may pay 5–15%. Always use your actual industry rate, not a generic estimate.</li>
+        <li><strong>Turnover multiplies these costs.</strong> If an employee leaves within a year, you pay most of these costs again. The true cost of poor retention isn't just salary — it's all the overhead, recruiting, and training costs repeated.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What payroll tax percentage should I use?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Start with 7.65% for FICA alone (6.2% Social Security + 1.45% Medicare). Then add FUTA at 0.6% (on first $7,000 of wages) and your state unemployment rate (SUTA varies from 0.1% to 10%+ depending on your state and experience rating). A combined rate of 8.5–10% is common for most small businesses.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What should I include in "other annual costs"?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Common items include: laptop/computer and peripherals, software licences and subscriptions, mobile phone allowance, office space allocation (rent per desk), recruiting and onboarding costs amortised over tenure, ongoing training and development, uniforms or PPE, and any vehicle or travel allowance. For remote employees, you might also include a home office stipend.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How much should I charge clients to cover an employee's cost?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">A common rule of thumb is to charge clients 2–3× the employee's fully-loaded hourly cost. This covers overhead, profit margin, non-billable time, slow periods, and the cost of acquiring and servicing the account. Divide total annual cost by 2,080 working hours (or actual billable hours), then multiply by your target multiplier.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Is it cheaper to hire a contractor than an employee?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">On paper, yes — you avoid payroll taxes, benefits, and many overhead costs with a 1099 contractor. However, contractors typically charge higher hourly rates to compensate for their own tax burden and lack of benefits. For short-term or specialised work, contractors are often cost-effective. For long-term, full-time roles, employees tend to be more economical once the relationship value is factored in.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How do I use this calculator for budgeting purposes?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Run this calculator for each planned hire and use the monthly cost figure in your operating budget. Compare it to the revenue the employee is expected to generate or enable. As a rule of thumb, a revenue-generating employee should produce 3–5× their total cost in revenue. Use the annualised figure when evaluating whether you can sustain a hire long-term.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  function updateTax(val) {
+    document.getElementById('taxDisplay').textContent = parseFloat(val).toFixed(val % 1 ? 2 : 0) + '%';
+  }
+
+  function fmt(n) {
+    return '$' + Math.round(n).toLocaleString('en-US');
+  }
+  function fmtDec(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function calculate() {
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+
+    const salaryVal = document.getElementById('annualSalary').value.trim();
+    if (!salaryVal) {
+      document.getElementById('errorText').textContent = 'Please enter the annual salary.';
+      errMsg.classList.add('visible');
+      return;
+    }
+
+    const salary   = parseFloat(salaryVal);
+    const taxPct   = parseFloat(document.getElementById('payrollTax').value);
+    const benefits = parseFloat(document.getElementById('benefitsCost').value)  || 0;
+    const insurance= parseFloat(document.getElementById('insuranceCost').value) || 0;
+    const other    = parseFloat(document.getElementById('otherCosts').value)    || 0;
+
+    if (salary <= 0) {
+      document.getElementById('errorText').textContent = 'Annual salary must be greater than zero.';
+      errMsg.classList.add('visible');
+      return;
+    }
+
+    /* Calculations */
+    const taxCost   = salary * (taxPct / 100);
+    const totalAnn  = salary + taxCost + benefits + insurance + other;
+    const totalMon  = totalAnn / 12;
+    const multiplier = totalAnn / salary;
+
+    /* Primary cards */
+    renderPrimary('val-annual', fmt(totalAnn));
+    renderPrimary('val-monthly', fmt(totalMon));
+    document.getElementById('sub-annual').textContent = 'vs base salary of ' + fmt(salary);
+
+    /* Multiplier */
+    const mc = document.getElementById('multiplierCard');
+    mc.classList.add('visible');
+    document.getElementById('mc-value').textContent = multiplier.toFixed(2) + '×';
+    document.getElementById('mc-sub').textContent   = 'Every $1 of salary costs $' + multiplier.toFixed(2) + ' in total';
+
+    /* KPI */
+    renderCard('val-tax',       'card-tax',       fmt(taxCost),   'warn',  'highlight-warn', taxPct.toFixed(2) + '% of salary');
+    renderCard('val-benefits',  'card-benefits',  fmt(benefits),  'blue',  'highlight-blue', 'annual benefit spend');
+    renderCard('val-insurance', 'card-insurance', fmt(insurance), 'pos',   'highlight',      'annual coverage cost');
+
+    /* Breakdown */
+    buildBreakdown(salary, taxCost, benefits, insurance, other, totalAnn);
+
+    /* Insights */
+    buildInsights(multiplier, benefits, totalAnn, salary);
+
+    document.getElementById('copyBtn').style.display = 'inline-block';
+    window._last = { salary, taxPct, taxCost, benefits, insurance, other, totalAnn, totalMon, multiplier };
+  }
+
+  function renderPrimary(valId, text) {
+    const el = document.getElementById(valId);
+    el.textContent = text;
+    el.className = 'r-value pop';
+    el.addEventListener('animationend', () => el.classList.remove('pop'), { once: true });
+  }
+
+  function renderCard(valId, cardId, text, cls, cardCls, subText) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    card.className = 'result-card ' + cardCls;
+    if (subText) { const sub = card.querySelector('.r-sub'); if (sub) sub.textContent = subText; }
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function buildBreakdown(salary, tax, benefits, insurance, other, total) {
+    const band = document.getElementById('breakdownBand');
+    band.classList.add('visible');
+    const rows = document.getElementById('bdRows');
+
+    const items = [
+      { label: 'Base Salary',        val: salary,    cls: 'salary-row', color: 'var(--accent)' },
+      { label: 'Payroll Tax',        val: tax,       cls: 'tax-row',    color: 'var(--danger)' },
+      { label: 'Benefits',           val: benefits,  cls: 'ben-row',    color: 'var(--blue)' },
+      { label: 'Insurance',          val: insurance, cls: 'ins-row',    color: 'var(--warning)' },
+      { label: 'Other Costs',        val: other,     cls: 'other-row',  color: 'var(--border-dark)' },
+    ].filter(i => i.val > 0);
+
+    let html = items.map(item => {
+      const pct = (item.val / total * 100).toFixed(1);
+      return `<div class="bd-row ${item.cls}">
+        <span class="bd-label">${item.label}</span>
+        <div class="bd-bar-wrap"><div class="bd-bar" style="width:0%; background:${item.color}" data-w="${pct}"></div></div>
+        <span class="bd-val">${fmt(item.val)}</span>
+        <span class="bd-pct">${pct}%</span>
+      </div>`;
+    }).join('');
+    html += `<div class="bd-row total-row"><span class="bd-label">Total Annual Cost</span><div class="bd-bar-wrap"></div><span class="bd-val">${fmt(total)}</span><span class="bd-pct">100%</span></div>`;
+    rows.innerHTML = html;
+
+    setTimeout(() => {
+      document.querySelectorAll('.bd-bar[data-w]').forEach(b => { b.style.width = b.dataset.w + '%'; });
+    }, 60);
+  }
+
+  function buildInsights(mult, benefits, total, salary) {
+    const area = document.getElementById('insightArea');
+    area.innerHTML = '';
+    const add = (type, msg) => {
+      const d = document.createElement('div');
+      d.className = 'insight-banner ' + type;
+      d.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg> ${msg}`;
+      area.appendChild(d);
+    };
+    if (mult > 1.5)     add('danger', `This employee costs ${mult.toFixed(2)}× their base salary — significantly above the typical 1.2–1.4× range. Review benefits, insurance, and other costs.`);
+    else if (mult > 1.25) add('warn', `Total cost is ${mult.toFixed(2)}× the base salary — above the salary by ${((mult - 1) * 100).toFixed(0)}%. Normal for employers with good benefits packages.`);
+    else                  add('info',  `Total cost is ${mult.toFixed(2)}× base salary. Consider adding benefits costs if not yet included for a more complete picture.`);
+    if (benefits === 0)   add('warn',  'No benefits cost entered. Actual employee cost is likely higher — most full-time US employees receive at least $3,000–$8,000/year in employer-paid benefits.');
+  }
+
+  function copySummary() {
+    const r = window._last;
+    if (!r) return;
+    const text =
+      `Employee Cost Summary\n` +
+      `─────────────────────\n` +
+      `Base Salary:          ${fmt(r.salary)}\n` +
+      `Payroll Tax (${r.taxPct}%):    ${fmt(r.taxCost)}\n` +
+      `Benefits:             ${fmt(r.benefits)}\n` +
+      `Insurance:            ${fmt(r.insurance)}\n` +
+      `Other Costs:          ${fmt(r.other)}\n` +
+      `Total Annual Cost:    ${fmt(r.totalAnn)}\n` +
+      `Monthly Cost:         ${fmt(r.totalMon)}\n` +
+      `Cost Multiplier:      ${r.multiplier.toFixed(2)}× base salary\n` +
+      `Generated by Small Business Profit Toolkit`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Cost Summary'; }, 2000);
+    });
+  }
+
+  function resetCalc() {
+    ['annualSalary','benefitsCost','insuranceCost','otherCosts'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('payrollTax').value = '7.65';
+    document.getElementById('taxDisplay').textContent = '7.65%';
+    document.getElementById('errorMsg').classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+    document.getElementById('copyBtn').style.display = 'none';
+    document.getElementById('breakdownBand').classList.remove('visible');
+    document.getElementById('multiplierCard').classList.remove('visible');
+
+    ['val-annual','val-monthly','val-tax','val-benefits','val-insurance'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    document.getElementById('card-annual').className   = 'result-primary annual-card';
+    document.getElementById('card-monthly').className  = 'result-primary monthly-card';
+    ['card-tax','card-benefits','card-insurance'].forEach(id => { document.getElementById(id).className = 'result-card'; });
+    document.getElementById('sub-annual').textContent = 'per year to employ';
+  }
+
+  function toggleFaq(btn) { btn.closest('.faq-item').classList.toggle('open'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>

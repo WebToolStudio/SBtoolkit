@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sales Tax Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Calculate sales tax and total purchase cost using US state sales tax rates. Fast, free, and mobile-friendly." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --blue:           #185FA5;
+    --blue-light:     #E8F0FA;
+    --profit-pos:     #1A5C3A;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:  'DM Serif Display', Georgia, serif;
+    --font-body:     'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1.5rem; }
+  .header-inner { max-width: 780px; margin: 0 auto; height: 58px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); text-decoration: none; letter-spacing: -0.01em; }
+  .logo span { color: var(--accent); }
+  .header-tag { font-size: 12px; font-weight: 500; color: var(--accent-text); background: var(--accent-light); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  /* Main */
+  main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* Page title */
+  .page-title { margin-bottom: 2rem; animation: fadeUp 0.4s ease both; }
+  .page-title h1 { font-family: var(--font-display); font-size: clamp(26px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+  .page-title p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* Calc card */
+  .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); animation: fadeUp 0.4s 0.08s ease both; margin-bottom: 2rem; }
+
+  .section-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Input grid */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+
+  /* Input */
+  .input-wrap { position: relative; }
+  .input-wrap .prefix { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 500; color: var(--text-muted); pointer-events: none; }
+  .input-wrap input {
+    width: 100%; padding: 11px 14px 11px 30px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; -moz-appearance: textfield;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* Select */
+  .field select {
+    width: 100%; padding: 11px 36px 11px 14px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239E9990' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+    transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
+  }
+  .field select:focus { border-color: var(--accent); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* State rate preview badge */
+  .rate-preview {
+    display: none; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--accent-text);
+    background: var(--accent-light); border: 1px solid #B8D9C5;
+    border-radius: var(--radius-sm); padding: 8px 12px; margin-top: 4px;
+  }
+  .rate-preview.visible { display: flex; }
+  .rate-preview.zero { color: var(--blue); background: var(--blue-light); border-color: #BDD4EE; }
+  .rate-preview.high { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .rate-preview strong { font-weight: 700; }
+
+  /* Error */
+  .error-msg { display: none; align-items: center; gap: 8px; font-size: 13px; color: var(--danger); background: var(--danger-light); border: 1px solid #F0C8C8; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 1.25rem; }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* Insight banners */
+  .insight-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .insight-banner { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid; animation: fadeUp 0.3s ease both; line-height: 1.5; }
+  .insight-banner.info   { color: var(--accent-text); background: var(--accent-light); border-color: #B8D9C5; }
+  .insight-banner.warn   { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .insight-banner.blue   { color: var(--blue); background: var(--blue-light); border-color: #BDD4EE; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .btn { font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 11px 24px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid transparent; transition: all var(--transition); letter-spacing: 0.01em; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); flex: 1; }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset { background: transparent; color: var(--text-secondary); border-color: var(--border-dark); }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy { font-family: var(--font-body); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid #B8D9C5; background: var(--accent-light); color: var(--accent-text); transition: all var(--transition); display: none; }
+  .btn-copy:hover { background: #d4ecde; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* Results */
+  .results-section h2 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Dual primary */
+  .result-primary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 480px) { .result-primary-row { grid-template-columns: 1fr; } }
+
+  .result-primary { border-radius: var(--radius-md); padding: 1.5rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-primary.tax-card   { background: var(--warning-light); border: 1px solid #F0D8A8; }
+  .result-primary.total-card { background: var(--accent-light);  border: 1px solid #B8D9C5; }
+  .result-primary.zero-card  { background: var(--blue-light);    border: 1px solid #BDD4EE; }
+  .result-primary .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .tax-card   .r-label { color: var(--warning); }
+  .total-card .r-label { color: var(--accent-text); }
+  .zero-card  .r-label { color: var(--blue); }
+  .result-primary .r-value { font-family: var(--font-display); font-size: 38px; line-height: 1; transition: color 0.25s ease; }
+  .tax-card   .r-value { color: var(--warning); }
+  .total-card .r-value { color: var(--profit-pos); }
+  .zero-card  .r-value { color: var(--blue); }
+  .result-primary .r-sub { font-size: 11px; margin-top: 5px; opacity: 0.8; }
+  .tax-card   .r-sub { color: var(--warning); }
+  .total-card .r-sub { color: var(--accent-text); }
+  .zero-card  .r-sub { color: var(--blue); }
+
+  /* KPI grid */
+  .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 480px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-card.highlight      { background: var(--accent-light); border-color: #B8D9C5; }
+  .result-card.highlight-blue { background: var(--blue-light);   border-color: #BDD4EE; }
+  .result-card.highlight-warn { background: var(--warning-light); border-color: #F0D8A8; }
+  .result-card .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .result-card .r-value { font-family: var(--font-display); font-size: 26px; color: var(--text-primary); line-height: 1; }
+  .result-card .r-value.pos  { color: var(--profit-pos); }
+  .result-card .r-value.blue { color: var(--blue); }
+  .result-card .r-value.warn { color: var(--warning); }
+  .result-card .r-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 20px; }
+  .result-primary .r-value.placeholder { font-size: 26px; }
+
+  /* Receipt band */
+  .receipt-band { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 12px; display: none; }
+  .receipt-band.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .receipt-band h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 10px; }
+  .receipt-rows { display: flex; flex-direction: column; gap: 6px; }
+  .receipt-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); }
+  .receipt-row span:last-child { font-weight: 600; color: var(--text-primary); }
+  .receipt-row.sep { border-top: 1px solid var(--border-dark); padding-top: 8px; margin-top: 2px; }
+  .receipt-row.sep span { color: var(--accent); font-weight: 700; font-size: 14px; }
+
+  /* Disclaimer */
+  .disclaimer-note {
+    font-size: 11px; color: var(--text-muted); background: var(--surface-alt);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 8px 12px; margin-bottom: 12px; line-height: 1.5; display: none;
+  }
+  .disclaimer-note.visible { display: block; }
+
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  /* State tax rates table section */
+  .rates-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .rates-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 14px; }
+  .rates-search {
+    width: 100%; padding: 10px 14px; font-family: var(--font-body); font-size: 14px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; margin-bottom: 12px;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  .rates-search:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); background: var(--surface); }
+  .rates-table-wrap { overflow-x: auto; }
+  .rates-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .rates-table th { text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); padding: 0 0 8px; white-space: nowrap; }
+  .rates-table th:last-child { text-align: right; }
+  .rates-table td { padding: 8px 0; border-top: 1px solid var(--border); color: var(--text-secondary); vertical-align: middle; }
+  .rates-table td:first-child { font-weight: 500; color: var(--text-primary); }
+  .rates-table td:last-child { text-align: right; font-weight: 700; }
+  .rates-table td.zero { color: var(--blue); }
+  .rates-table td.high { color: var(--warning); }
+  .rates-table td.med  { color: var(--accent); }
+  .rate-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+  .rate-dot.zero { background: var(--blue); }
+  .rate-dot.high { background: var(--warning); }
+  .rate-dot.med  { background: var(--accent); }
+
+  /* Guide */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section > h2, .faq-section > h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--text-primary); margin-bottom: 1.25rem; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .guide-card .g-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.amber { background: #FDF3E7; }
+  .g-icon.slate { background: #EEF0F5; }
+  .guide-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .guide-card p  { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .guide-card .formula { margin-top: 10px; padding: 8px 12px; background: var(--surface-alt); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--text-secondary); font-family: 'Courier New', monospace; border-left: 3px solid var(--border-dark); }
+
+  .guide-card-wide { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .guide-card-wide h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .why-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* FAQ */
+  .faq-section { margin-top: 2.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .faq-q { width: 100%; text-align: left; padding: 1rem 1.25rem; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background var(--transition); }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s ease; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0.75rem 1.25rem 1rem; font-size: 13px; color: var(--text-secondary); line-height: 1.65; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-a { display: block; }
+
+  /* Footer */
+  .site-footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--surface); }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+  @keyframes popIn { 0% { transform: scale(0.94); opacity: 0.6; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>Sales Tax Calculator</h1>
+    <p>Select your state and enter a purchase amount to instantly calculate the sales tax owed and total cost — using current statewide base rates for all 50 US states.</p>
+  </div>
+
+  <div class="calc-card">
+
+    <div class="input-section">
+      <h2 class="section-label">Purchase Details</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="purchaseAmount">Purchase Amount</label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="purchaseAmount" placeholder="100.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="stateSelect">State</label>
+          <select id="stateSelect" onchange="handleStateChange()">
+            <option value="">— Select a State —</option>
+          </select>
+          <div class="rate-preview" id="ratePreview"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-area" id="insightArea"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate Tax</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Tax Breakdown</h2>
+
+      <!-- Dual primary -->
+      <div class="result-primary-row">
+        <div class="result-primary tax-card" id="card-tax">
+          <div class="r-label">Sales Tax Amount</div>
+          <div class="r-value placeholder" id="val-tax">—</div>
+          <div class="r-sub" id="sub-tax">state tax</div>
+        </div>
+        <div class="result-primary total-card" id="card-total">
+          <div class="r-label">Total Purchase Cost</div>
+          <div class="r-value placeholder" id="val-total">—</div>
+          <div class="r-sub">price + tax</div>
+        </div>
+      </div>
+
+      <!-- KPI cards -->
+      <div class="results-grid">
+        <div class="result-card" id="card-rate">
+          <div class="r-label">State Tax Rate</div>
+          <div class="r-value placeholder" id="val-rate">—</div>
+          <div class="r-sub" id="sub-rate">statewide base rate</div>
+        </div>
+        <div class="result-card" id="card-original">
+          <div class="r-label">Original Price</div>
+          <div class="r-value placeholder" id="val-original">—</div>
+          <div class="r-sub">before tax</div>
+        </div>
+      </div>
+
+      <!-- Receipt -->
+      <div class="receipt-band" id="receiptBand">
+        <h3>Receipt Summary</h3>
+        <div class="receipt-rows" id="receiptRows"></div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="disclaimer-note" id="disclaimerNote">
+        ⚠ This calculator uses the statewide base sales tax rate only. Local city, county, and special district taxes may add 0–5% on top of this figure and are not included. Always verify the exact local rate for your specific transaction.
+      </div>
+
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn" onclick="copySummary()">Copy Tax Summary</button>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- State Rates Table -->
+  <div class="guide-section">
+    <h2>All 50 States — Tax Rate Reference</h2>
+    <div class="rates-card">
+      <h3>Statewide Base Sales Tax Rates</h3>
+      <input type="text" class="rates-search" id="ratesSearch" placeholder="Search by state name…" oninput="filterRates()" />
+      <div class="rates-table-wrap">
+        <table class="rates-table" id="ratesTable">
+          <thead>
+            <tr>
+              <th>State</th>
+              <th style="text-align:right;">Base Tax Rate</th>
+            </tr>
+          </thead>
+          <tbody id="ratesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Guide cards -->
+    <div class="guide-grid" style="margin-top:0;">
+
+      <div class="guide-card">
+        <div class="g-icon green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>How Sales Tax Is Calculated</h3>
+        <p>Multiply your purchase amount by the state tax rate. A $200 purchase in California (7.25%) results in $14.50 in state sales tax, bringing the total to $214.50 — before any local additions.</p>
+        <div class="formula">Tax = Purchase × (Rate ÷ 100)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 3v14M3 10h14" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>States With No Sales Tax</h3>
+        <p>Five states charge no statewide sales tax: Alaska, Delaware, Montana, New Hampshire, and Oregon. However, Alaska allows local jurisdictions to levy their own taxes — so "no state tax" doesn't always mean zero tax at the register.</p>
+        <div class="formula">0% State Rate: AK, DE, MT, NH, OR</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon amber">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="5" width="14" height="10" rx="2" stroke="#7A4A10" stroke-width="1.5"/>
+            <path d="M3 8h14" stroke="#7A4A10" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <h3>Local Taxes on Top</h3>
+        <p>Most states allow cities and counties to add local sales taxes on top of the state base rate. New York City, for example, adds a combined local rate that brings the total to 8.875%. Always check local rates for exact quotes.</p>
+        <div class="formula">Total Rate = State Rate + Local Rate</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon slate">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 10l4 4 6-7" stroke="#4A5568" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>When Businesses Must Collect Tax</h3>
+        <p>If you have nexus — a significant presence — in a state, you're generally required to collect and remit sales tax for sales into that state. Since South Dakota v. Wayfair (2018), nexus can be established by sales volume alone, even without a physical presence.</p>
+        <div class="formula">Nexus = Physical or Economic Presence</div>
+      </div>
+
+    </div>
+
+    <!-- Business tips -->
+    <div class="guide-card-wide" style="margin-top:1rem;">
+      <h3>Sales tax tips for small business owners</h3>
+      <ul class="why-list">
+        <li><strong>Register in every state where you have nexus.</strong> Selling above a threshold (often $100,000 or 200 transactions per year) in a state creates economic nexus and requires you to collect and remit their sales tax.</li>
+        <li><strong>Not all products are taxable.</strong> Many states exempt groceries, prescription drugs, and clothing from sales tax. Know your product category before assuming you need to collect.</li>
+        <li><strong>Use this calculator for estimates, not for compliance.</strong> Actual tax due includes local rates and may vary by product type. Use this as a planning tool and consult your accountant for tax filings.</li>
+        <li><strong>Sales tax is not your money.</strong> Tax collected from customers belongs to the state. Track it separately and remit on schedule to avoid penalties and interest.</li>
+        <li><strong>Automate if you sell in multiple states.</strong> Services like TaxJar or Avalara automatically calculate, collect, and file sales tax across states — essential if you're selling online at scale.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Does this calculator include local city and county taxes?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">No — this calculator shows the statewide base rate only. Most states allow cities and counties to add local taxes on top, which can range from 0.5% to over 5%. For precise calculations, look up the combined rate for your specific city and county at your state's department of revenue website.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Which states have no sales tax?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Five states have a 0% statewide sales tax: Alaska, Delaware, Montana, New Hampshire, and Oregon. Note that Alaska permits local governments to levy their own sales taxes, so some Alaska locations do have a local tax even though the state rate is zero. The other four states have neither a state nor local general sales tax.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Do I have to charge sales tax as a freelancer or service provider?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">It depends on the state and the type of service. Most states do not tax pure services (consulting, legal, accounting), but some states do tax certain services like digital services, software, or repair work. If you sell physical products alongside services, the product portion is typically taxable. Check your state's specific rules or consult a tax professional.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What is economic nexus and how does it affect my business?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Since the Supreme Court's 2018 ruling in South Dakota v. Wayfair, states can require out-of-state sellers to collect sales tax if they exceed certain sales thresholds — typically $100,000 in sales or 200 transactions per year in that state. This means an online seller based in Texas may need to collect and remit sales tax for customers in California, New York, and dozens of other states.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How often do state sales tax rates change?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Statewide base rates change infrequently — typically only when state legislation modifies the tax code. Local rates change more often. The rates in this calculator reflect current statewide base rates but should be verified against your state's official revenue department for the most up-to-date figures before making business decisions.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  /* ── All 50 state tax rates ── */
+  const STATE_RATES = {
+    "Alabama": 4.0, "Alaska": 0.0, "Arizona": 5.6, "Arkansas": 6.5,
+    "California": 7.25, "Colorado": 2.9, "Connecticut": 6.35, "Delaware": 0.0,
+    "Florida": 6.0, "Georgia": 4.0, "Hawaii": 4.0, "Idaho": 6.0,
+    "Illinois": 6.25, "Indiana": 7.0, "Iowa": 6.0, "Kansas": 6.5,
+    "Kentucky": 6.0, "Louisiana": 4.45, "Maine": 5.5, "Maryland": 6.0,
+    "Massachusetts": 6.25, "Michigan": 6.0, "Minnesota": 6.875, "Mississippi": 7.0,
+    "Missouri": 4.225, "Montana": 0.0, "Nebraska": 5.5, "Nevada": 6.85,
+    "New Hampshire": 0.0, "New Jersey": 6.625, "New Mexico": 5.125, "New York": 4.0,
+    "North Carolina": 4.75, "North Dakota": 5.0, "Ohio": 5.75, "Oklahoma": 4.5,
+    "Oregon": 0.0, "Pennsylvania": 6.0, "Rhode Island": 7.0, "South Carolina": 6.0,
+    "South Dakota": 4.2, "Tennessee": 7.0, "Texas": 6.25, "Utah": 6.1,
+    "Vermont": 6.0, "Virginia": 5.3, "Washington": 6.5, "West Virginia": 6.0,
+    "Wisconsin": 5.0, "Wyoming": 4.0
+  };
+
+  /* ── Populate state dropdown ── */
+  (function() {
+    const sel = document.getElementById('stateSelect');
+    Object.keys(STATE_RATES).sort().forEach(state => {
+      const opt = document.createElement('option');
+      opt.value = state;
+      opt.textContent = state;
+      sel.appendChild(opt);
+    });
+  })();
+
+  /* ── Populate rates table ── */
+  (function() {
+    const tbody = document.getElementById('ratesBody');
+    Object.keys(STATE_RATES).sort().forEach(state => {
+      const rate = STATE_RATES[state];
+      const cls  = rate === 0 ? 'zero' : rate >= 7 ? 'high' : 'med';
+      const tr   = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${state}</td>
+        <td class="${cls}"><span class="rate-dot ${cls}"></span>${rate === 0 ? 'No state tax' : rate.toFixed(3).replace(/\.?0+$/, '') + '%'}</td>`;
+      tbody.appendChild(tr);
+    });
+  })();
+
+  function filterRates() {
+    const q = document.getElementById('ratesSearch').value.toLowerCase();
+    document.querySelectorAll('#ratesBody tr').forEach(tr => {
+      tr.style.display = tr.cells[0].textContent.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+
+  /* ── State change preview ── */
+  function handleStateChange() {
+    const state = document.getElementById('stateSelect').value;
+    const preview = document.getElementById('ratePreview');
+    if (!state) { preview.classList.remove('visible'); return; }
+    const rate = STATE_RATES[state];
+    preview.classList.remove('zero', 'high');
+    if (rate === 0) {
+      preview.innerHTML = `<strong>${state}</strong> has no statewide sales tax (0.00%).`;
+      preview.classList.add('visible', 'zero');
+    } else if (rate >= 7) {
+      preview.innerHTML = `<strong>${state}</strong> state rate: <strong>${rate}%</strong> — relatively high statewide rate.`;
+      preview.classList.add('visible', 'high');
+    } else {
+      preview.innerHTML = `<strong>${state}</strong> state rate: <strong>${rate}%</strong>`;
+      preview.classList.add('visible');
+    }
+  }
+
+  /* ── Helpers ── */
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  /* ── Calculate ── */
+  function calculate() {
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+
+    const amountVal = document.getElementById('purchaseAmount').value.trim();
+    const state     = document.getElementById('stateSelect').value;
+
+    if (!amountVal || !state) {
+      document.getElementById('errorText').textContent = 'Please enter a purchase amount and select a state.';
+      errMsg.classList.add('visible');
+      return;
+    }
+
+    const amount = parseFloat(amountVal);
+    if (amount < 0) {
+      document.getElementById('errorText').textContent = 'Purchase amount cannot be negative.';
+      errMsg.classList.add('visible');
+      return;
+    }
+
+    const rate    = STATE_RATES[state];
+    const taxAmt  = amount * (rate / 100);
+    const total   = amount + taxAmt;
+    const isZero  = rate === 0;
+    const isHigh  = rate >= 7;
+
+    /* Primary cards */
+    const taxCard = document.getElementById('card-tax');
+    const taxVal  = document.getElementById('val-tax');
+    taxCard.className = 'result-primary ' + (isZero ? 'zero-card' : 'tax-card');
+    taxVal.textContent = fmt(taxAmt);
+    taxVal.className = 'r-value pop';
+    document.getElementById('sub-tax').textContent = state + ' · ' + rate + '%';
+    taxVal.addEventListener('animationend', () => taxVal.classList.remove('pop'), { once: true });
+
+    const totalVal = document.getElementById('val-total');
+    totalVal.textContent = fmt(total);
+    totalVal.className = 'r-value pop';
+    totalVal.addEventListener('animationend', () => totalVal.classList.remove('pop'), { once: true });
+
+    /* KPI cards */
+    const rateVal = document.getElementById('val-rate');
+    rateVal.textContent = isZero ? '0%' : rate + '%';
+    rateVal.className = 'r-value pop ' + (isZero ? 'blue' : isHigh ? 'warn' : 'pos');
+    document.getElementById('card-rate').className = 'result-card ' + (isZero ? 'highlight-blue' : isHigh ? 'highlight-warn' : 'highlight');
+    document.getElementById('sub-rate').textContent = state;
+    rateVal.addEventListener('animationend', () => rateVal.classList.remove('pop'), { once: true });
+
+    const origVal = document.getElementById('val-original');
+    origVal.textContent = fmt(amount);
+    origVal.className = 'r-value pop pos';
+    document.getElementById('card-original').className = 'result-card highlight';
+    origVal.addEventListener('animationend', () => origVal.classList.remove('pop'), { once: true });
+
+    /* Receipt */
+    const receiptBand = document.getElementById('receiptBand');
+    receiptBand.classList.add('visible');
+    document.getElementById('receiptRows').innerHTML = `
+      <div class="receipt-row"><span>Purchase Price</span><span>${fmt(amount)}</span></div>
+      <div class="receipt-row"><span>${state} Sales Tax (${rate}%)</span><span>${fmt(taxAmt)}</span></div>
+      <div class="receipt-row sep"><span>Total</span><span>${fmt(total)}</span></div>`;
+
+    /* Disclaimer */
+    document.getElementById('disclaimerNote').classList.add('visible');
+
+    /* Insights */
+    buildInsights(state, rate, isZero, isHigh);
+
+    document.getElementById('copyBtn').style.display = 'inline-block';
+    window._last = { amount, state, rate, taxAmt, total };
+  }
+
+  function buildInsights(state, rate, isZero, isHigh) {
+    const area = document.getElementById('insightArea');
+    area.innerHTML = '';
+    const add = (type, msg) => {
+      const d = document.createElement('div');
+      d.className = 'insight-banner ' + type;
+      d.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg> ${msg}`;
+      area.appendChild(d);
+    };
+    if (isZero) add('blue', `${state} has no statewide sales tax. However, local jurisdictions${state === 'Alaska' ? ' in Alaska' : ''} may still apply local taxes. Verify locally before assuming zero tax.`);
+    else if (isHigh) add('warn', `${state} has one of the higher statewide sales tax rates in the US at ${rate}%. Local additions may increase the effective rate further.`);
+    else add('info', `${state} state rate: ${rate}%. Local city or county taxes may apply on top of this rate and are not included in this estimate.`);
+  }
+
+  function copySummary() {
+    const r = window._last;
+    if (!r) return;
+    const text =
+      `Sales Tax Summary\n` +
+      `─────────────────\n` +
+      `State:           ${r.state}\n` +
+      `State Tax Rate:  ${r.rate}%\n` +
+      `Purchase Amount: ${fmt(r.amount)}\n` +
+      `Sales Tax:       ${fmt(r.taxAmt)}\n` +
+      `Total Cost:      ${fmt(r.total)}\n` +
+      `Note: Statewide base rate only. Local taxes may apply.\n` +
+      `Generated by Small Business Profit Toolkit`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Tax Summary'; }, 2000);
+    });
+  }
+
+  function resetCalc() {
+    document.getElementById('purchaseAmount').value = '';
+    document.getElementById('stateSelect').value = '';
+    document.getElementById('ratePreview').classList.remove('visible', 'zero', 'high');
+    document.getElementById('errorMsg').classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+    document.getElementById('copyBtn').style.display = 'none';
+    document.getElementById('receiptBand').classList.remove('visible');
+    document.getElementById('disclaimerNote').classList.remove('visible');
+
+    ['val-tax','val-total','val-rate','val-original'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    document.getElementById('card-tax').className   = 'result-primary tax-card';
+    document.getElementById('card-total').className = 'result-primary total-card';
+    document.getElementById('card-rate').className    = 'result-card';
+    document.getElementById('card-original').className = 'result-card';
+    document.getElementById('sub-tax').textContent  = 'state tax';
+    document.getElementById('sub-rate').textContent = 'statewide base rate';
+  }
+
+  function toggleFaq(btn) { btn.closest('.faq-item').classList.toggle('open'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>

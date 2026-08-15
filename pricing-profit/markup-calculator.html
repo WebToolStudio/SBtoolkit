@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Markup Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Free markup calculator for small businesses. Calculate selling price and profit instantly using markup percentage." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #F7F5F0;
+    --surface:     #FFFFFF;
+    --surface-alt: #F0EDE6;
+    --border:      #DDD9D0;
+    --border-dark: #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:      #1A5C3A;
+    --accent-light:#E8F3ED;
+    --accent-text: #0F3D26;
+    --danger:      #9B2828;
+    --danger-light:#FBEAEA;
+    --warning:     #7A4A10;
+    --warning-light:#FDF3E7;
+    --profit-pos:  #1A5C3A;
+    --profit-neg:  #9B2828;
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   16px;
+    --shadow-sm:   0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md:   0 4px 16px rgba(0,0,0,0.09);
+    --font-display:'DM Serif Display', Georgia, serif;
+    --font-body:   'DM Sans', system-ui, sans-serif;
+    --transition:  0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1.5rem;
+  }
+  .header-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Main Layout ── */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* ── Page Title ── */
+  .page-title {
+    margin-bottom: 2rem;
+    animation: fadeUp 0.4s ease both;
+  }
+  .page-title h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 5vw, 36px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .page-title p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ── Calculator Card ── */
+  .calc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    animation: fadeUp 0.4s 0.08s ease both;
+    margin-bottom: 2rem;
+  }
+
+  /* ── Input Section ── */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  @media (max-width: 500px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .input-wrap { position: relative; }
+  .input-wrap .prefix {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-muted);
+    pointer-events: none;
+    user-select: none;
+  }
+  .input-wrap .suffix {
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-muted);
+    pointer-events: none;
+    user-select: none;
+  }
+  .input-wrap input {
+    width: 100%;
+    padding: 11px 14px 11px 30px;
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--text-primary);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+    -moz-appearance: textfield;
+  }
+  .input-wrap input.has-suffix {
+    padding-right: 32px;
+  }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(26,92,58,0.12);
+  }
+  .input-wrap input.error-input { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(155,40,40,0.1); }
+
+  /* ── Error Message ── */
+  .error-msg {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--danger);
+    background: var(--danger-light);
+    border: 1px solid #F0C8C8;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-bottom: 1.25rem;
+  }
+  .error-msg.warning {
+    color: var(--warning);
+    background: var(--warning-light);
+    border-color: #F0D8B0;
+  }
+  .error-msg.warning svg circle { stroke: var(--warning); }
+  .error-msg.warning svg path { stroke: var(--warning); }
+  .error-msg.warning svg circle:last-child { fill: var(--warning); }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+
+  /* ── Buttons ── */
+  .btn-row { display: flex; gap: 10px; }
+  .btn {
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 11px 24px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all var(--transition);
+    letter-spacing: 0.01em;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    flex: 1;
+  }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset {
+    background: transparent;
+    color: var(--text-secondary);
+    border-color: var(--border-dark);
+  }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 1.75rem 0;
+  }
+
+  /* ── Results Section ── */
+  .results-section h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1.25rem;
+  }
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 480px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card {
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1rem;
+    text-align: center;
+    transition: all 0.25s ease;
+  }
+  .result-card.highlight {
+    background: var(--accent-light);
+    border-color: #B8D9C5;
+  }
+  .result-card.highlight-neg {
+    background: var(--danger-light);
+    border-color: #F0C8C8;
+  }
+  .result-card .r-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .result-card .r-value {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--text-primary);
+    line-height: 1;
+    transition: color 0.25s ease;
+  }
+  .result-card .r-value.pos { color: var(--profit-pos); }
+  .result-card .r-value.neg { color: var(--profit-neg); }
+  .result-card .r-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 5px;
+  }
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 22px; }
+
+  /* ── Guide / Explanation Section ── */
+  .guide-section {
+    animation: fadeUp 0.4s 0.16s ease both;
+    margin-bottom: 2rem;
+  }
+  .guide-section h2 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+  }
+  .guide-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+  }
+  .guide-card .g-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    font-size: 18px;
+  }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.orange { background: #FDF3E7; }
+  .guide-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+  .guide-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+  .guide-card .formula {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: var(--surface-alt);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+    border-left: 3px solid var(--border-dark);
+  }
+
+  .guide-card-wide {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .guide-card-wide h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  /* ── Business Example Box ── */
+  .example-box {
+    background: var(--accent-light);
+    border: 1px solid #B8D9C5;
+    border-radius: var(--radius-md);
+    padding: 1.25rem 1.5rem;
+    margin-top: 1rem;
+  }
+  .example-box .ex-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent-text);
+    margin-bottom: 8px;
+  }
+  .example-box p {
+    font-size: 13px;
+    color: var(--accent-text);
+    line-height: 1.65;
+  }
+  .example-box .ex-numbers {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .example-box .ex-num {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .example-box .ex-num-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent-text);
+    opacity: 0.75;
+  }
+  .example-box .ex-num-value {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--accent);
+  }
+
+  /* ── Why List ── */
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .why-list li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* ── Comparison Table ── */
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 12px;
+  }
+  .comparison-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+    padding: 8px 12px;
+    background: var(--surface-alt);
+    border-bottom: 1px solid var(--border);
+  }
+  .comparison-table th:not(:first-child) { text-align: center; }
+  .comparison-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .comparison-table td:not(:first-child) { text-align: center; }
+  .comparison-table td:first-child { font-weight: 500; color: var(--text-primary); }
+  .comparison-table tr:last-child td { border-bottom: none; }
+  .comparison-table .check { color: var(--accent); font-weight: 700; font-size: 16px; }
+  .comparison-table .cross { color: var(--danger); font-weight: 700; font-size: 16px; }
+
+  /* ── FAQ Section ── */
+  .faq-section {
+    animation: fadeUp 0.4s 0.2s ease both;
+    margin-bottom: 2rem;
+  }
+  .faq-section h2 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+  }
+  .faq-list { display: flex; flex-direction: column; gap: 10px; }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: left;
+    transition: background var(--transition);
+  }
+  .faq-question:hover { background: var(--surface-alt); }
+  .faq-question .faq-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition), background var(--transition);
+  }
+  .faq-question.open .faq-icon {
+    transform: rotate(45deg);
+    background: var(--accent-light);
+    border-color: #B8D9C5;
+  }
+  .faq-answer {
+    display: none;
+    padding: 0 1.25rem 1rem;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .faq-answer.open { display: block; animation: fadeUp 0.2s ease both; }
+
+  /* ── Related Tools Section ── */
+  .related-section {
+    animation: fadeUp 0.4s 0.24s ease both;
+    margin-bottom: 2rem;
+  }
+  .related-section h2 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+  }
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 560px) { .related-grid { grid-template-columns: 1fr; } }
+
+  .related-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    text-decoration: none;
+    display: block;
+    transition: all var(--transition);
+  }
+  .related-card:hover {
+    border-color: var(--border-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .related-card .rc-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  .related-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+  }
+  .related-card p {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .related-card .rc-cta {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%     { transform: translateX(-5px); }
+    40%     { transform: translateX(5px); }
+    60%     { transform: translateX(-3px); }
+    80%     { transform: translateX(3px); }
+  }
+  @keyframes popIn {
+    0%   { transform: scale(0.94); opacity: 0.6; }
+    60%  { transform: scale(1.03); }
+    100% { transform: scale(1);    opacity: 1; }
+  }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Page Title -->
+  <div class="page-title">
+    <h1>Markup Calculator</h1>
+    <p>Calculate your selling price and profit instantly using markup percentage — no spreadsheet needed.</p>
+  </div>
+
+  <!-- Calculator Card -->
+  <div class="calc-card">
+
+    <!-- Inputs -->
+    <div class="input-section">
+      <h2>Enter Your Numbers</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="costPrice">Cost Price</label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="costPrice" placeholder="0.00" min="0" step="0.01" inputmode="decimal" aria-label="Cost price in dollars" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="markupPct">Markup Percentage</label>
+          <div class="input-wrap">
+            <input type="number" id="markupPct" placeholder="0.0" min="0" step="0.1" inputmode="decimal" class="has-suffix" aria-label="Markup percentage" />
+            <span class="suffix">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <circle cx="8" cy="8" r="7" stroke="#9B2828" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="#9B2828" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="#9B2828"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" id="calcBtn" onclick="calculate()">Calculate</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Your Results</h2>
+      <div class="results-grid">
+        <div class="result-card" id="card-sell">
+          <div class="r-label">Selling Price</div>
+          <div class="r-value placeholder" id="val-sell">—</div>
+          <div class="r-sub">per unit</div>
+        </div>
+        <div class="result-card" id="card-profit">
+          <div class="r-label">Profit Amount</div>
+          <div class="r-value placeholder" id="val-profit">—</div>
+          <div class="r-sub">per unit</div>
+        </div>
+        <div class="result-card" id="card-markup">
+          <div class="r-label">Applied Markup</div>
+          <div class="r-value placeholder" id="val-markup">—</div>
+          <div class="r-sub">above cost</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Understanding Markup Section -->
+  <div class="guide-section">
+    <h2>Understanding Markup</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>What is Markup?</h3>
+        <p>Markup is the percentage you add on top of your <strong>cost price</strong> to arrive at your selling price. It covers your overhead, labor, and desired profit — expressed as a percent of cost.</p>
+        <div class="formula">Selling Price = Cost × (1 + Markup% ÷ 100)</div>
+        <div class="formula" style="margin-top:6px;">Profit = Selling Price − Cost</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="9" width="14" height="2" rx="1" fill="#185FA5"/>
+            <rect x="9" y="3" width="2" height="14" rx="1" fill="#185FA5"/>
+          </svg>
+        </div>
+        <h3>Markup vs. Margin</h3>
+        <p>Markup and margin are often confused. Markup is based on <strong>cost</strong>; margin is based on <strong>selling price</strong>. A 100% markup means you doubled your cost — but that only gives you a 50% profit margin, not 100%.</p>
+        <div class="formula">Margin = Profit ÷ Selling Price × 100</div>
+        <div class="formula" style="margin-top:6px;">Markup = Profit ÷ Cost × 100</div>
+      </div>
+
+    </div>
+
+    <div class="guide-card-wide">
+      <h3>Why small businesses use markup pricing</h3>
+      <ul class="why-list">
+        <li><strong>Simple to apply.</strong> Once you know your costs, a consistent markup rule means pricing every product takes seconds, not spreadsheet sessions.</li>
+        <li><strong>Covers hidden costs.</strong> A proper markup bakes in overhead — rent, labor, shipping — so you never accidentally pocket less than you think.</li>
+        <li><strong>Easy to adjust for market conditions.</strong> Seasonal demand, competitor pricing, or supplier increases can be reflected by adjusting the markup percentage without rebuilding your whole pricing model.</li>
+        <li><strong>Industry benchmarks exist.</strong> Retail commonly uses 50–100% markup. Restaurants often aim for 200–300% on food. Knowing your industry norm helps you stay competitive and profitable.</li>
+      </ul>
+
+      <div class="example-box">
+        <div class="ex-label">Business Example</div>
+        <p>A boutique buys a jacket for <strong>$50</strong> and applies a <strong>40% markup</strong>. The selling price becomes $70, generating $20 profit per unit. That $20 must cover rent, staff, and card processing fees — so understanding markup helps ensure the price actually works.</p>
+        <div class="ex-numbers">
+          <div class="ex-num">
+            <span class="ex-num-label">Cost</span>
+            <span class="ex-num-value">$50</span>
+          </div>
+          <div class="ex-num">
+            <span class="ex-num-label">Markup</span>
+            <span class="ex-num-value">40%</span>
+          </div>
+          <div class="ex-num">
+            <span class="ex-num-label">Selling Price</span>
+            <span class="ex-num-value">$70</span>
+          </div>
+          <div class="ex-num">
+            <span class="ex-num-label">Profit</span>
+            <span class="ex-num-value">$20</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="guide-card-wide">
+      <h3>Markup vs. Margin: side-by-side</h3>
+      <table class="comparison-table" aria-label="Markup vs margin comparison">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Markup</th>
+            <th>Profit Margin</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Based on</td>
+            <td>Cost price</td>
+            <td>Selling price</td>
+          </tr>
+          <tr>
+            <td>Formula</td>
+            <td>Profit ÷ Cost × 100</td>
+            <td>Profit ÷ Revenue × 100</td>
+          </tr>
+          <tr>
+            <td>100% value means</td>
+            <td>You doubled your cost</td>
+            <td>Pure profit — impossible in practice</td>
+          </tr>
+          <tr>
+            <td>Best used for</td>
+            <td>Setting prices from cost</td>
+            <td>Measuring business health</td>
+          </tr>
+          <tr>
+            <td>Always higher than the other?</td>
+            <td><span class="check">✓</span> Always ≥ margin</td>
+            <td><span class="cross">✗</span> Always ≤ markup</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /.guide-section -->
+
+  <!-- FAQ Section -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          What is markup?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          Markup is the percentage added to your product's cost price to arrive at the final selling price. For example, if something costs you $40 and you sell it for $60, your markup is 50% ($20 profit ÷ $40 cost × 100). Markup always references cost as its base, which distinguishes it from profit margin.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          How do I calculate markup?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          The formula is straightforward: <strong>Selling Price = Cost × (1 + Markup% ÷ 100)</strong>. For a $100 item with 60% markup, that's $100 × 1.6 = $160. Your profit is then $60. Alternatively, to find the markup percentage from a known cost and selling price: Markup% = (Selling Price − Cost) ÷ Cost × 100.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          Is markup the same as profit margin?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          No — and confusing the two is one of the most common small business pricing mistakes. Markup is calculated on <strong>cost</strong>; profit margin is calculated on <strong>selling price</strong>. A 50% markup on a $100 product gives you a selling price of $150 and a profit of $50 — but that's a 33.3% margin (not 50%). Markup will always be a higher percentage number than the equivalent margin.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          What markup percentage should small businesses use?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          It depends heavily on industry. General retail typically targets 50–100% markup (known as "keystone" at 100%). Restaurants often apply 200–300% to food costs. Service businesses sometimes use 20–50% on materials. The key is to ensure your markup covers all overhead — not just the direct product cost — or you may turn a profit on paper but lose money in practice.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question" onclick="toggleFaq(this)" aria-expanded="false">
+          Why is markup important for my business?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-answer">
+          Markup is your pricing foundation. Set it too low and every sale quietly drains your business — high revenue with poor margins is a classic trap. Set it correctly and you build in a buffer for slow months, unexpected costs, and growth investment. Consistent markup discipline also makes it easier to give discounts strategically without accidentally selling below cost.
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /.faq-section -->
+
+  <!-- Related Tools Section -->
+  <div class="related-section">
+    <h2>Related Tools</h2>
+    <div class="related-grid">
+
+      <a href="profit-margin-calculator.html" class="related-card">
+        <div class="rc-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 14l4-4 3 3 5-6" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Profit Margin Calculator</h3>
+        <p>Enter cost and selling price to see your exact profit margin percentage instantly.</p>
+        <span class="rc-cta">Try it
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+
+      <a href="break-even-calculator.html" class="related-card">
+        <div class="rc-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M3 10h14M10 3v14" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Break-Even Calculator</h3>
+        <p>Find out exactly how many units you need to sell to cover your fixed and variable costs.</p>
+        <span class="rc-cta">Try it
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+
+      <a href="../invoice-payment/discount-profit-calculator.html" class="related-card">
+        <div class="rc-icon">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 5l10 10M14 6H6v8" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Discount Profit Calculator</h3>
+        <p>See how discounts affect your profit margin before you offer a deal or sale.</p>
+        <span class="rc-cta">Try it
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M7 3l3 3-3 3" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </a>
+
+    </div>
+  </div><!-- /.related-section -->
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  /* ── Helpers ── */
+  function fmt(n) {
+    return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtPct(n) {
+    return n.toFixed(1) + '%';
+  }
+
+  /* ── Main Calculate ── */
+  function calculate() {
+    const costEl   = document.getElementById('costPrice');
+    const markupEl = document.getElementById('markupPct');
+    const errMsg   = document.getElementById('errorMsg');
+
+    const costVal   = costEl.value.trim();
+    const markupVal = markupEl.value.trim();
+
+    /* Clear previous errors */
+    errMsg.classList.remove('visible', 'warning');
+    costEl.classList.remove('error-input');
+    markupEl.classList.remove('error-input');
+
+    /* Validate: empty */
+    if (costVal === '' || markupVal === '') {
+      showError(
+        'Please enter both a cost price and a markup percentage.',
+        costVal === '' ? costEl : null,
+        markupVal === '' ? markupEl : null
+      );
+      return;
+    }
+
+    const cost   = parseFloat(costVal);
+    const markup = parseFloat(markupVal);
+
+    /* Validate: negative */
+    if (cost < 0) {
+      showError('Cost price cannot be negative.', costEl, null);
+      return;
+    }
+    if (markup < 0) {
+      showError('Markup percentage cannot be negative.', null, markupEl);
+      return;
+    }
+
+    /* Validate: cost is zero */
+    if (cost === 0) {
+      showError('Cost price cannot be zero — enter a value greater than $0.', costEl, null);
+      return;
+    }
+
+    /* Calculate */
+    const profit   = cost * (markup / 100);
+    const sellPrice = cost + profit;
+
+    /* Render */
+    renderResult('val-sell',   'card-sell',   '$' + fmt(sellPrice), 'pos');
+    renderResult('val-profit', 'card-profit', '$' + fmt(profit),    'pos');
+    renderResult('val-markup', 'card-markup', fmtPct(markup),       'pos');
+
+    /* Warn on zero markup */
+    if (markup === 0) {
+      showError('Your markup is 0% — you are selling at cost with no profit.', null, markupEl, true);
+    }
+  }
+
+  function renderResult(valId, cardId, text, cls) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    card.className = 'result-card ' + (cls === 'pos' ? 'highlight' : 'highlight-neg');
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function showError(msg, el1, el2, isWarning) {
+    const errMsg = document.getElementById('errorMsg');
+    const errTxt = document.getElementById('errorText');
+    errTxt.textContent = msg;
+    errMsg.classList.add('visible');
+    if (isWarning) errMsg.classList.add('warning');
+    if (el1) el1.classList.add('error-input');
+    if (el2) el2.classList.add('error-input');
+  }
+
+  /* ── Reset ── */
+  function resetCalc() {
+    document.getElementById('costPrice').value = '';
+    document.getElementById('markupPct').value = '';
+    document.getElementById('costPrice').classList.remove('error-input');
+    document.getElementById('markupPct').classList.remove('error-input');
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible', 'warning');
+
+    ['val-sell','val-profit','val-markup'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    ['card-sell','card-profit','card-markup'].forEach(id => {
+      document.getElementById(id).className = 'result-card';
+    });
+  }
+
+  /* ── FAQ Toggle ── */
+  function toggleFaq(btn) {
+    const answer = btn.nextElementSibling;
+    const isOpen = answer.classList.contains('open');
+
+    /* Close all */
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.classList.remove('open');
+      q.setAttribute('aria-expanded', 'false');
+    });
+
+    if (!isOpen) {
+      answer.classList.add('open');
+      btn.classList.add('open');
+      btn.setAttribute('aria-expanded', 'true');
+    }
+  }
+
+  /* ── Enter key support ── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') calculate();
+  });
+</script>
+</body>
+</html>

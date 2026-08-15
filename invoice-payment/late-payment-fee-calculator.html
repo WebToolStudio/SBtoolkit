@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Late Payment Fee Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Calculate late payment fees and interest charges on overdue invoices. Free late fee calculator for businesses and freelancers." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --blue:           #185FA5;
+    --blue-light:     #E8F0FA;
+    --profit-pos:     #1A5C3A;
+    --profit-neg:     #9B2828;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:  'DM Serif Display', Georgia, serif;
+    --font-body:     'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1.5rem; }
+  .header-inner { max-width: 780px; margin: 0 auto; height: 58px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); text-decoration: none; letter-spacing: -0.01em; }
+  .logo span { color: var(--accent); }
+  .header-tag { font-size: 12px; font-weight: 500; color: var(--accent-text); background: var(--accent-light); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  /* Main */
+  main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* Page title */
+  .page-title { margin-bottom: 2rem; animation: fadeUp 0.4s ease both; }
+  .page-title h1 { font-family: var(--font-display); font-size: clamp(26px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+  .page-title p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* Calc card */
+  .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); animation: fadeUp 0.4s 0.08s ease both; margin-bottom: 2rem; }
+
+  .section-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Input grid */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .field .field-hint { font-size: 11px; color: var(--text-muted); margin-top: -3px; }
+
+  /* Tooltip */
+  .tip { position: relative; display: inline-flex; align-items: center; cursor: default; }
+  .tip-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--border-dark); color: var(--text-secondary); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tip-box { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--text-primary); color: #fff; font-size: 11px; line-height: 1.5; padding: 7px 10px; border-radius: var(--radius-sm); width: 220px; z-index: 10; pointer-events: none; }
+  .tip:hover .tip-box { display: block; }
+
+  /* Inputs */
+  .input-wrap { position: relative; }
+  .input-wrap .prefix { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 500; color: var(--text-muted); pointer-events: none; }
+  .input-wrap .suffix-unit { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); font-size: 14px; font-weight: 500; color: var(--text-muted); pointer-events: none; }
+  .input-wrap input {
+    width: 100%; padding: 11px 14px 11px 30px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; -moz-appearance: textfield;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  }
+  .input-wrap input.no-prefix { padding-left: 14px; }
+  .input-wrap input.has-suffix { padding-right: 36px; }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+  .input-wrap input.error-input { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(155,40,40,0.1); }
+
+  /* Select */
+  .field select {
+    width: 100%; padding: 11px 36px 11px 14px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239E9990' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center;
+    transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition);
+  }
+  .field select:focus { border-color: var(--accent); background-color: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* Fee method description band */
+  .method-hint {
+    background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md);
+    padding: 10px 14px; font-size: 12px; color: var(--text-secondary); line-height: 1.55;
+    margin-top: -4px; display: none;
+  }
+  .method-hint.visible { display: block; }
+  .method-hint strong { color: var(--text-primary); }
+
+  /* Error */
+  .error-msg { display: none; align-items: center; gap: 8px; font-size: 13px; color: var(--danger); background: var(--danger-light); border: 1px solid #F0C8C8; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 1.25rem; }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* Insight banners */
+  .insight-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .insight-banner { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid; animation: fadeUp 0.3s ease both; line-height: 1.5; }
+  .insight-banner svg { flex-shrink: 0; margin-top: 1px; }
+  .insight-banner.warn   { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .insight-banner.danger { color: var(--danger);  background: var(--danger-light);  border-color: #F0C8C8; }
+  .insight-banner.info   { color: var(--accent-text); background: var(--accent-light); border-color: #B8D9C5; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .btn { font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 11px 24px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid transparent; transition: all var(--transition); letter-spacing: 0.01em; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); flex: 1; }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset { background: transparent; color: var(--text-secondary); border-color: var(--border-dark); }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy { font-family: var(--font-body); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid #B8D9C5; background: var(--accent-light); color: var(--accent-text); transition: all var(--transition); display: none; }
+  .btn-copy:hover { background: #d4ecde; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* Results */
+  .results-section h2 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Dual primary */
+  .result-primary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 480px) { .result-primary-row { grid-template-columns: 1fr; } }
+
+  .result-primary { border-radius: var(--radius-md); padding: 1.4rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-primary.fee-card  { background: var(--danger-light); border: 1px solid #F0C8C8; }
+  .result-primary.total-card { background: var(--accent-light); border: 1px solid #B8D9C5; }
+  .result-primary .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+  .fee-card   .r-label { color: var(--danger); }
+  .total-card .r-label { color: var(--accent-text); }
+  .result-primary .r-value { font-family: var(--font-display); font-size: 36px; line-height: 1; transition: color 0.25s ease; }
+  .fee-card   .r-value { color: var(--profit-neg); }
+  .total-card .r-value { color: var(--profit-pos); }
+  .result-primary .r-sub { font-size: 11px; margin-top: 5px; opacity: 0.8; }
+  .fee-card   .r-sub { color: var(--danger); }
+  .total-card .r-sub { color: var(--accent-text); }
+
+  /* KPI grid */
+  .results-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 480px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-card.highlight      { background: var(--accent-light); border-color: #B8D9C5; }
+  .result-card.highlight-warn { background: var(--warning-light); border-color: #F0D8A8; }
+  .result-card.highlight-neg  { background: var(--danger-light);  border-color: #F0C8C8; }
+  .result-card.highlight-blue { background: var(--blue-light); border-color: #BDD4EE; }
+  .result-card .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .result-card .r-value { font-family: var(--font-display); font-size: 24px; color: var(--text-primary); line-height: 1; }
+  .result-card .r-value.pos  { color: var(--profit-pos); }
+  .result-card .r-value.neg  { color: var(--profit-neg); }
+  .result-card .r-value.warn { color: var(--warning); }
+  .result-card .r-value.blue { color: var(--blue); }
+  .result-card .r-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 20px; }
+  .result-primary .r-value.placeholder { font-size: 24px; }
+
+  /* Invoice-style summary band */
+  .invoice-band { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 12px; display: none; }
+  .invoice-band.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .invoice-band h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 10px; }
+  .inv-rows { display: flex; flex-direction: column; gap: 6px; }
+  .inv-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-secondary); }
+  .inv-row span:last-child { font-weight: 600; color: var(--text-primary); }
+  .inv-row.sep { border-top: 1px solid var(--border-dark); padding-top: 6px; margin-top: 2px; }
+  .inv-row.sep span { color: var(--accent); font-weight: 700; font-size: 14px; }
+  .inv-row.fee-row span:last-child { color: var(--danger); }
+
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  /* Guide */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section > h2, .faq-section > h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--text-primary); margin-bottom: 1.25rem; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .guide-card .g-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.amber { background: #FDF3E7; }
+  .g-icon.red   { background: var(--danger-light); }
+  .guide-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .guide-card p  { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .guide-card .formula { margin-top: 10px; padding: 8px 12px; background: var(--surface-alt); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--text-secondary); font-family: 'Courier New', monospace; border-left: 3px solid var(--border-dark); }
+
+  .guide-card-wide { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .guide-card-wide h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .why-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* Examples grid */
+  .examples-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .examples-grid { grid-template-columns: 1fr; } }
+  .example-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; }
+  .example-card .e-role { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--accent-text); background: var(--accent-light); display: inline-block; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+  .example-card h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .example-card .e-detail { font-size: 12px; color: var(--text-secondary); line-height: 1.65; }
+  .example-card .e-price { margin-top: 10px; font-family: var(--font-display); font-size: 20px; color: var(--profit-neg); }
+
+  /* FAQ */
+  .faq-section { margin-top: 2.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .faq-q { width: 100%; text-align: left; padding: 1rem 1.25rem; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background var(--transition); }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s ease; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0.75rem 1.25rem 1rem; font-size: 13px; color: var(--text-secondary); line-height: 1.65; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-a { display: block; }
+
+  /* Footer */
+  .site-footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--surface); }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+  @keyframes popIn { 0% { transform: scale(0.94); opacity: 0.6; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>Late Payment Fee Calculator</h1>
+    <p>Calculate the exact late fee to add to an overdue invoice — using a flat fee, monthly interest, or annual interest rate. Know what you're owed in seconds.</p>
+  </div>
+
+  <div class="calc-card">
+
+    <div class="input-section">
+      <h2 class="section-label">Invoice Details</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="invoiceAmount">Invoice Amount</label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="invoiceAmount" placeholder="1,000.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="daysLate">
+            Days Late
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Number of calendar days the invoice is past its due date.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="daysLate" class="no-prefix" placeholder="15" min="1" step="1" inputmode="numeric" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <h2 class="section-label">Late Fee Method</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="feeMethod">Fee Method</label>
+          <select id="feeMethod" onchange="handleMethodChange()">
+            <option value="flat">Flat Fee (%)</option>
+            <option value="monthly">Monthly Interest Rate</option>
+            <option value="annual">Annual Interest Rate</option>
+          </select>
+          <div class="method-hint" id="methodHint"></div>
+        </div>
+        <div class="field">
+          <label for="feeValue" id="feeLabel">
+            Fee Percentage
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box" id="feeTip">Enter a percentage of the invoice amount to charge as a one-time flat fee.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="feeValue" class="no-prefix has-suffix" placeholder="5" min="0" step="0.01" inputmode="decimal" />
+            <span class="suffix-unit">%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-area" id="insightArea"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate Late Fee</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Fee Breakdown</h2>
+
+      <!-- Dual primary -->
+      <div class="result-primary-row">
+        <div class="result-primary fee-card" id="card-fee">
+          <div class="r-label">Late Fee</div>
+          <div class="r-value placeholder" id="val-fee">—</div>
+          <div class="r-sub" id="sub-fee">amount to add</div>
+        </div>
+        <div class="result-primary total-card" id="card-total">
+          <div class="r-label">Total Amount Due</div>
+          <div class="r-value placeholder" id="val-total">—</div>
+          <div class="r-sub">invoice + late fee</div>
+        </div>
+      </div>
+
+      <!-- KPI cards -->
+      <div class="results-grid">
+        <div class="result-card" id="card-original">
+          <div class="r-label">Original Invoice</div>
+          <div class="r-value placeholder" id="val-original">—</div>
+          <div class="r-sub">before late fee</div>
+        </div>
+        <div class="result-card" id="card-days">
+          <div class="r-label">Days Overdue</div>
+          <div class="r-value placeholder" id="val-days">—</div>
+          <div class="r-sub">calendar days late</div>
+        </div>
+      </div>
+
+      <!-- Invoice-style summary -->
+      <div class="invoice-band" id="invoiceBand">
+        <h3>Invoice Summary</h3>
+        <div class="inv-rows" id="invRows"></div>
+      </div>
+
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn" onclick="copySummary()">Copy Fee Summary</button>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Guide -->
+  <div class="guide-section">
+    <h2>Understanding Late Payment Fees</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>Flat Fee Method</h3>
+        <p>A flat percentage fee is the simplest approach — charge a fixed percentage of the invoice total regardless of how long it's been overdue. Common for freelancers and service businesses with straightforward billing.</p>
+        <div class="formula">Fee = Invoice × (Rate ÷ 100)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M4 14l4-4 3 3 5-6" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Monthly Interest Rate</h3>
+        <p>Charge interest based on how many months (or partial months) the invoice is late. The US standard is 1.5% per month — equivalent to 18% annually. Interest grows with each passing month, incentivising faster payment.</p>
+        <div class="formula">Fee = Invoice × Rate × (Days ÷ 30)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon amber">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <circle cx="10" cy="10" r="8" stroke="#7A4A10" stroke-width="1.5"/>
+            <path d="M7 10l2 2 4-4" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Annual Interest Rate</h3>
+        <p>Calculates interest using a per-day rate derived from an annual percentage. More precise for invoices that are only a few days late. Common in formal vendor agreements and government contracts.</p>
+        <div class="formula">Fee = Invoice × Rate × (Days ÷ 365)</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon red">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 6v5M10 14v.5" stroke="#9B2828" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M3.5 16.5l6.5-11 6.5 11H3.5z" stroke="#9B2828" stroke-width="1.5" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Legal Considerations</h3>
+        <p>Late fees must be disclosed in your contract or on your invoices before work begins — not added as a surprise after the fact. Some US states cap the maximum allowable interest rate on overdue invoices. Always confirm your rate is compliant with local law.</p>
+        <div class="formula">US Standard: 1.5%/month (18%/year)</div>
+      </div>
+
+    </div>
+
+    <!-- Business Examples -->
+    <h2 style="margin-top:2.5rem; margin-bottom:1.25rem;">Business Examples</h2>
+    <div class="examples-grid">
+      <div class="example-card">
+        <span class="e-role">Freelancer</span>
+        <h4>$2,500 Invoice — 21 Days Late</h4>
+        <div class="e-detail">Flat fee method · 5% of invoice amount · applied once on overdue balance</div>
+        <div class="e-price">+ $125 late fee</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Agency</span>
+        <h4>$8,000 Invoice — 45 Days Late</h4>
+        <div class="e-detail">Monthly interest · 1.5%/month · 1.5 billing periods elapsed</div>
+        <div class="e-price">+ $180 late fee</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Contractor</span>
+        <h4>$15,000 Invoice — 30 Days Late</h4>
+        <div class="e-detail">Annual interest · 18%/year · 30 days elapsed (÷ 365)</div>
+        <div class="e-price">+ $221.92 late fee</div>
+      </div>
+      <div class="example-card">
+        <span class="e-role">Consultant</span>
+        <h4>$5,000 Invoice — 60 Days Late</h4>
+        <div class="e-detail">Monthly interest · 1.5%/month · 2 billing periods elapsed</div>
+        <div class="e-price">+ $150 late fee</div>
+      </div>
+    </div>
+
+    <!-- Best practices -->
+    <div class="guide-card-wide">
+      <h3>Best practices for late payment policies</h3>
+      <ul class="why-list">
+        <li><strong>Put it in writing before you start.</strong> Your late fee policy must appear in your contract and on every invoice. A fee you add after the fact is unenforceable and damages the client relationship.</li>
+        <li><strong>Use 1.5% per month as your default.</strong> This is the widely accepted US standard — high enough to motivate payment, low enough to remain legally defensible in most states.</li>
+        <li><strong>Send a reminder before the due date.</strong> A brief "payment due in 3 days" message prevents most late payments before they happen. Reactive collection is harder than proactive reminders.</li>
+        <li><strong>Apply fees consistently.</strong> If you waive late fees for some clients but not others, you undermine their purpose and create expectations of flexibility. Apply the policy consistently unless there's a genuine exceptional circumstance.</li>
+        <li><strong>Know your state's limits.</strong> A handful of states impose caps on late fee interest rates. If you work with clients across multiple states, use a conservative rate like 1.5%/month that falls within limits everywhere.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Can I legally charge late fees on overdue invoices?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Yes, provided you disclosed the late fee policy before entering the agreement — either in your contract or on your invoice. You cannot retroactively add a late fee clause to an existing invoice. Once disclosed upfront, late fees are generally enforceable in the US, though some states cap the allowable interest rate.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What's the most common late fee rate for US businesses?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">The most widely used rate is 1.5% per month (18% annually). This is high enough to motivate timely payment without being so aggressive that it alienates clients. For flat fee situations, a one-time 2–5% charge on the invoice total is common among freelancers and small service businesses.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Should I use a flat fee or interest-based late fee?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Flat fees are simpler and easier to communicate to clients — great for freelancers and small service providers. Interest-based fees (monthly or annual) scale with time and are more appropriate for ongoing vendor relationships or larger invoice amounts where delayed payment has a real cash flow cost. Interest-based fees also apply ongoing pressure the longer a client delays.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What if my client refuses to pay the late fee?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">If the fee was disclosed in your contract and the client refuses, you have a few options: negotiate a partial waiver in exchange for immediate full payment of the original invoice, send a formal demand letter, engage a collections agency, or pursue the matter in small claims court for amounts under the threshold in your state (typically $5,000–$10,000). For ongoing clients, waiving the first late fee as a goodwill gesture while making clear future fees will be enforced is often a practical approach.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Do late fees apply to the original invoice or to the growing balance?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">This calculator applies the interest to the original invoice amount (simple interest), not to a compounding balance. Compound interest — charging interest on accrued interest — is more complex, less common for standard invoicing, and may face additional legal scrutiny. For most small business invoicing purposes, simple interest on the original invoice total is appropriate.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  const METHOD_META = {
+    flat:    { hint: 'A one-time fee charged as a percentage of the invoice amount — simple, transparent, easy for clients to understand.', tip: 'Enter the percentage of the invoice to charge as a flat late fee. Example: 5% on a $1,000 invoice = $50.', label: 'Flat Fee Percentage' },
+    monthly: { hint: 'Interest accrues based on how many months (or partial months) the invoice is overdue. US standard is 1.5%/month.', tip: 'Enter the monthly interest rate. Example: 1.5% per month = 18% per year.', label: 'Monthly Interest Rate' },
+    annual:  { hint: 'Interest is calculated using a daily rate derived from the annual percentage. More precise for short overdue periods.', tip: 'Enter the annual interest rate. Example: 18% per year ÷ 365 = ~0.049% per day.', label: 'Annual Interest Rate' },
+  };
+
+  function handleMethodChange() {
+    const method = document.getElementById('feeMethod').value;
+    const meta   = METHOD_META[method];
+    const hint   = document.getElementById('methodHint');
+    hint.innerHTML = '<strong>' + meta.label + ':</strong> ' + meta.hint;
+    hint.classList.add('visible');
+    document.getElementById('feeLabel').childNodes[0].textContent = meta.label + ' ';
+    document.getElementById('feeTip').textContent = meta.tip;
+  }
+  handleMethodChange(); // init
+
+  function fmt(n) {
+    return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function calculate() {
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+
+    const invoiceVal = document.getElementById('invoiceAmount').value.trim();
+    const daysVal    = document.getElementById('daysLate').value.trim();
+    const feeVal     = document.getElementById('feeValue').value.trim();
+    const method     = document.getElementById('feeMethod').value;
+
+    if (!invoiceVal || !daysVal || !feeVal) {
+      document.getElementById('errorText').textContent = 'Please fill in the invoice amount, days late, and fee value.';
+      errMsg.classList.add('visible');
+      return;
+    }
+
+    const invoice = parseFloat(invoiceVal);
+    const days    = parseFloat(daysVal);
+    const rate    = parseFloat(feeVal);
+
+    if (invoice <= 0) { document.getElementById('errorText').textContent = 'Invoice amount must be greater than zero.'; errMsg.classList.add('visible'); return; }
+    if (days   <= 0) { document.getElementById('errorText').textContent = 'Days late must be at least 1.'; errMsg.classList.add('visible'); return; }
+    if (rate   <  0) { document.getElementById('errorText').textContent = 'Fee value cannot be negative.'; errMsg.classList.add('visible'); return; }
+
+    /* Calculate */
+    let lateFee;
+    let methodLabel;
+    if (method === 'flat') {
+      lateFee     = invoice * (rate / 100);
+      methodLabel = rate + '% flat fee';
+    } else if (method === 'monthly') {
+      lateFee     = invoice * (rate / 100) * (days / 30);
+      methodLabel = rate + '%/month · ' + days + ' days';
+    } else {
+      lateFee     = invoice * (rate / 100) * (days / 365);
+      methodLabel = rate + '%/year · ' + days + ' days';
+    }
+
+    const totalDue = invoice + lateFee;
+
+    /* Render primary */
+    renderPrimary('val-fee',   fmt(lateFee),  method);
+    renderPrimary('val-total', fmt(totalDue), 'total');
+    document.getElementById('sub-fee').textContent = methodLabel;
+
+    /* KPI cards */
+    renderCard('val-original', 'card-original', fmt(invoice), 'blue');
+    renderCard('val-days',     'card-days',      days + (days === 1 ? ' day' : ' days'), days > 60 ? 'neg' : days > 30 ? 'warn' : 'pos');
+    document.getElementById('card-days').className = 'result-card ' + (days > 60 ? 'highlight-neg' : days > 30 ? 'highlight-warn' : 'highlight');
+
+    /* Invoice band */
+    buildInvoiceBand(invoice, lateFee, totalDue, methodLabel);
+
+    /* Insights */
+    buildInsights(days);
+
+    document.getElementById('copyBtn').style.display = 'inline-block';
+    window._last = { invoice, lateFee, totalDue, days, rate, method, methodLabel };
+  }
+
+  function renderPrimary(valId, text, type) {
+    const el = document.getElementById(valId);
+    el.textContent = text;
+    el.className = 'r-value pop';
+    el.addEventListener('animationend', () => el.classList.remove('pop'), { once: true });
+  }
+
+  function renderCard(valId, cardId, text, cls) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    if (!card.className.includes('highlight')) card.className = 'result-card highlight-blue';
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function buildInvoiceBand(invoice, fee, total, methodLabel) {
+    const band = document.getElementById('invoiceBand');
+    const rows = document.getElementById('invRows');
+    band.classList.add('visible');
+    rows.innerHTML = `
+      <div class="inv-row"><span>Original Invoice</span><span>${fmt(invoice)}</span></div>
+      <div class="inv-row fee-row"><span>Late Fee (${methodLabel})</span><span>+ ${fmt(fee)}</span></div>
+      <div class="inv-row sep"><span>Total Amount Due</span><span>${fmt(total)}</span></div>`;
+  }
+
+  function buildInsights(days) {
+    const area = document.getElementById('insightArea');
+    area.innerHTML = '';
+    const add = (type, msg) => {
+      const d = document.createElement('div');
+      d.className = 'insight-banner ' + type;
+      d.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg> ${msg}`;
+      area.appendChild(d);
+    };
+    if (days > 60)       add('danger', 'Invoice is more than 60 days overdue. Consider escalating to a formal collection notice or third-party collections.');
+    else if (days > 30)  add('warn',   'Payment is significantly overdue. Send a formal payment demand letter and include this late fee calculation.');
+    else                 add('info',   'Add this late fee to your next invoice or payment reminder. Make sure your original contract disclosed the late fee policy.');
+  }
+
+  function copySummary() {
+    const r = window._last;
+    if (!r) return;
+    const text =
+      `Late Payment Fee Summary\n` +
+      `────────────────────────\n` +
+      `Original Invoice:   ${fmt(r.invoice)}\n` +
+      `Days Overdue:       ${r.days} days\n` +
+      `Fee Method:         ${r.methodLabel}\n` +
+      `Late Fee:           ${fmt(r.lateFee)}\n` +
+      `Total Amount Due:   ${fmt(r.totalDue)}\n` +
+      `Generated by Small Business Profit Toolkit`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Fee Summary'; }, 2000);
+    });
+  }
+
+  function resetCalc() {
+    ['invoiceAmount','daysLate','feeValue'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('feeMethod').value = 'flat';
+    handleMethodChange();
+    document.getElementById('errorMsg').classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+    document.getElementById('copyBtn').style.display = 'none';
+    document.getElementById('invoiceBand').classList.remove('visible');
+
+    ['val-fee','val-total','val-original','val-days'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    document.getElementById('sub-fee').textContent = 'amount to add';
+    ['card-original','card-days'].forEach(id => { document.getElementById(id).className = 'result-card'; });
+  }
+
+  function toggleFaq(btn) { btn.closest('.faq-item').classList.toggle('open'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>

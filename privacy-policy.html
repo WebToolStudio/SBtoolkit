@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Privacy Policy | Small Business Profit Toolkit</title>
+<meta name="description" content="Read the Small Business Profit Toolkit privacy policy to learn how information is collected, used, and protected when you use our free business calculators." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://smallbusinessprofittoolkit.com/privacy-policy.html" />
+
+<!-- Open Graph -->
+<meta property="og:title" content="Privacy Policy | Small Business Profit Toolkit" />
+<meta property="og:description" content="Learn how Small Business Profit Toolkit collects, uses, and protects information across our free small business calculators." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://smallbusinessprofittoolkit.com/privacy-policy.html" />
+<meta property="og:site_name" content="Small Business Profit Toolkit" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Privacy Policy | Small Business Profit Toolkit" />
+<meta name="twitter:description" content="Learn how Small Business Profit Toolkit collects, uses, and protects information across our free small business calculators." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #F7F5F0;
+    --surface:     #FFFFFF;
+    --surface-alt: #F0EDE6;
+    --border:      #DDD9D0;
+    --border-dark: #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:      #1A5C3A;
+    --accent-light:#E8F3ED;
+    --accent-text: #0F3D26;
+    --danger:      #9B2828;
+    --danger-light:#FBEAEA;
+    --warning:     #7A4A10;
+    --warning-light:#FDF3E7;
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   16px;
+    --shadow-sm:   0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md:   0 4px 16px rgba(0,0,0,0.09);
+    --font-display:'DM Serif Display', Georgia, serif;
+    --font-body:   'DM Sans', system-ui, sans-serif;
+    --transition:  0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  a { color: var(--accent); }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+  }
+  .header-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  /* ── Main Layout ── */
+  main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  /* ── Hero / Page Title ── */
+  .page-title {
+    margin-bottom: 1.75rem;
+    animation: fadeUp 0.4s ease both;
+  }
+  .page-title h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 5vw, 36px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+  .page-title p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 60ch;
+    margin-bottom: 14px;
+  }
+  .effective-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── TOC Card ── */
+  .toc-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 0.4s 0.06s ease both;
+  }
+  .toc-card h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+  }
+  .toc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px 1rem;
+  }
+  @media (max-width: 560px) { .toc-grid { grid-template-columns: 1fr; } }
+  .toc-grid a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: var(--radius-sm);
+    padding: 0 8px;
+    transition: background var(--transition), color var(--transition);
+  }
+  .toc-grid a:hover { background: var(--surface-alt); color: var(--accent-text); }
+  .toc-grid a.active { color: var(--accent-text); background: var(--accent-light); font-weight: 600; }
+  .toc-grid a::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--border-dark);
+    margin-right: 9px;
+    flex-shrink: 0;
+  }
+  .toc-grid a.active::before { background: var(--accent); }
+
+  /* ── Policy Section Cards ── */
+  .policy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.25rem;
+    scroll-margin-top: 16px;
+    animation: fadeUp 0.4s ease both;
+  }
+  @media (max-width: 640px) { .policy-card { padding: 1.25rem; } }
+
+  .policy-card h2 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 0.9rem;
+    padding-left: 14px;
+    border-left: 3px solid var(--accent);
+  }
+  .policy-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 0.85rem;
+  }
+  .policy-card p:last-child { margin-bottom: 0; }
+  .policy-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin: 0.5rem 0 0.9rem;
+  }
+  .policy-card ul:last-child { margin-bottom: 0; }
+  .policy-card ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+  .policy-card ul li::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 7px;
+  }
+  .policy-card ul li strong { color: var(--text-primary); font-weight: 600; }
+  .policy-card a { font-weight: 500; }
+
+  .inline-note {
+    display: flex;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    border: 1px solid #B8D9C5;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    margin-top: 0.6rem;
+    line-height: 1.55;
+  }
+
+  /* ── Back to Top ── */
+  .back-to-top {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity var(--transition), transform var(--transition), background var(--transition);
+    z-index: 50;
+  }
+  .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+  .back-to-top:hover { background: var(--accent-text); }
+  .back-to-top:active { transform: scale(0.95); }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .footer-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 6px;
+    margin-bottom: 0.9rem;
+  }
+  .footer-nav a {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    padding: 10px 12px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition), color var(--transition);
+  }
+  .footer-nav a:hover { background: var(--surface-alt); color: var(--accent-text); }
+  .footer-divider {
+    color: var(--border-dark);
+    display: flex;
+    align-items: center;
+  }
+  .site-footer p {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<!-- ── Main ── -->
+<main>
+
+  <!-- Hero -->
+  <div class="page-title">
+    <h1>Privacy Policy</h1>
+    <p>Learn how information is collected, used, and protected when you use Small Business Profit Toolkit and our free business calculators.</p>
+    <span class="effective-date">Effective Date: June 20, 2026</span>
+  </div>
+
+  <!-- Table of Contents -->
+  <nav class="toc-card" aria-label="Page sections">
+    <h2>On This Page</h2>
+    <div class="toc-grid">
+      <a href="#introduction">Introduction</a>
+      <a href="#information-we-collect">Information We Collect</a>
+      <a href="#how-information-is-used">How Information Is Used</a>
+      <a href="#cookies">Cookies</a>
+      <a href="#google-analytics">Google Analytics</a>
+      <a href="#google-adsense">Google AdSense</a>
+      <a href="#third-party-services">Third-Party Services</a>
+      <a href="#data-security">Data Security</a>
+      <a href="#childrens-privacy">Children's Privacy</a>
+      <a href="#policy-changes">Policy Changes</a>
+      <a href="#contact-information">Contact Information</a>
+    </div>
+  </nav>
+
+  <!-- Introduction -->
+  <section class="policy-card" id="introduction" aria-labelledby="introduction-h">
+    <h2 id="introduction-h">Introduction</h2>
+    <p>Your privacy matters to us. Small Business Profit Toolkit ("we," "us," or "our") is committed to being transparent about how this website operates and what happens to information when you visit it or use any of our free business calculators.</p>
+    <p>This Privacy Policy explains what information we collect, how it is used, and the choices available to you. It applies to every page and tool hosted under the Small Business Profit Toolkit website.</p>
+    <p>This policy is effective as of <strong>June 20, 2026</strong>. By continuing to use this website, you acknowledge that you have read and understood this policy.</p>
+  </section>
+
+  <!-- Information We Collect -->
+  <section class="policy-card" id="information-we-collect" aria-labelledby="info-collect-h">
+    <h2 id="info-collect-h">Information We Collect</h2>
+    <p>We aim to collect as little information as possible while still being able to operate and improve the website. Depending on how you use the site, we may collect:</p>
+    <ul>
+      <li><strong>Non-personal usage information,</strong> such as the pages you visit, how long you spend on them, and which calculators you use.</li>
+      <li><strong>Analytics information,</strong> including aggregated and anonymized statistics about traffic and on-site behavior.</li>
+      <li><strong>Browser and device information,</strong> such as browser type and version, operating system, screen size, and approximate location at a country or city level.</li>
+      <li><strong>Contact form submissions,</strong> including any name, email address, or message content you choose to provide when reaching out to us.</li>
+    </ul>
+    <div class="inline-note">The numbers you type into our calculators (cost, price, hours, rates, etc.) are processed entirely in your browser and are never transmitted to or stored on our servers.</div>
+  </section>
+
+  <!-- How Information Is Used -->
+  <section class="policy-card" id="how-information-is-used" aria-labelledby="info-used-h">
+    <h2 id="info-used-h">How Information Is Used</h2>
+    <p>Any information we do collect is used only for legitimate purposes related to operating and improving this website, including to:</p>
+    <ul>
+      <li>Improve website performance, speed, and reliability.</li>
+      <li>Analyze traffic patterns and understand which tools are most useful.</li>
+      <li>Enhance the overall user experience and usability of our calculators.</li>
+      <li>Respond to questions, support requests, or other inquiries you send us.</li>
+      <li>Protect the website's security and detect or prevent fraud, abuse, or technical issues.</li>
+    </ul>
+  </section>
+
+  <!-- Cookies -->
+  <section class="policy-card" id="cookies" aria-labelledby="cookies-h">
+    <h2 id="cookies-h">Cookies</h2>
+    <p>Cookies are small text files placed on your device by your browser. They help websites remember information about your visit, such as preferences or repeat visits.</p>
+    <ul>
+      <li>We and our partners may use cookies to remember basic preferences, measure traffic, and, where applicable, serve relevant advertising.</li>
+      <li>Most browsers let you view, manage, block, or delete cookies through their settings menu.</li>
+      <li>You can choose to disable cookies at any time, though some parts of the site may not function exactly as intended without them.</li>
+    </ul>
+  </section>
+
+  <!-- Google Analytics -->
+  <section class="policy-card" id="google-analytics" aria-labelledby="analytics-h">
+    <h2 id="analytics-h">Google Analytics</h2>
+    <p>This website may use Google Analytics, a web analytics service provided by Google, to help us understand how visitors use the site.</p>
+    <ul>
+      <li>Google Analytics collects anonymous, aggregated data — it does not identify you personally.</li>
+      <li>This data helps us measure overall traffic and which pages and calculators are visited most.</li>
+      <li>We use these insights solely to improve site performance and content.</li>
+    </ul>
+    <p>If you'd prefer not to be measured by Google Analytics, you can install the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer">Google Analytics Opt-out Browser Add-on</a>.</p>
+  </section>
+
+  <!-- Google AdSense -->
+  <section class="policy-card" id="google-adsense" aria-labelledby="adsense-h">
+    <h2 id="adsense-h">Google AdSense</h2>
+    <p>This website may display advertisements served by Google AdSense and other third-party advertising networks.</p>
+    <ul>
+      <li>Google, as a third-party vendor, may use cookies to serve ads based on a visitor's prior visits to this and other websites.</li>
+      <li>These advertising cookies enable Google and its partners to serve ads that may be more relevant to your interests.</li>
+      <li>You may opt out of personalized advertising by visiting <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer">Google Ads Settings</a> or <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer">aboutads.info</a>.</li>
+    </ul>
+    <p>For more detail on how Google uses information from sites that use its services, see Google's <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer">Advertising Policies</a>.</p>
+  </section>
+
+  <!-- Third-Party Services -->
+  <section class="policy-card" id="third-party-services" aria-labelledby="third-party-h">
+    <h2 id="third-party-h">Third-Party Services</h2>
+    <p>We may rely on a small number of trusted third parties to help run this website, including:</p>
+    <ul>
+      <li><strong>Analytics providers</strong> (such as Google Analytics), used to understand site traffic.</li>
+      <li><strong>Advertising providers</strong> (such as Google AdSense), used to display ads that help support free access to our tools.</li>
+    </ul>
+    <p>Our site may also contain links to external websites that are not operated by us. We are not responsible for the content, accuracy, or privacy practices of any third-party site, and we encourage you to review the privacy policy of any site you visit.</p>
+  </section>
+
+  <!-- Data Security -->
+  <section class="policy-card" id="data-security" aria-labelledby="security-h">
+    <h2 id="security-h">Data Security</h2>
+    <p>We take reasonable technical and organizational measures designed to protect any information we hold from unauthorized access, alteration, or disclosure.</p>
+    <p>That said, no method of transmission over the internet or method of electronic storage is completely secure, and we cannot guarantee absolute security.</p>
+  </section>
+
+  <!-- Children's Privacy -->
+  <section class="policy-card" id="childrens-privacy" aria-labelledby="children-h">
+    <h2 id="children-h">Children's Privacy</h2>
+    <p>This website is intended for a general business audience and is not directed at children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have inadvertently collected such information, we will take steps to delete it promptly.</p>
+  </section>
+
+  <!-- Policy Changes -->
+  <section class="policy-card" id="policy-changes" aria-labelledby="changes-h">
+    <h2 id="changes-h">Policy Changes</h2>
+    <p>We may update this Privacy Policy from time to time to reflect changes in our practices, our tools, or for legal and regulatory reasons. Any changes will be posted on this page with an updated effective date.</p>
+    <p>We encourage you to review this page periodically so you stay informed about how we protect information on this website.</p>
+  </section>
+
+  <!-- Contact Information -->
+  <section class="policy-card" id="contact-information" aria-labelledby="contact-h">
+    <h2 id="contact-h">Contact Information</h2>
+    <p>If you have any questions about this Privacy Policy or how this website operates, please get in touch through our <a href="contact.html">Contact page</a>.</p>
+  </section>
+
+</main>
+
+<!-- ── Back to Top ── -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+    <path d="M9 14V4M9 4L4 9M9 4l5 5" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <nav class="footer-nav" aria-label="Footer navigation">
+    <a href="index.html">Home</a>
+    <span class="footer-divider">·</span>
+    <a href="about.html">About</a>
+    <span class="footer-divider">·</span>
+    <a href="contact.html">Contact</a>
+    <span class="footer-divider">·</span>
+    <a href="terms.html">Terms &amp; Conditions</a>
+  </nav>
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.<br>&copy; 2026 Small Business Profit Toolkit. All rights reserved.</p>
+</footer>
+
+<script>
+  /* ── Back to top button ── */
+  const backToTopBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 420) {
+      backToTopBtn.classList.add('visible');
+    } else {
+      backToTopBtn.classList.remove('visible');
+    }
+  }, { passive: true });
+
+  backToTopBtn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  /* ── Highlight active TOC link based on scroll position ── */
+  const tocLinks = Array.from(document.querySelectorAll('.toc-grid a'));
+  const sections = tocLinks
+    .map(link => document.getElementById(link.getAttribute('href').slice(1)))
+    .filter(Boolean);
+
+  function setActiveLink() {
+    let currentId = null;
+    const scrollPos = window.scrollY + 120;
+
+    sections.forEach(section => {
+      if (section.offsetTop <= scrollPos) {
+        currentId = section.id;
+      }
+    });
+
+    tocLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+    });
+  }
+
+  window.addEventListener('scroll', setActiveLink, { passive: true });
+  window.addEventListener('load', setActiveLink);
+</script>
+</body>
+</html>

@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Time &amp; Operations Tools | Small Business Profit Toolkit</title>
+<meta name="description" content="Free time and operations calculators for small businesses. Track business hours, estimate project profitability, measure revenue growth, and plan profit goals — all in one place." />
+<meta property="og:title" content="Time &amp; Operations Tools | Small Business Profit Toolkit" />
+<meta property="og:description" content="Free calculators for operational planning, project profitability, revenue growth analysis, and profit goal planning. Built for US small business owners." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://smallbusinessprofittoolkit.com/time-operations-tools" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is operational efficiency for small businesses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Operational efficiency means producing more output — revenue, completed projects, billed hours — with the same or fewer inputs like time, labor, and money. For small businesses, it typically comes down to eliminating time waste, pricing work correctly, and tracking performance metrics so you can act on data rather than guesswork."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I calculate project profitability?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Project profitability is calculated by subtracting all direct project costs (labor, materials, overhead allocation) from the total revenue earned on that project. Dividing that profit by total revenue gives you the project's profit margin percentage. A positive margin means the project was profitable; a negative margin means you lost money on it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why should small businesses track revenue growth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Tracking revenue growth helps you understand whether your business is expanding, stagnating, or contracting over time. It reveals whether price changes, new services, or marketing efforts are working. Without growth tracking, you may feel busy but have no objective measure of whether the business is moving in the right direction."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a good revenue growth rate for a small business?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For an established small business, 5–10% annual revenue growth is generally considered healthy and sustainable. Early-stage businesses may target 20–50%+ growth. The right benchmark depends on your industry, local market conditions, and your own capacity to service additional work without sacrificing quality or burning out."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I improve business productivity?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Start by tracking where time actually goes — most small business owners are surprised by the answer. Then identify your highest-revenue-per-hour activities and protect that time first. Automate or delegate low-value tasks, batch similar work together, and use tools like project profitability estimators to drop clients or services that consume time without delivering adequate margin."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is time tracking important for small businesses?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Time is the only resource a small business owner cannot recover. Tracking it precisely lets you calculate true labor costs, identify unprofitable services, and set accurate quotes for future projects. Businesses that track time consistently tend to price higher and more accurately — because they have real data instead of optimistic estimates."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do profit goals help with business planning?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Working backward from a profit goal turns an abstract ambition into a concrete revenue target. If you know your expected profit margin and the profit amount you need, you can calculate exactly what revenue is required. This converts 'I want to make more money' into 'I need to generate $X in revenue at a Y% margin by month Z' — a plan you can actually execute."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What metrics should small businesses monitor for operations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The most useful operational metrics for small businesses include: revenue per labor hour, project profit margin, billable hours utilization rate, revenue growth rate, and gross profit per client or service line. Tracking even two or three of these consistently will surface the decisions that matter most for profitability."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often should a small business measure growth?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Monthly tracking is ideal for spotting problems early, but quarterly comparisons are more meaningful for growth rate calculations because they smooth out seasonal volatility. Annual reviews give the clearest picture of long-term trajectory. The most important thing is consistency — measure the same metrics at the same intervals so comparisons are valid."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are these time and operations tools free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every calculator in the Small Business Profit Toolkit is completely free, with no account required and no ads. They run entirely in your browser — no data is stored or transmitted."
+      }
+    }
+  ]
+}
+</script>
+
+<style>
+  /* ── Reset & Base ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-sm:      0 1px 3px rgba(0,0,0,0.07);
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:   'DM Serif Display', Georgia, serif;
+    --font-body:      'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+    --max-w:          900px;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 1rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .logo {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--text-primary);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+  .logo span { color: var(--accent); }
+  .header-tag {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+  }
+
+  /* ── Main Layout ── */
+  main {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  /* ── Section spacing ── */
+  section { margin-bottom: 3rem; }
+
+  /* ── Section label ── */
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  /* ─────────────────────────────
+     SECTION 1 — HERO
+  ───────────────────────────── */
+  .hero {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2.75rem 2.5rem;
+    box-shadow: var(--shadow-md);
+    animation: fadeUp 0.4s ease both;
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 260px; height: 260px;
+    background: radial-gradient(circle at top right, var(--accent-light) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    border: 1px solid #C2DDD0;
+    border-radius: 20px;
+    padding: 5px 12px;
+    margin-bottom: 1.25rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.18;
+    margin-bottom: 1rem;
+    max-width: 580px;
+  }
+  .hero p {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    max-width: 540px;
+    margin-bottom: 1.75rem;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .hero-stat strong {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .hero-stat span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  @media (max-width: 640px) {
+    .hero { padding: 1.75rem 1.25rem; }
+    .hero::before { display: none; }
+    .hero-stats { gap: 1.5rem; }
+  }
+
+  /* ─────────────────────────────
+     SECTION 2 — TOOL DIRECTORY
+  ───────────────────────────── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    animation: fadeUp 0.4s 0.08s ease both;
+  }
+  @media (max-width: 640px) {
+    .tools-grid { grid-template-columns: 1fr; }
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  }
+  .tool-card:hover {
+    border-color: var(--border-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .tool-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+  }
+  .tool-icon svg { display: block; }
+  .tool-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .tool-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    flex: 1;
+    margin-bottom: 1.25rem;
+  }
+  .btn-tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    border: 1px solid #C2DDD0;
+    border-radius: var(--radius-md);
+    padding: 9px 16px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition);
+    align-self: flex-start;
+    min-height: 44px;
+  }
+  .btn-tool:hover {
+    background: #D4EAE0;
+    border-color: #A5CCBA;
+  }
+  .btn-tool svg { flex-shrink: 0; }
+
+  /* ─────────────────────────────
+     SECTION 3 — BENEFITS
+  ───────────────────────────── */
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    animation: fadeUp 0.4s 0.12s ease both;
+  }
+  @media (max-width: 640px) {
+    .benefits-grid { grid-template-columns: 1fr; }
+  }
+
+  .benefit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .benefit-num {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--border-dark);
+    line-height: 1;
+    flex-shrink: 0;
+    min-width: 28px;
+  }
+  .benefit-body h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+  }
+  .benefit-body p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ─────────────────────────────
+     SECTION 4 — EDUCATIONAL
+  ───────────────────────────── */
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem 2rem;
+    box-shadow: var(--shadow-sm);
+    animation: fadeUp 0.4s 0.16s ease both;
+  }
+  .edu-card h2 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    line-height: 1.25;
+  }
+  .edu-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.6rem;
+    margin-top: 1.5rem;
+  }
+  .edu-card h3:first-of-type { margin-top: 0; }
+  .edu-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 0.5rem;
+  }
+  .edu-card p:last-child { margin-bottom: 0; }
+  @media (max-width: 640px) {
+    .edu-card { padding: 1.5rem 1.25rem; }
+  }
+
+  /* ─────────────────────────────
+     SECTION 5 — FAQ
+  ───────────────────────────── */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    animation: fadeUp 0.4s 0.18s ease both;
+  }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .faq-q {
+    width: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 1rem 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    min-height: 52px;
+    transition: background var(--transition);
+  }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-q[aria-expanded="true"] { color: var(--accent-text); }
+  .faq-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition), background var(--transition);
+  }
+  .faq-q[aria-expanded="true"] .faq-icon {
+    transform: rotate(45deg);
+    background: var(--accent-light);
+    border-color: #C2DDD0;
+  }
+  .faq-a {
+    display: none;
+    padding: 0 1.25rem 1rem;
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+  }
+  .faq-a.open { display: block; animation: fadeDown 0.22s ease both; }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─────────────────────────────
+     SECTION 6 — RELATED CATEGORIES
+  ───────────────────────────── */
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    animation: fadeUp 0.4s 0.2s ease both;
+  }
+  @media (max-width: 640px) {
+    .related-grid { grid-template-columns: 1fr; }
+  }
+
+  .related-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.35rem 1.25rem;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  }
+  .related-card:hover {
+    border-color: var(--border-dark);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+  }
+  .related-tag {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--accent-text);
+    background: var(--accent-light);
+    border-radius: 20px;
+    padding: 3px 9px;
+    align-self: flex-start;
+    margin-bottom: 4px;
+  }
+  .related-card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+  }
+  .related-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+  .related-arrow {
+    font-size: 13px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-top: 6px;
+  }
+
+  /* ── Section title ── */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.25rem;
+    line-height: 1.25;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ──────────────────────────────
+       SECTION 1 — HERO
+  ────────────────────────────── -->
+  <section class="hero" aria-label="Page introduction">
+    <div class="hero-eyebrow">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <circle cx="6" cy="6" r="5" stroke="#1A5C3A" stroke-width="1.5"/>
+        <path d="M6 3.5V6.5L8 8" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      Time &amp; Operations
+    </div>
+    <h1>Time &amp; Operations Tools</h1>
+    <p>Free calculators designed to help small business owners track productivity, measure project profitability, plan revenue growth, and achieve profit goals.</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>4</strong>
+        <span>Free tools</span>
+      </div>
+      <div class="hero-stat">
+        <strong>0</strong>
+        <span>Account required</span>
+      </div>
+      <div class="hero-stat">
+        <strong>100%</strong>
+        <span>Browser-based</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────
+       SECTION 2 — TOOL DIRECTORY
+  ────────────────────────────── -->
+  <section aria-labelledby="tools-heading">
+    <p class="section-label">Tools in this category</p>
+    <h2 class="section-title" id="tools-heading">Choose a Calculator</h2>
+    <div class="tools-grid">
+
+      <!-- Business Hours Calculator -->
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="8.5" stroke="#1A5C3A" stroke-width="1.5"/>
+            <path d="M11 6.5V11.5L14.5 13.5" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Business Hours Calculator</h3>
+        <p>Calculate total hours worked across shifts, estimate labor time for a project or period, and see projected earnings based on your hourly rate.</p>
+        <a href="time-operations/business-hours-calculator.html" class="btn-tool">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 7h8M8 4.5l2.5 2.5L8 9.5" stroke="#0F3D26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Project Profitability Estimator -->
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <rect x="3" y="4" width="16" height="14" rx="2" stroke="#1A5C3A" stroke-width="1.5"/>
+            <path d="M7 14l2.5-3 2.5 2 3-4" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Project Profitability Estimator</h3>
+        <p>Analyze project revenue, costs, profit, and profit margin before taking on work. Know whether a project is worth accepting before you commit.</p>
+        <a href="time-operations/project-profitability-estimator.html" class="btn-tool">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 7h8M8 4.5l2.5 2.5L8 9.5" stroke="#0F3D26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Revenue Growth Rate Calculator -->
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <path d="M4 16L8.5 11 12 13.5 18 6.5" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14.5 6.5H18V10" stroke="#1A5C3A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Revenue Growth Rate Calculator</h3>
+        <p>Measure business growth performance over time, track revenue trends period over period, and benchmark progress toward your annual targets.</p>
+        <a href="time-operations/revenue-growth-rate-calculator.html" class="btn-tool">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 7h8M8 4.5l2.5 2.5L8 9.5" stroke="#0F3D26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Profit Goal Revenue Calculator -->
+      <div class="tool-card">
+        <div class="tool-icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+            <circle cx="11" cy="11" r="8.5" stroke="#1A5C3A" stroke-width="1.5"/>
+            <circle cx="11" cy="11" r="4.5" stroke="#1A5C3A" stroke-width="1.5"/>
+            <circle cx="11" cy="11" r="1.5" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>Profit Goal Revenue Calculator</h3>
+        <p>Calculate the exact revenue required to hit a specific profit target. Enter your profit goal and expected margin — get the revenue number you need to chase.</p>
+        <a href="time-operations/profit-goal-revenue-calculator.html" class="btn-tool">
+          Open Tool
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+            <path d="M3 7h8M8 4.5l2.5 2.5L8 9.5" stroke="#0F3D26" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────
+       SECTION 3 — BENEFITS
+  ────────────────────────────── -->
+  <section aria-labelledby="benefits-heading">
+    <p class="section-label">Why it matters</p>
+    <h2 class="section-title" id="benefits-heading">What You Gain</h2>
+    <div class="benefits-grid">
+      <div class="benefit-card">
+        <div class="benefit-num" aria-hidden="true">01</div>
+        <div class="benefit-body">
+          <h3>Improve Operational Efficiency</h3>
+          <p>Pinpoint where time and money are being spent so you can cut waste, protect high-value work, and run a leaner business without working longer hours.</p>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-num" aria-hidden="true">02</div>
+        <div class="benefit-body">
+          <h3>Track Business Growth</h3>
+          <p>Move beyond gut feel. Measure revenue growth with real numbers so you can validate what's working and double down on it with confidence.</p>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-num" aria-hidden="true">03</div>
+        <div class="benefit-body">
+          <h3>Analyze Project Profitability</h3>
+          <p>Stop quoting by instinct. Know the profit margin of every project before you accept it — and stop taking on work that looks busy but bleeds money.</p>
+        </div>
+      </div>
+      <div class="benefit-card">
+        <div class="benefit-num" aria-hidden="true">04</div>
+        <div class="benefit-body">
+          <h3>Plan Revenue Goals Effectively</h3>
+          <p>Work backward from the profit you need to the revenue you must generate. Turn financial ambitions into a concrete, actionable monthly target.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────
+       SECTION 4 — EDUCATIONAL CONTENT
+  ────────────────────────────── -->
+  <section aria-labelledby="edu-heading">
+    <p class="section-label">The fundamentals</p>
+    <div class="edu-card">
+      <h2 id="edu-heading">How Small Business Owners Should Think About Time &amp; Operations</h2>
+
+      <h3>Operational Efficiency Is a Profit Strategy, Not a Buzzword</h3>
+      <p>Most small business owners equate being busy with being successful. The two are not the same. Operational efficiency asks a harder question: for every dollar and hour you invest, what are you actually getting back? A business running at high efficiency generates more profit per hour of work than one that simply logs more hours.</p>
+      <p>For service businesses especially, the path to higher profit rarely runs through adding more clients. It runs through understanding which existing clients and projects generate the most margin — and structuring the business around protecting that work. That requires measurement, and measurement starts with the tools on this page.</p>
+
+      <h3>Why Project Profitability Analysis Changes How You Bid Work</h3>
+      <p>Pricing by feel is the single most common reason small service businesses stay small. Without analyzing project profitability before accepting a job, you are essentially making a financial bet without looking at the odds. A project that pays $5,000 but requires $4,200 in labor and materials leaves you $800 — not the $5,000 you deposited.</p>
+      <p>The Project Profitability Estimator on this page forces you to account for all costs before you commit. Run it on your last ten projects and you will almost certainly discover that your highest-revenue clients are not your most profitable ones. That realization alone is worth more than any pricing formula.</p>
+
+      <h3>Time Tracking and Labor Cost Awareness</h3>
+      <p>Time is the only fixed constraint in your business. You cannot manufacture more of it. But most small businesses have no accurate picture of where their time actually goes — which means they have no accurate picture of their true labor costs.</p>
+      <p>When you track hours seriously, two things happen. First, your estimates become accurate because they are based on recorded data, not memory. Second, you start identifying activities that consume disproportionate time relative to the revenue they produce. The Business Hours Calculator gives you the starting point: a clear, calculated view of hours worked and the dollar value attached to that time.</p>
+
+      <h3>Measuring Revenue Growth: What the Number Actually Tells You</h3>
+      <p>A revenue growth rate is only useful if you compare it to something meaningful — the same period last year, an industry benchmark, or your own target rate. Growth of 8% sounds modest but may be excellent in a flat market. Growth of 25% sounds impressive but may be insufficient to cover rising costs.</p>
+      <p>The Revenue Growth Rate Calculator removes the ambiguity. Enter two revenue figures — any two periods — and get a precise growth rate you can contextualize and act on. Track it quarterly, and you will develop a sense of your business's natural growth rhythm, which makes anomalies (sudden slowdowns or unexpected spikes) much easier to catch and investigate early.</p>
+
+      <h3>Goal-Based Financial Planning: Start With the Profit, Not the Revenue</h3>
+      <p>Most small business owners plan their finances forward: "If I bring in X in revenue, I'll probably make Y in profit." The problem is that "probably" hides a lot of margin leakage. A more disciplined approach runs the calculation in reverse: decide what profit you need — to cover personal income, invest in equipment, build a cash reserve — and calculate exactly what revenue is required to produce it at your current margin.</p>
+      <p>This is what the Profit Goal Revenue Calculator does. It converts a profit target into a revenue milestone. That milestone is specific, trackable, and directly tied to your operational decisions. If you need $60,000 in profit and your margin is 35%, you know you need roughly $171,000 in revenue. That is a number you can plan a year around.</p>
+
+      <h3>Building a Business You Can Measure — and Actually Improve</h3>
+      <p>The businesses that grow consistently are not necessarily the ones working the hardest. They are the ones measuring the right things and adjusting. Operational metrics — project margins, revenue growth, labor utilization, goal attainment — give you the feedback loop that turns effort into progress. Without that loop, you work harder but cannot be sure you are getting better.</p>
+      <p>Start with one metric. Track it for 90 days. Then add another. The compounding effect of honest measurement over 12 to 24 months is one of the most reliable paths to a fundamentally stronger, more profitable small business.</p>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────
+       SECTION 5 — FAQ
+  ────────────────────────────── -->
+  <section aria-labelledby="faq-heading">
+    <p class="section-label">Common questions</p>
+    <h2 class="section-title" id="faq-heading">Frequently Asked Questions</h2>
+    <div class="faq-list" role="list">
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          What is operational efficiency for small businesses?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Operational efficiency means producing more output — revenue, completed projects, billed hours — with the same or fewer inputs like time, labor, and money. For small businesses, it typically comes down to eliminating time waste, pricing work correctly, and tracking performance metrics so you can act on data rather than guesswork.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          How do I calculate project profitability?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Project profitability is calculated by subtracting all direct project costs (labor, materials, overhead allocation) from the total revenue earned on that project. Dividing that profit by total revenue gives you the project's profit margin percentage. A positive margin means the project was profitable; a negative margin means you lost money on it.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          Why should small businesses track revenue growth?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Tracking revenue growth helps you understand whether your business is expanding, stagnating, or contracting over time. It reveals whether price changes, new services, or marketing efforts are working. Without growth tracking, you may feel busy but have no objective measure of whether the business is moving in the right direction.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          What is a good revenue growth rate for a small business?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">For an established small business, 5–10% annual revenue growth is generally considered healthy and sustainable. Early-stage businesses may target 20–50%+ growth. The right benchmark depends on your industry, local market conditions, and your own capacity to service additional work without sacrificing quality or burning out.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          How can I improve business productivity?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Start by tracking where time actually goes — most small business owners are surprised by the answer. Then identify your highest-revenue-per-hour activities and protect that time first. Automate or delegate low-value tasks, batch similar work together, and use tools like the Project Profitability Estimator to identify clients or services that consume time without delivering adequate margin.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          Why is time tracking important for small businesses?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Time is the only resource a small business owner cannot recover. Tracking it precisely lets you calculate true labor costs, identify unprofitable services, and set accurate quotes for future projects. Businesses that track time consistently tend to price higher and more accurately — because they have real data instead of optimistic estimates.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          How do profit goals help with business planning?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Working backward from a profit goal turns an abstract ambition into a concrete revenue target. If you know your expected profit margin and the profit amount you need, you can calculate exactly what revenue is required. This converts "I want to make more money" into "I need to generate $X in revenue at a Y% margin by month Z" — a plan you can actually execute.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          What metrics should small businesses monitor for operations?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">The most useful operational metrics for small businesses include: revenue per labor hour, project profit margin, billable hours utilization rate, revenue growth rate, and gross profit per client or service line. Tracking even two or three of these consistently will surface the decisions that matter most for profitability.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          How often should a small business measure growth?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Monthly tracking is ideal for spotting problems early, but quarterly comparisons are more meaningful for growth rate calculations because they smooth out seasonal volatility. Annual reviews give the clearest picture of long-term trajectory. The most important thing is consistency — measure the same metrics at the same intervals so comparisons are valid.</div>
+      </div>
+
+      <div class="faq-item" role="listitem">
+        <button class="faq-q" aria-expanded="false" onclick="toggleFaq(this)">
+          Are these time and operations tools free to use?
+          <span class="faq-icon" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="#6B6660" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </span>
+        </button>
+        <div class="faq-a">Yes. Every calculator in the Small Business Profit Toolkit is completely free, with no account required and no ads. They run entirely in your browser — no data is stored or transmitted.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────
+       SECTION 6 — RELATED CATEGORIES
+  ────────────────────────────── -->
+  <section aria-labelledby="related-heading">
+    <p class="section-label">More tools</p>
+    <h2 class="section-title" id="related-heading">Related Categories</h2>
+    <div class="related-grid">
+
+      <a href="pricing-profit-tools.html" class="related-card">
+        <span class="related-tag">Pricing</span>
+        <h3>Pricing &amp; Profit Tools</h3>
+        <p>Profit margin, markup, break-even, and service pricing calculators to set prices you can stand behind.</p>
+        <div class="related-arrow">Explore →</div>
+      </a>
+
+      <a href="invoice-payment-tools.html" class="related-card">
+        <span class="related-tag">Invoicing</span>
+        <h3>Invoice &amp; Payment Tools</h3>
+        <p>Calculate due dates, late payment fees, and payment terms so you get paid faster and on time.</p>
+        <div class="related-arrow">Explore →</div>
+      </a>
+
+      <a href="employee-business-cost-tools.html" class="related-card">
+        <span class="related-tag">Costs</span>
+        <h3>Employee &amp; Business Cost Tools</h3>
+        <p>Payroll estimates, employee cost calculators, and hiring ROI tools to understand what your team truly costs.</p>
+        <div class="related-arrow">Explore →</div>
+      </a>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  function toggleFaq(btn) {
+    const answer = btn.nextElementSibling;
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', !isOpen);
+    answer.classList.toggle('open', !isOpen);
+  }
+</script>
+</body>
+</html>

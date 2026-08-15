@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Payroll Estimate Calculator | Small Business Profit Toolkit</title>
+<meta name="description" content="Calculate gross pay, deductions, taxes, and net pay with this free payroll estimate calculator." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:             #F7F5F0;
+    --surface:        #FFFFFF;
+    --surface-alt:    #F0EDE6;
+    --border:         #DDD9D0;
+    --border-dark:    #C4BFB5;
+    --text-primary:   #1A1815;
+    --text-secondary: #6B6660;
+    --text-muted:     #9E9990;
+    --accent:         #1A5C3A;
+    --accent-light:   #E8F3ED;
+    --accent-text:    #0F3D26;
+    --danger:         #9B2828;
+    --danger-light:   #FBEAEA;
+    --warning:        #7A4A10;
+    --warning-light:  #FDF3E7;
+    --blue:           #185FA5;
+    --blue-light:     #E8F0FA;
+    --profit-pos:     #1A5C3A;
+    --profit-neg:     #9B2828;
+    --radius-sm:      6px;
+    --radius-md:      10px;
+    --radius-lg:      16px;
+    --shadow-md:      0 4px 16px rgba(0,0,0,0.09);
+    --font-display:  'DM Serif Display', Georgia, serif;
+    --font-body:     'DM Sans', system-ui, sans-serif;
+    --transition:     0.18s ease;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--text-primary); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  /* Header */
+  .site-header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 1.5rem; }
+  .header-inner { max-width: 780px; margin: 0 auto; height: 58px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); text-decoration: none; letter-spacing: -0.01em; }
+  .logo span { color: var(--accent); }
+  .header-tag { font-size: 12px; font-weight: 500; color: var(--accent-text); background: var(--accent-light); padding: 4px 10px; border-radius: 20px; letter-spacing: 0.02em; }
+
+  /* Main */
+  main { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* Page title */
+  .page-title { margin-bottom: 2rem; animation: fadeUp 0.4s ease both; }
+  .page-title h1 { font-family: var(--font-display); font-size: clamp(26px, 5vw, 36px); font-weight: 400; line-height: 1.2; margin-bottom: 8px; }
+  .page-title p { font-size: 15px; color: var(--text-secondary); line-height: 1.6; }
+
+  /* Calc card */
+  .calc-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); animation: fadeUp 0.4s 0.08s ease both; margin-bottom: 2rem; }
+
+  .section-label { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Input grid */
+  .input-section { margin-bottom: 1.75rem; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .input-grid { grid-template-columns: 1fr; } }
+
+  .field { display: flex; flex-direction: column; gap: 7px; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .field .field-hint { font-size: 11px; color: var(--text-muted); margin-top: -3px; }
+
+  /* Tooltip */
+  .tip { position: relative; display: inline-flex; align-items: center; cursor: default; }
+  .tip-icon { width: 14px; height: 14px; border-radius: 50%; background: var(--border-dark); color: var(--text-secondary); font-size: 9px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .tip-box { display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: var(--text-primary); color: #fff; font-size: 11px; line-height: 1.5; padding: 7px 10px; border-radius: var(--radius-sm); width: 220px; z-index: 10; pointer-events: none; }
+  .tip:hover .tip-box { display: block; }
+
+  /* Number inputs */
+  .input-wrap { position: relative; }
+  .input-wrap .prefix { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); font-size: 15px; font-weight: 500; color: var(--text-muted); pointer-events: none; }
+  .input-wrap input {
+    width: 100%; padding: 11px 14px 11px 30px;
+    font-family: var(--font-body); font-size: 15px; color: var(--text-primary);
+    background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-md);
+    outline: none; -moz-appearance: textfield;
+    transition: border-color var(--transition), box-shadow var(--transition), background var(--transition);
+  }
+  .input-wrap input.no-prefix { padding-left: 14px; }
+  .input-wrap input::-webkit-inner-spin-button,
+  .input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .input-wrap input:focus { border-color: var(--accent); background: var(--surface); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+
+  /* Sliders */
+  .sliders-section { margin-bottom: 1.75rem; }
+  .sliders-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  @media (max-width: 640px) { .sliders-grid { grid-template-columns: 1fr; } }
+
+  .slider-field { display: flex; flex-direction: column; gap: 7px; }
+  .slider-field label { font-size: 13px; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .slider-wrap { display: flex; flex-direction: column; gap: 8px; }
+  .slider-header { display: flex; justify-content: space-between; align-items: center; }
+  .slider-hint { font-size: 11px; color: var(--text-muted); }
+  .slider-value { font-size: 14px; font-weight: 600; color: var(--accent); background: var(--accent-light); padding: 3px 10px; border-radius: 20px; min-width: 52px; text-align: center; }
+  input[type="range"] { -webkit-appearance: none; width: 100%; height: 5px; border-radius: 10px; background: var(--border); outline: none; cursor: pointer; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.2); cursor: pointer; transition: transform var(--transition); }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb { width: 20px; height: 20px; border-radius: 50%; background: var(--accent); border: 2px solid #fff; cursor: pointer; }
+
+  /* Error */
+  .error-msg { display: none; align-items: center; gap: 8px; font-size: 13px; color: var(--danger); background: var(--danger-light); border: 1px solid #F0C8C8; border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 1.25rem; }
+  .error-msg.visible { display: flex; animation: shake 0.3s ease; }
+  .error-msg svg { flex-shrink: 0; }
+
+  /* Insights */
+  .insight-area { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1.25rem; }
+  .insight-banner { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid; animation: fadeUp 0.3s ease both; line-height: 1.5; }
+  .insight-banner svg { flex-shrink: 0; margin-top: 1px; }
+  .insight-banner.info   { color: var(--accent-text); background: var(--accent-light); border-color: #B8D9C5; }
+  .insight-banner.warn   { color: var(--warning); background: var(--warning-light); border-color: #F0D8A8; }
+  .insight-banner.danger { color: var(--danger);  background: var(--danger-light);  border-color: #F0C8C8; }
+
+  /* Buttons */
+  .btn-row { display: flex; gap: 10px; }
+  .btn { font-family: var(--font-body); font-size: 14px; font-weight: 600; padding: 11px 24px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid transparent; transition: all var(--transition); letter-spacing: 0.01em; }
+  .btn-primary { background: var(--accent); color: #fff; border-color: var(--accent); flex: 1; }
+  .btn-primary:hover { background: var(--accent-text); border-color: var(--accent-text); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-reset { background: transparent; color: var(--text-secondary); border-color: var(--border-dark); }
+  .btn-reset:hover { background: var(--surface-alt); color: var(--text-primary); }
+  .btn-copy { font-family: var(--font-body); font-size: 13px; font-weight: 600; padding: 9px 18px; border-radius: var(--radius-md); cursor: pointer; border: 1px solid #B8D9C5; background: var(--accent-light); color: var(--accent-text); transition: all var(--transition); display: none; }
+  .btn-copy:hover { background: #d4ecde; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+  /* Results */
+  .results-section h2 { font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* Net pay hero */
+  .result-hero { background: var(--accent-light); border: 1px solid #B8D9C5; border-radius: var(--radius-lg); padding: 2rem 1.5rem; text-align: center; margin-bottom: 12px; transition: all 0.25s ease; }
+  .result-hero .rh-eyebrow { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent-text); margin-bottom: 8px; }
+  .result-hero .rh-value { font-family: var(--font-display); font-size: 58px; color: var(--profit-pos); line-height: 1; margin-bottom: 8px; transition: color 0.25s ease; }
+  .result-hero .rh-sub { font-size: 13px; color: var(--accent-text); opacity: 0.85; }
+  .rh-value.placeholder { font-size: 34px; color: var(--border-dark); font-family: var(--font-body); }
+
+  /* Gross pay secondary card */
+  .result-gross { background: var(--blue-light); border: 1px solid #BDD4EE; border-radius: var(--radius-md); padding: 1.2rem 1rem; text-align: center; margin-bottom: 12px; }
+  .result-gross .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--blue); margin-bottom: 6px; }
+  .result-gross .r-value { font-family: var(--font-display); font-size: 32px; color: var(--blue); line-height: 1; }
+  .result-gross .r-sub  { font-size: 11px; color: var(--blue); margin-top: 4px; opacity: 0.8; }
+  .r-value.placeholder { color: var(--border-dark); font-family: var(--font-body); font-size: 20px; }
+
+  /* KPI grid */
+  .results-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 12px; }
+  @media (max-width: 560px) { .results-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 380px) { .results-grid { grid-template-columns: 1fr; } }
+
+  .result-card { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem 1rem; text-align: center; transition: all 0.25s ease; }
+  .result-card.highlight-neg  { background: var(--danger-light);  border-color: #F0C8C8; }
+  .result-card.highlight-warn { background: var(--warning-light); border-color: #F0D8A8; }
+  .result-card.highlight      { background: var(--accent-light);  border-color: #B8D9C5; }
+  .result-card .r-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .result-card .r-value { font-family: var(--font-display); font-size: 22px; color: var(--text-primary); line-height: 1; }
+  .result-card .r-value.neg  { color: var(--profit-neg); }
+  .result-card .r-value.warn { color: var(--warning); }
+  .result-card .r-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  /* Payslip-style deduction breakdown */
+  .payslip-band { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 12px; display: none; }
+  .payslip-band.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .payslip-band h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 12px; }
+  .payslip-rows { display: flex; flex-direction: column; gap: 0; }
+  .payslip-row { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 7px 0; border-bottom: 1px solid var(--border); color: var(--text-secondary); }
+  .payslip-row:last-child { border-bottom: none; }
+  .payslip-row span:last-child { font-weight: 600; color: var(--text-primary); }
+  .payslip-row.gross-row { font-weight: 600; color: var(--blue); }
+  .payslip-row.gross-row span { color: var(--blue); }
+  .payslip-row.deduct-row span:last-child { color: var(--danger); }
+  .payslip-row.net-row { font-weight: 700; font-size: 14px; border-top: 2px solid var(--border-dark); border-bottom: none; padding-top: 10px; margin-top: 4px; }
+  .payslip-row.net-row span { color: var(--accent); font-size: 15px; }
+
+  /* Deduction bar */
+  .deduction-bar-wrap { margin-top: 14px; }
+  .deduction-bar-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 8px; }
+  .deduction-bar-track { height: 18px; background: var(--border); border-radius: 10px; overflow: hidden; display: flex; }
+  .deduction-bar-net     { background: var(--accent); height: 100%; transition: width 0.5s ease; border-radius: 10px 0 0 10px; }
+  .deduction-bar-federal { background: var(--danger); height: 100%; transition: width 0.5s ease; }
+  .deduction-bar-state   { background: var(--warning); height: 100%; transition: width 0.5s ease; }
+  .deduction-bar-other   { background: var(--border-dark); height: 100%; transition: width 0.5s ease; border-radius: 0 10px 10px 0; }
+  .deduction-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 8px; }
+  .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--text-secondary); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* Annualised band */
+  .annual-band { background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.25rem; margin-bottom: 12px; display: none; }
+  .annual-band.visible { display: block; animation: fadeUp 0.3s ease both; }
+  .annual-band h3 { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 10px; }
+  .annual-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  @media (max-width: 560px) { .annual-grid { grid-template-columns: 1fr 1fr; } }
+  .annual-item { text-align: center; }
+  .annual-item .a-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); margin-bottom: 4px; }
+  .annual-item .a-value { font-family: var(--font-display); font-size: 18px; color: var(--text-primary); }
+  .annual-item .a-value.pos { color: var(--profit-pos); }
+  .annual-item .a-value.neg { color: var(--profit-neg); }
+
+  .copy-row { display: flex; justify-content: flex-end; margin-top: 8px; }
+
+  /* Disclaimer */
+  .disclaimer-note { font-size: 11px; color: var(--text-muted); background: var(--surface-alt); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; margin-bottom: 12px; line-height: 1.5; display: none; }
+  .disclaimer-note.visible { display: block; }
+
+  /* Guide */
+  .guide-section { animation: fadeUp 0.4s 0.16s ease both; }
+  .guide-section > h2, .faq-section > h2 { font-family: var(--font-display); font-size: 24px; font-weight: 400; color: var(--text-primary); margin-bottom: 1.25rem; }
+  .guide-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
+  @media (max-width: 560px) { .guide-grid { grid-template-columns: 1fr; } }
+
+  .guide-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; }
+  .guide-card .g-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .g-icon.green { background: var(--accent-light); }
+  .g-icon.blue  { background: #E8F0FA; }
+  .g-icon.amber { background: #FDF3E7; }
+  .g-icon.slate { background: #EEF0F5; }
+  .guide-card h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+  .guide-card p  { font-size: 13px; color: var(--text-secondary); line-height: 1.65; }
+  .guide-card .formula { margin-top: 10px; padding: 8px 12px; background: var(--surface-alt); border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; color: var(--text-secondary); font-family: 'Courier New', monospace; border-left: 3px solid var(--border-dark); }
+
+  .guide-card-wide { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .guide-card-wide h3 { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; }
+  .why-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .why-list li { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .why-list li::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex-shrink: 0; margin-top: 6px; }
+  .why-list li strong { color: var(--text-primary); font-weight: 600; }
+
+  /* FAQ */
+  .faq-section { margin-top: 2.5rem; }
+  .faq-list { display: flex; flex-direction: column; gap: 8px; }
+  .faq-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; }
+  .faq-q { width: 100%; text-align: left; padding: 1rem 1.25rem; font-family: var(--font-body); font-size: 14px; font-weight: 600; color: var(--text-primary); background: none; border: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 12px; transition: background var(--transition); }
+  .faq-q:hover { background: var(--surface-alt); }
+  .faq-chevron { flex-shrink: 0; color: var(--text-muted); transition: transform 0.2s ease; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-a { display: none; padding: 0.75rem 1.25rem 1rem; font-size: 13px; color: var(--text-secondary); line-height: 1.65; border-top: 1px solid var(--border); }
+  .faq-item.open .faq-a { display: block; }
+
+  /* Footer */
+  .site-footer { text-align: center; padding: 2rem 1rem; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); background: var(--surface); }
+
+  /* Animations */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes shake { 0%,100% { transform: translateX(0); } 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+  @keyframes popIn { 0% { transform: scale(0.94); opacity: 0.6; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
+  .pop { animation: popIn 0.3s ease both; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="../index.html" class="logo">Small Business <span>Profit</span> Toolkit</a>
+    <span class="header-tag">Free Tools</span>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-title">
+    <h1>Payroll Estimate Calculator</h1>
+    <p>Enter the hourly rate, hours worked, and tax rates to instantly calculate gross pay, all deductions, and the employee's actual take-home pay.</p>
+  </div>
+
+  <div class="calc-card">
+
+    <!-- Earnings -->
+    <div class="input-section">
+      <h2 class="section-label">Earnings</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="hourlyRate">
+            Hourly Rate
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">The employee's pay rate per hour before any deductions.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="hourlyRate" placeholder="25.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+        <div class="field">
+          <label for="hoursWorked">
+            Hours Worked
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Total hours worked in this pay period. Use 40 for a standard full-time week.</span>
+            </span>
+          </label>
+          <div class="input-wrap">
+            <input type="number" id="hoursWorked" class="no-prefix" placeholder="40" min="0" step="0.5" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tax sliders -->
+    <div class="sliders-section">
+      <h2 class="section-label">Tax Rates</h2>
+      <div class="sliders-grid">
+        <div class="slider-field">
+          <label>
+            Federal Tax Rate
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">US federal income tax withheld. Common rates: 10% (low income), 12%, 22%, 24% (mid), 32%+ (high income).</span>
+            </span>
+          </label>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-hint">Federal withholding rate</span>
+              <span class="slider-value" id="fedDisplay">12%</span>
+            </div>
+            <input type="range" id="federalTax" min="0" max="40" step="0.5" value="12"
+              oninput="document.getElementById('fedDisplay').textContent = parseFloat(this.value).toFixed(this.value % 1 ? 1 : 0) + '%'" />
+          </div>
+        </div>
+        <div class="slider-field">
+          <label>
+            State Tax Rate
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">State income tax rate. Ranges from 0% (TX, FL, etc.) to ~13% (CA). Check your state's withholding tables.</span>
+            </span>
+          </label>
+          <div class="slider-wrap">
+            <div class="slider-header">
+              <span class="slider-hint">State withholding rate</span>
+              <span class="slider-value" id="stateDisplay">5%</span>
+            </div>
+            <input type="range" id="stateTax" min="0" max="15" step="0.5" value="5"
+              oninput="document.getElementById('stateDisplay').textContent = parseFloat(this.value).toFixed(this.value % 1 ? 1 : 0) + '%'" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other deductions -->
+    <div class="input-section">
+      <h2 class="section-label">Other Deductions</h2>
+      <div class="input-grid">
+        <div class="field">
+          <label for="otherDeductions">
+            Other Deductions
+            <span class="tip">
+              <span class="tip-icon">?</span>
+              <span class="tip-box">Health insurance premiums, 401(k) contributions, garnishments, or any other pre/post-tax deductions.</span>
+            </span>
+          </label>
+          <span class="field-hint">Benefits, 401(k), health insurance, garnishments</span>
+          <div class="input-wrap">
+            <span class="prefix">$</span>
+            <input type="number" id="otherDeductions" placeholder="0.00" min="0" step="0.01" inputmode="decimal" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-msg" id="errorMsg" role="alert" aria-live="polite">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <circle cx="8" cy="11" r="0.75" fill="currentColor"/>
+      </svg>
+      <span id="errorText"></span>
+    </div>
+
+    <!-- Insights -->
+    <div class="insight-area" id="insightArea"></div>
+
+    <!-- Buttons -->
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="calculate()">Calculate Take-Home Pay</button>
+      <button class="btn btn-reset" onclick="resetCalc()">Reset</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Results -->
+    <div class="results-section">
+      <h2>Pay Breakdown</h2>
+
+      <!-- Net pay hero -->
+      <div class="result-hero" id="heroCard">
+        <div class="rh-eyebrow">Employee Take-Home Pay (Net Pay)</div>
+        <div class="rh-value placeholder" id="val-netpay">—</div>
+        <div class="rh-sub" id="sub-netpay">this pay period</div>
+      </div>
+
+      <!-- Gross pay -->
+      <div class="result-gross" id="grossCard">
+        <div class="r-label">Gross Pay</div>
+        <div class="r-value placeholder" id="val-grosspay">—</div>
+        <div class="r-sub" id="sub-grosspay">before any deductions</div>
+      </div>
+
+      <!-- KPI grid -->
+      <div class="results-grid">
+        <div class="result-card" id="card-federal">
+          <div class="r-label">Federal Tax</div>
+          <div class="r-value placeholder" id="val-federal">—</div>
+          <div class="r-sub" id="sub-federal">withheld</div>
+        </div>
+        <div class="result-card" id="card-state">
+          <div class="r-label">State Tax</div>
+          <div class="r-value placeholder" id="val-state">—</div>
+          <div class="r-sub" id="sub-state">withheld</div>
+        </div>
+        <div class="result-card" id="card-totaldeduct">
+          <div class="r-label">Total Deductions</div>
+          <div class="r-value placeholder" id="val-totaldeduct">—</div>
+          <div class="r-sub" id="sub-totaldeduct">all withholdings</div>
+        </div>
+      </div>
+
+      <!-- Payslip band -->
+      <div class="payslip-band" id="payslipBand">
+        <h3>Payslip Summary</h3>
+        <div class="payslip-rows" id="payslipRows"></div>
+        <!-- Deduction bar -->
+        <div class="deduction-bar-wrap">
+          <div class="deduction-bar-label">Pay Distribution</div>
+          <div class="deduction-bar-track">
+            <div class="deduction-bar-net"     id="bar-net"     style="width:0%"></div>
+            <div class="deduction-bar-federal" id="bar-federal" style="width:0%"></div>
+            <div class="deduction-bar-state"   id="bar-state"   style="width:0%"></div>
+            <div class="deduction-bar-other"   id="bar-other"   style="width:0%"></div>
+          </div>
+          <div class="deduction-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div> Net Pay</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--danger)"></div> Federal Tax</div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--warning)"></div> State Tax</div>
+            <div class="legend-item" id="legend-other" style="display:none;"><div class="legend-dot" style="background:var(--border-dark)"></div> Other</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Annualised view -->
+      <div class="annual-band" id="annualBand">
+        <h3>Annualised Projection (52 Weeks)</h3>
+        <div class="annual-grid">
+          <div class="annual-item">
+            <div class="a-label">Gross Pay</div>
+            <div class="a-value" id="ann-gross">—</div>
+          </div>
+          <div class="annual-item">
+            <div class="a-label">Total Deductions</div>
+            <div class="a-value neg" id="ann-deduct">—</div>
+          </div>
+          <div class="annual-item">
+            <div class="a-label">Net Pay</div>
+            <div class="a-value pos" id="ann-net">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="disclaimer-note" id="disclaimerNote">
+        ⚠ This calculator provides estimates only. Actual withholding may vary based on W-4 elections, FICA taxes (Social Security 6.2% + Medicare 1.45%), local taxes, pre-tax benefit adjustments, and other factors. Consult a payroll professional or CPA for compliance.
+      </div>
+
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn" onclick="copySummary()">Copy Pay Summary</button>
+      </div>
+    </div>
+
+  </div><!-- /.calc-card -->
+
+  <!-- Guide -->
+  <div class="guide-section">
+    <h2>Understanding Your Paycheck</h2>
+    <div class="guide-grid">
+
+      <div class="guide-card">
+        <div class="g-icon green">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 11H9V9h2v4zm0-6H9V5h2v2z" fill="#1A5C3A"/>
+          </svg>
+        </div>
+        <h3>Gross Pay vs Net Pay</h3>
+        <p>Gross pay is total earnings before any deductions. Net pay — your take-home — is what remains after taxes, benefits, and other withholdings are subtracted. These two numbers are almost never equal.</p>
+        <div class="formula">Net Pay = Gross Pay − Total Deductions</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon blue">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <rect x="3" y="4" width="14" height="13" rx="2" stroke="#185FA5" stroke-width="1.5"/>
+            <path d="M7 2v4M13 2v4M3 9h14" stroke="#185FA5" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>Federal Tax Withholding</h3>
+        <p>Federal income tax is withheld based on the employee's W-4 form and IRS withholding tables. Rates range from 10% to 37% depending on filing status and income level. This calculator uses the rate you specify as an estimate.</p>
+        <div class="formula">Federal Tax = Gross Pay × Federal Rate</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon amber">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M10 3v14M3 10h14" stroke="#7A4A10" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>FICA Taxes (Not Included)</h3>
+        <p>This calculator focuses on income tax withholding. In practice, employees also pay FICA: 6.2% Social Security (on first $168,600 in 2024) and 1.45% Medicare — totalling 7.65%. Add these to "Other Deductions" for a more complete estimate.</p>
+        <div class="formula">FICA = 6.2% SS + 1.45% Medicare</div>
+      </div>
+
+      <div class="guide-card">
+        <div class="g-icon slate">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 10l4 4 6-7" stroke="#4A5568" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h3>Pre-Tax Deductions</h3>
+        <p>Contributions to 401(k) plans, health insurance premiums, HSA contributions, and FSA deductions are typically pre-tax — they reduce gross pay before taxes are calculated. This lowers taxable income and reduces the tax bill.</p>
+        <div class="formula">Taxable Gross = Gross − Pre-Tax Deductions</div>
+      </div>
+
+    </div>
+
+    <!-- Best practices -->
+    <div class="guide-card-wide">
+      <h3>What employers and employees should understand about payroll</h3>
+      <ul class="why-list">
+        <li><strong>Gross pay and employer cost are different.</strong> Employers also pay the matching FICA contribution (7.65%), unemployment insurance (FUTA/SUTA), and workers' comp — adding roughly 10–15% on top of gross wages as the true cost of employment.</li>
+        <li><strong>W-4 elections control withholding amount.</strong> Employees can adjust their federal withholding by updating their W-4. Claiming more allowances reduces withholding and increases take-home pay — but may result in a tax bill at year end.</li>
+        <li><strong>State tax rates vary dramatically.</strong> Seven states have no income tax (TX, FL, NV, WA, WY, SD, AK). California tops out at 13.3%. Always use your specific state's withholding rate for accuracy.</li>
+        <li><strong>Pre-tax benefits significantly increase effective take-home.</strong> A $500/month employer-sponsored health plan that the employee contributes $100 toward pre-tax is worth more than a $100 raise, because the $100 isn't taxed.</li>
+        <li><strong>Overtime changes the math.</strong> Hours above 40 per week must be paid at 1.5× the regular rate under federal law (FLSA). This calculator uses a single rate — use it per period and factor overtime separately.</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- FAQ -->
+  <div class="faq-section">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What's the difference between gross pay and net pay?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Gross pay is total earnings before any deductions — it's the number on the offer letter. Net pay (take-home pay) is what actually gets deposited into the employee's bank account after federal taxes, state taxes, FICA, health insurance, and any other deductions are removed. The gap between the two is often 20–35% of gross.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Does this include Social Security and Medicare taxes?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Not automatically. FICA taxes (6.2% Social Security + 1.45% Medicare = 7.65%) apply to virtually all W-2 employees and can be added to the "Other Deductions" field for a more complete estimate. Self-employed individuals pay double this (15.3%) as self-employment tax.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What federal tax rate should I use?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Use 10% for lower-income earners (under ~$11,600/year single). Use 12% for incomes up to ~$47,000. Use 22% for incomes up to ~$100,500. Use 24% for incomes up to ~$191,950. These are marginal rates — actual effective withholding may be lower. Check the IRS withholding tables or Publication 15-T for precise amounts.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          How do I calculate payroll for a salaried employee?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Divide the annual salary by the number of pay periods (26 for biweekly, 24 for semi-monthly, 12 for monthly). That gives gross pay per period. Then enter that as hourly rate × 1 hour (or use the annualised view). Alternatively, divide the annual salary by 52 and enter it as a weekly gross equivalent.</div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          What counts as "other deductions"?
+          <svg class="faq-chevron" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="faq-a">Other deductions can include: FICA taxes (7.65%), employee health/dental/vision insurance premiums, 401(k) or retirement plan contributions, HSA or FSA contributions, union dues, wage garnishments, and any other recurring withholdings. Including FICA in this field will give you a significantly more accurate net pay estimate.</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>Small Business Profit Toolkit &mdash; Free tools to help you price smarter and grow confidently.</p>
+</footer>
+
+<script>
+  function fmt(n) {
+    return '$' + Math.abs(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function fmtPct(n) { return n.toFixed(1) + '%'; }
+
+  function calculate() {
+    const errMsg = document.getElementById('errorMsg');
+    errMsg.classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+
+    const rateVal  = document.getElementById('hourlyRate').value.trim();
+    const hoursVal = document.getElementById('hoursWorked').value.trim();
+
+    if (!rateVal || !hoursVal) {
+      document.getElementById('errorText').textContent = 'Please enter both the hourly rate and hours worked.';
+      errMsg.classList.add('visible');
+      return;
+    }
+
+    const rate   = parseFloat(rateVal);
+    const hours  = parseFloat(hoursVal);
+    const fedPct = parseFloat(document.getElementById('federalTax').value);
+    const staPct = parseFloat(document.getElementById('stateTax').value);
+    const other  = parseFloat(document.getElementById('otherDeductions').value) || 0;
+
+    if (rate  <= 0) { document.getElementById('errorText').textContent = 'Hourly rate must be greater than zero.'; errMsg.classList.add('visible'); return; }
+    if (hours <= 0) { document.getElementById('errorText').textContent = 'Hours worked must be greater than zero.'; errMsg.classList.add('visible'); return; }
+
+    /* Calculations */
+    const grossPay    = rate * hours;
+    const fedTax      = grossPay * (fedPct / 100);
+    const staTax      = grossPay * (staPct / 100);
+    const totalDeduct = fedTax + staTax + other;
+    const netPay      = grossPay - totalDeduct;
+    const deductPct   = (totalDeduct / grossPay) * 100;
+    const netPct      = (netPay / grossPay) * 100;
+
+    /* Hero */
+    const heroVal = document.getElementById('val-netpay');
+    heroVal.textContent = fmt(netPay);
+    heroVal.className = 'rh-value pop';
+    document.getElementById('sub-netpay').textContent = hours + ' hrs @ $' + rate + '/hr · ' + fmtPct(netPct) + ' take-home rate';
+    heroVal.addEventListener('animationend', () => heroVal.classList.remove('pop'), { once: true });
+
+    /* Gross */
+    const grossVal = document.getElementById('val-grosspay');
+    grossVal.textContent = fmt(grossPay);
+    grossVal.className = 'r-value pop';
+    document.getElementById('sub-grosspay').textContent = hours + ' hrs × $' + rate + '/hr';
+    grossVal.addEventListener('animationend', () => grossVal.classList.remove('pop'), { once: true });
+
+    /* KPI cards */
+    renderCard('val-federal',     'card-federal',     fmt(fedTax),      'neg', 'highlight-neg',  fmtPct(fedPct) + ' federal rate');
+    renderCard('val-state',       'card-state',       fmt(staTax),      'warn','highlight-warn', fmtPct(staPct) + ' state rate');
+    renderCard('val-totaldeduct', 'card-totaldeduct', fmt(totalDeduct), 'neg', 'highlight-neg',  fmtPct(deductPct) + ' of gross');
+
+    /* Payslip */
+    buildPayslip(grossPay, fedTax, staTax, other, totalDeduct, netPay);
+
+    /* Annual */
+    buildAnnual(grossPay, totalDeduct, netPay);
+
+    /* Bar chart */
+    setTimeout(() => {
+      document.getElementById('bar-net').style.width     = Math.max(0, netPct) + '%';
+      document.getElementById('bar-federal').style.width = (fedTax / grossPay * 100) + '%';
+      document.getElementById('bar-state').style.width   = (staTax / grossPay * 100) + '%';
+      document.getElementById('bar-other').style.width   = (other  / grossPay * 100) + '%';
+    }, 60);
+    document.getElementById('legend-other').style.display = other > 0 ? 'flex' : 'none';
+
+    /* Disclaimer */
+    document.getElementById('disclaimerNote').classList.add('visible');
+
+    /* Insights */
+    buildInsights(deductPct, netPct, netPay);
+
+    document.getElementById('copyBtn').style.display = 'inline-block';
+    window._last = { rate, hours, grossPay, fedTax, staTax, other, totalDeduct, netPay, fedPct, staPct, deductPct };
+  }
+
+  function renderCard(valId, cardId, text, cls, cardCls, subText) {
+    const val  = document.getElementById(valId);
+    const card = document.getElementById(cardId);
+    val.textContent = text;
+    val.className = 'r-value pop ' + cls;
+    card.className = 'result-card ' + cardCls;
+    if (subText) {
+      const sub = card.querySelector('.r-sub');
+      if (sub) sub.textContent = subText;
+    }
+    val.addEventListener('animationend', () => val.classList.remove('pop'), { once: true });
+  }
+
+  function buildPayslip(gross, fed, sta, other, total, net) {
+    const band = document.getElementById('payslipBand');
+    band.classList.add('visible');
+    const rows = document.getElementById('payslipRows');
+    let html = `
+      <div class="payslip-row gross-row"><span>Gross Pay</span><span>${fmt(gross)}</span></div>
+      <div class="payslip-row deduct-row"><span>Federal Income Tax</span><span>− ${fmt(fed)}</span></div>
+      <div class="payslip-row deduct-row"><span>State Income Tax</span><span>− ${fmt(sta)}</span></div>`;
+    if (other > 0) {
+      html += `<div class="payslip-row deduct-row"><span>Other Deductions</span><span>− ${fmt(other)}</span></div>`;
+    }
+    html += `<div class="payslip-row net-row"><span>Net Pay (Take-Home)</span><span>${fmt(net)}</span></div>`;
+    rows.innerHTML = html;
+  }
+
+  function buildAnnual(gross, deduct, net) {
+    const band = document.getElementById('annualBand');
+    band.classList.add('visible');
+    document.getElementById('ann-gross').textContent  = '$' + Math.round(gross  * 52).toLocaleString();
+    document.getElementById('ann-deduct').textContent = '$' + Math.round(deduct * 52).toLocaleString();
+    document.getElementById('ann-net').textContent    = '$' + Math.round(net    * 52).toLocaleString();
+  }
+
+  function buildInsights(deductPct, netPct, netPay) {
+    const area = document.getElementById('insightArea');
+    area.innerHTML = '';
+    const add = (type, msg) => {
+      const d = document.createElement('div');
+      d.className = 'insight-banner ' + type;
+      d.innerHTML = `<svg width="15" height="15" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="currentColor" stroke-width="1.4"/><path d="M8 4.5V8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="8" cy="11" r="0.75" fill="currentColor"/></svg> ${msg}`;
+      area.appendChild(d);
+    };
+    if (netPct < 70) add('warn', `Take-home pay is ${fmtPct(netPct)} of gross — ${fmtPct(100 - netPct)} is being deducted. Review whether all deductions are correctly applied.`);
+    else if (deductPct > 25) add('info', `${fmtPct(deductPct)} of gross pay is being deducted. Note: this calculator does not include FICA (7.65%) — add it to Other Deductions for a more complete picture.`);
+    else add('info', `Deductions are ${fmtPct(deductPct)} of gross pay. Remember to add FICA (7.65%) to Other Deductions if this is a W-2 employee.`);
+  }
+
+  function copySummary() {
+    const r = window._last;
+    if (!r) return;
+    const text =
+      `Payroll Estimate Summary\n` +
+      `────────────────────────\n` +
+      `Hourly Rate:       $${r.rate}\n` +
+      `Hours Worked:      ${r.hours}\n` +
+      `Gross Pay:         ${fmt(r.grossPay)}\n` +
+      `Federal Tax (${r.fedPct}%): ${fmt(r.fedTax)}\n` +
+      `State Tax (${r.staPct}%):   ${fmt(r.staTax)}\n` +
+      (r.other > 0 ? `Other Deductions:  ${fmt(r.other)}\n` : '') +
+      `Total Deductions:  ${fmt(r.totalDeduct)}  (${r.deductPct.toFixed(1)}% of gross)\n` +
+      `Net Pay:           ${fmt(r.netPay)}\n` +
+      `Note: Estimate only. Does not include FICA or all withholdings.\n` +
+      `Generated by Small Business Profit Toolkit`;
+
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('copyBtn');
+      btn.textContent = 'Copied!';
+      setTimeout(() => { btn.textContent = 'Copy Pay Summary'; }, 2000);
+    });
+  }
+
+  function resetCalc() {
+    ['hourlyRate','hoursWorked','otherDeductions'].forEach(id => { document.getElementById(id).value = ''; });
+    document.getElementById('federalTax').value = '12';
+    document.getElementById('fedDisplay').textContent = '12%';
+    document.getElementById('stateTax').value = '5';
+    document.getElementById('stateDisplay').textContent = '5%';
+    document.getElementById('errorMsg').classList.remove('visible');
+    document.getElementById('insightArea').innerHTML = '';
+    document.getElementById('copyBtn').style.display = 'none';
+    document.getElementById('payslipBand').classList.remove('visible');
+    document.getElementById('annualBand').classList.remove('visible');
+    document.getElementById('disclaimerNote').classList.remove('visible');
+    ['bar-net','bar-federal','bar-state','bar-other'].forEach(id => { document.getElementById(id).style.width = '0%'; });
+
+    const heroVal = document.getElementById('val-netpay');
+    heroVal.textContent = '—';
+    heroVal.className = 'rh-value placeholder';
+    document.getElementById('sub-netpay').textContent = 'this pay period';
+
+    const grossVal = document.getElementById('val-grosspay');
+    grossVal.textContent = '—';
+    grossVal.className = 'r-value placeholder';
+    document.getElementById('sub-grosspay').textContent = 'before any deductions';
+
+    ['val-federal','val-state','val-totaldeduct'].forEach(id => {
+      const el = document.getElementById(id);
+      el.textContent = '—';
+      el.className = 'r-value placeholder';
+    });
+    ['card-federal','card-state','card-totaldeduct'].forEach(id => { document.getElementById(id).className = 'result-card'; });
+  }
+
+  function toggleFaq(btn) { btn.closest('.faq-item').classList.toggle('open'); }
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>
