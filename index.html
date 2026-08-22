@@ -1320,16 +1320,7 @@ a { color: inherit; text-decoration: none; }
       : '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
   }
 
-  /* Close nav on outside click */
-  document.addEventListener('click', function(e) {
-    const nav = document.getElementById('navMobile');
-    const toggle = document.querySelector('.nav-toggle');
-    if (nav.classList.contains('open') && !nav.contains(e.target) && !toggle.contains(e.target)) {
-      nav.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.innerHTML = '<svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-    }
-  });
+ 
 
   /* ── FAQ Toggle ── */
   function toggleFAQ(btn) {
