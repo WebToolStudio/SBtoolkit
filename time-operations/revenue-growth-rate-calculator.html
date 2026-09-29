@@ -757,7 +757,7 @@
       area.appendChild(d);
     };
     if (isDecline) add('danger', `Revenue declined by ${fmtPct(Math.abs(rate))}. Investigate whether this is seasonal, a one-off event, or a structural trend before taking action.`);
-    else if (isSlow) add('warn', `${fmtPct(rate, true)} growth is below inflation. In real terms, the business may be shrinking. Focus on pricing power and customer acquisition to accelerate.`);
+    else if (isSlow) add('warn', `${fmtPct(rate, true)} indicates modest growth. Ensure revenue gains outpace operating cost increases and inflation to maintain real profitability.`);
     else if (isStrong) add('info', `Strong growth of ${fmtPct(rate, true)}. Make sure your operations, team, and cash flow can scale at this pace — rapid growth unchecked creates its own problems.`);
     else add('info', `Healthy growth of ${fmtPct(rate, true)}. The business is on a solid trajectory. Identify what's driving this growth and double down on it.`);
   }

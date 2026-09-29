@@ -749,7 +749,7 @@
     if (mult > 1.5)     add('danger', `This employee costs ${mult.toFixed(2)}× their base salary — significantly above the typical 1.2–1.4× range. Review benefits, insurance, and other costs.`);
     else if (mult > 1.25) add('warn', `Total cost is ${mult.toFixed(2)}× the base salary — above the salary by ${((mult - 1) * 100).toFixed(0)}%. Normal for employers with good benefits packages.`);
     else                  add('info',  `Total cost is ${mult.toFixed(2)}× base salary. Consider adding benefits costs if not yet included for a more complete picture.`);
-    if (benefits === 0)   add('warn',  'No benefits cost entered. Actual employee cost is likely higher — most full-time US employees receive at least $3,000–$8,000/year in employer-paid benefits.');
+    if (benefits === 0)   add('warn',  'No benefits cost entered. Employer-sponsored benefits (healthcare, retirement, PTO) often represent 20–30% of total compensation according to BLS data. Consider adding expected benefits for an accurate total.');
   }
 
   function copySummary() {
